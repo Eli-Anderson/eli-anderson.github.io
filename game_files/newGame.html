@@ -33,7 +33,7 @@
 			document.getElementById('canvas').style.width=window_w;
 			loadImages()
 		}
-		window.onorientationchange = windowSize()
+		window.onorientationchange = windowSize;
 		
 	function loadImages(){
 			console.log('loading images')
@@ -65,7 +65,7 @@
 			jay_50.src = '../images/jay-50.png'
 			pipeu.src = '../images/pipeu.png'
 			piped.src = '../images/piped.png'
-			console.log('../images loaded successfully')
+			console.log('images loaded successfully')
 			init()
 		}
 		
