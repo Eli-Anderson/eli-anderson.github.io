@@ -1,0 +1,235 @@
+<html>
+<head>
+	<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+	<style id=style onload=windowSize()>
+		#canvas {width: auto;
+				height: auto;}
+	</style>
+	
+	
+</head>
+<body>
+	<canvas id=canvas width=720px height=480px style='border:1px solid black'></canvas>
+	
+	
+	<script>
+		var canvas = document.getElementById('canvas')
+		var ctx = canvas.getContext('2d')
+		var dt = 1
+		//draw background
+		var floor = new Image()
+		floor.src = 'floor.png'
+		var floor_x = 0
+		
+		function windowSize(){
+			console.log('get size')
+			window_w = window.innerWidth;
+			window_h = window.innerHeight;
+			document.getElementById('canvas').style.width=window_w;
+			document.getElementById('canvas').style.height=window_h -35;
+			loadImages()
+		}
+		
+	function loadImages(){
+			console.log('loading images')
+			jay = new Image()
+			jay10 = new Image()
+			jay20 = new Image()
+			jay30 = new Image()
+			jay40 = new Image()
+			jay50 = new Image()
+			jay_10 = new Image()
+			jay_20 = new Image()
+			jay_30 = new Image()
+			jay_40 = new Image()
+			jay_50 = new Image()
+			var pipeu = new Image()
+			var piped = new Image()
+			jay.src = 'images/jay.png'
+			jay10.src = 'images/jay10.png'
+			jay20.src = 'images/jay20.png'
+			jay30.src = 'images/jay30.png'
+			jay40.src = 'images/jay40.png'
+			jay50.src = 'images/jay50.png'
+			jay_10.src = 'images/jay-10.png'
+			jay_20.src = 'images/jay-20.png'
+			jay_30.src = 'images/jay-30.png'
+			jay_40.src = 'images/jay-40.png'
+			jay_50.src = 'images/jay-50.png'
+			pipeu.src = 'images/pipeu.png'
+			piped.src = 'images/piped.png'
+			console.log('images loaded successfully')
+			init()
+		}
+		
+		
+	function drawBackground(){
+			ctx.fillStyle='green'
+			ctx.fillRect(0,0,720,480)
+			ctx.drawImage(floor,floor_x,448)
+			ctx.drawImage(floor,floor_x+448,448)
+			if(floor_x < -95){floor_x = 0}
+			floor_x-=2*dt
+		}
+		
+		//draw player
+		var startingY = 180
+		
+		var playerSprite = new Image()
+		var player_x = 100;
+		var player_y = startingY;
+		var player_w = 40
+		var player_h = 58
+		
+		
+	function drawPlayer(){
+			if (velocity > -6 && velocity < -5){playerSprite = jay_50}
+			else if (velocity > -4 && velocity < -3){playerSprite = jay_40}
+			else if (velocity > -3 && velocity < -2){playerSprite = jay_30}
+			else if (velocity > -2 && velocity < -1){playerSprite = jay_20}
+			else if (velocity > -1 && velocity < -.1){playerSprite = jay_10}
+		
+			else if (velocity > -.1 && velocity < .1){playerSprite = jay}
+		
+			else if (velocity > .1 && velocity < 1){playerSprite = jay10}
+			else if (velocity > 1 && velocity < 2){playerSprite = jay20}
+			else if (velocity > 2 && velocity < 3){playerSprite = jay30}
+			else if (velocity > 3 && velocity < 4){playerSprite = jay40}
+			else if (velocity > 4 && velocity < 5){playerSprite = jay50}
+		
+			ctx.drawImage(playerSprite,player_x,player_y)
+			animatePlayer()
+		}
+		//allow player movement
+		var velocity = 0;
+		var gravity = .3
+	function animatePlayer(){
+			player_y += velocity
+			velocity += gravity
+			
+			if (space){space=false;
+					   velocity = -6;}
+		
+			
+		}
+		var space = false
+	function keyDown(evt) {
+  			if (evt.keyCode == 32){space = true;}
+		}
+	function keyUp(evt) {
+  			if (evt.keyCode == 32){space = false;}
+		}
+		document.onkeydown=keyDown
+		document.onkeyup=keyUp
+		
+		document.addEventListener('touchstart', function(){space=true})
+		document.addEventListener('touchend', function(){space=false})
+		
+		//draw walls
+		walls = []
+		var pipe_w = 50
+		var pipe_h = 312
+	function beginWalls(){
+			var x = 720
+			for (i=0;i<5;i++){
+				var y = Math.floor(Math.random()*2)
+				var h = pipe_h
+				if (y==0){y = -Math.floor(Math.random()*200)-50}
+				if (y==1){y = Math.floor(Math.random()*200)+200}
+				createWall(x,y,h)
+				x += 144
+			}
+		}
+	function createWall(x,y,h){
+			walls.push([x,y,h])
+		}
+	function animateWall(){
+			for (i=0;i<walls.length;i++){
+				if(walls[i][0]<-pipe_w){
+					walls.splice(i,1);
+					var y = Math.floor(Math.random()*2)
+					var h = 312
+					if (y==0){y = -Math.floor(Math.random()*200)-50}
+					if (y==1){y = Math.floor(Math.random()*200)+200}
+					var x = 720
+					createWall(x,y,h)
+				}
+				else{walls[i][0]-=2*dt}
+				if (walls[i][1]<120){
+					ctx.drawImage(piped,walls[i][0],walls[i][1])
+				}
+				else{ctx.drawImage(pipeu,walls[i][0],walls[i][1])}
+			}
+		}
+		//check for collisions
+	function checkCollision(){
+		for (i=0;i<walls.length;i++){
+			if(walls[i][2] > 0){
+				if(player_x < walls[i][0] + pipe_w &&
+					player_x + player_w > walls[i][0] &&
+					player_y < walls[i][1] + walls[i][2] &&
+					player_y + player_h > walls[i][1])
+					{gameOver()}
+				
+				
+					
+				if (player_y < -player_h && walls[i][0] == player_x + player_w){
+					gameOver()
+				}
+				}
+			}
+		if (player_y + player_h> 480){
+					gameOver()
+		}
+	}
+	function gameOver(){
+		if(localStorage.getItem('score')){
+			if (score > localStorage.getItem('score')){localStorage.setItem('score',score)}
+			var highscore = localStorage.getItem('score')
+		}
+		else{localStorage.setItem('score',score)}
+			alert('Game Over\nYour score: '+score+'\nHighscore: '+highscore)
+			walls = []
+			score = 0
+			velocity = 0
+			player_y = startingY
+			space = false
+			space = true
+			beginWalls()
+	}
+		score = 0
+	function updateScore(){
+			for (i=0;i<walls.length;i++){
+				if (player_x == walls[i][0] || player_x-1 == walls[i][0]){
+					score ++
+				}
+			}
+			ctx.fillStyle = 'yellow'
+			ctx.font='28px Georgia'
+			ctx.fillText('Score: '+score,25,25)
+		}
+		//loop game
+	function gameLoop(){
+			ctx.clearRect(0,0,720,480)
+			drawBackground()
+			drawPlayer()
+			animateWall()
+			updateScore()
+			checkCollision()
+			nextFrame = requestAnimationFrame(gameLoop)
+		}
+		//initialize game
+	function init(){
+			gameLoop()
+			space = true
+			beginWalls()
+		}
+		
+		
+	function log(){
+			console.log(walls.length)
+			console.log(walls)
+		}
+	</script>
+</body>
+</html>
