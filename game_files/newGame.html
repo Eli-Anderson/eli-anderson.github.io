@@ -3,7 +3,11 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0;">
 	<meta name="apple-mobile-web-app-capable" content="yes">
 	<style id=style onload=windowSize()>
-		#canvas {width: auto;
+		#canvas {
+				position:absolute;
+				top:-10px;
+				left:-10px;
+				width: auto;
 				height: auto;}
 	</style>
 	
@@ -26,7 +30,10 @@
 			window_w = window.innerWidth;
 			window_h = window.innerHeight;
 			document.getElementById('canvas').style.width=window_w;
-			document.getElementById('canvas').style.height=window_h -35;
+			if(window_w > 720){
+				document.getElementById('canvas').style.height=window_h;
+			}
+			else{document.getElementById('canvas').style.height=window_h;}
 			loadImages()
 		}
 		
