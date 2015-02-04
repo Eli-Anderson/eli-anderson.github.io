@@ -29,11 +29,13 @@
 			console.log('get size')
 			window_w = window.innerWidth;
 			window_h = window.innerHeight;
-			document.getElementById('canvas').style.width=window_w;
 			if(window_w > 720){
 				document.getElementById('canvas').style.height=window_h;
+				document.getElementById('canvas').style.width=window_w;
 			}
-			else{document.getElementById('canvas').style.height=300;}
+			else{document.getElementById('canvas').style.height=500;
+				document.getElementById('canvas').style.width=300;
+			}
 			loadImages()
 		}
 		
