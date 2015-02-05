@@ -27,6 +27,10 @@
 		var balloon_w = 50
 		var balloon_x_var = 0;
 		var popped_this_click = false;
+		var equ = []
+		var goal = 10
+		var result = 0
+		var f_result = 0
 
 		
 		function windowSize(){
@@ -53,37 +57,84 @@
 			balloon_blue.src = 'balloon_blue1.png'
 			balloon_green = new Image();
 			balloon_green.src = 'balloon_green1.png'
-			if(mobileUser){alert('Version 1.1')}
+			if(mobileUser){alert('Version 1.2')}
 			init()
 		}
+		
+		
+		
+		
+		
 		
 		
 		function drawBackground(){
 			ctx.fillStyle='#6d9fff'
 			ctx.fillRect(0,0,360,480)
 		}
-//62x68
+		
+		function drawGoal(){
+			ctx.fillStyle='yellow'
+			if (equ[0] != undefined){
+				ctx.fillText(equ[0],20,475)
+			}
+			if (equ[1] != undefined){
+				ctx.fillText(equ[1],60,475)
+			}
+			if (equ[2] != undefined){
+				ctx.fillText(equ[2],100,475)
+			}
+			if (equ[3] != undefined){
+				ctx.fillText(equ[3],140,475)
+			}
+			if (equ[4] != undefined){
+				ctx.fillText(equ[4],180,475)
+			}
+			ctx.fillText('=',240,475)
+			ctx.fillText(goal,300,475)
+		}
+		
+		function compute_equation(){
+			result = 0 + equ[0] + equ[1] + equ[2] + equ[3] + equ[4]
+			if(equ[4] != undefined){
+				f_result = eval(result) || 0
+			}
+			if(f_result == goal){win()}
+		}
+		
+		function win(){
+			alert('Hoorah!')
+			balloons = []
+			equ = []
+			result = 0
+			f_result = 0
+			score += goal
+			goal ++
+		}
+		
 		function drawBalloons(){
 			balloon_x_var+=.1
 			for (i=0;i<balloons.length;i++){
+				ctx.font='28px Georgia'
+				ctx.fillStyle = 'yellow'
+				
 				balloons[i][1] --;
 				
 				if (balloons[i][2] == 'r') {
 					balloons[i][0] += Math.sin(balloon_x_var)*2
 					ctx.drawImage(balloon_red,balloons[i][0],balloons[i][1])
-					ctx.font='28px Georgia'
-					var t = Math.floor(Math.random()*8)+1
-					ctx.fillText('t',balloons[i][0],balloons[i][1])
+					ctx.fillText(balloons[i][3],balloons[i][0]+17,balloons[i][1]+36)
 				}
 				
 				else if(balloons[i][2] == 'g') {
 					balloons[i][0] += Math.cos(balloon_x_var)*2
 					ctx.drawImage(balloon_green,balloons[i][0],balloons[i][1])
+					ctx.fillText(balloons[i][3],balloons[i][0]+17,balloons[i][1]+36)
 				}
 				
 				else if(balloons[i][2] == 'b') {
 					balloons[i][0] += Math.sin(balloon_x_var/2)*4
 					ctx.drawImage(balloon_blue,balloons[i][0],balloons[i][1])
+					ctx.fillText(balloons[i][3],balloons[i][0]+17,balloons[i][1]+36)
 				}
 				
 				
@@ -106,7 +157,13 @@
 				e.changedTouches[0].clientY < balloons[i][1] + balloon_h + 12 &&
 				e.changedTouches[0].clientY > balloons[i][1] - 12){
 												//animate balloon popping here!
-				if(!popped_this_click){popped_this_click = true;balloons.splice(i,1);score++}
+				if(!popped_this_click){
+					popped_this_click = true;
+					if (balloons[i][3] != 'X'){
+						equ.push(balloons[i][3]);
+					}
+					balloons.splice(i,1);
+					score++}
 			}
 		}
 		
@@ -119,7 +176,13 @@
 				e.clientY < balloons[i][1] + balloon_h + 10 &&
 				e.clientY > balloons[i][1] -10){
 												//animate balloon popping here!
-				if(!popped_this_click){popped_this_click = true;balloons.splice(i,1);score++}
+				if(!popped_this_click){
+					popped_this_click = true;
+					if (balloons[i][3] != 'X'){
+						equ.push(balloons[i][3]);
+					}
+					balloons.splice(i,1);
+					score++}
 			}
 		}
 		
@@ -162,7 +225,8 @@
 			ctx.clearRect(0,0,720,480)
 			drawBackground()
 			drawBalloons()
-			
+			drawGoal()
+			compute_equation()
 			updateScore()
 			checkCollision()
 			requestAnimationFrame(gameLoop)
@@ -175,15 +239,32 @@
 	
 	function startBalloons(){
 			setInterval(function(){
-			balloons.push([Math.random()*(360-balloon_w),480+Math.random()*100,'r'])
-			balloons.push([Math.random()*(360-balloon_w),480+Math.random()*100,'b'])
-			balloons.push([Math.random()*(360-balloon_w),480+Math.random()*100,'g'])
+				var t = Math.floor(Math.random()*4)+1;
+				var s;
+				switch(t){
+					case 1:
+						s = '+'
+						break;
+					case 2:
+						s = '-'
+						break;
+					case 3:
+						s = '/'
+						break;
+					case 4:
+						s = '*'
+						break;
+				}
+			balloons.push([Math.random()*(360-balloon_w),480+Math.random()*100,'r',Math.floor((Math.random()*8)+1)])
+			balloons.push([Math.random()*(360-balloon_w),480+Math.random()*100,'b','X'])
+			balloons.push([Math.random()*(360-balloon_w),480+Math.random()*100,'g',s])
 			if(score > 50){balloons.push([Math.random()*(360-balloon_w),480+Math.random()*100,'r'])}
 			},1500)
 		}	
 		
 	function log(){
-			
+			console.log(result)
+			console.log(f_result)
 		}
 	</script>
 </body>
