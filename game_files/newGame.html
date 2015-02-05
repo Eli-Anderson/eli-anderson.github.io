@@ -33,12 +33,12 @@
 			document.getElementById('canvas').style.height=window_h;
 			document.getElementById('canvas').style.width=window_w;
 			if(window_w < 480){mobileUser = true}
-			loadImages()
+			preload()
 		}
 		
 		window.onorientationchange=function(){location.reload(true)}
 		
-	function loadImages(){
+	function preload(){
 			console.log('loading images')
 			jay = new Image()
 			jay10 = new Image()
@@ -70,7 +70,6 @@
 			piped.src = '../images/piped.png'
 			console.log('images loaded successfully')
 			if(mobileUser){alert('please hold the device horizontally')}
-			else{}
 			init()
 		}
 		
