@@ -17,7 +17,7 @@
 	<canvas id=canvas width=360px height=480px style='border:1px solid black'></canvas>
 
 	
-	<script type=text/javascript script='?0004'>
+	<script type=text/javascript script='?0005'>
 		var canvas = document.getElementById('canvas');
 		var ctx = canvas.getContext('2d');
 		var mobileUser = false;
@@ -33,8 +33,8 @@
 			console.log('get size')
 			window_w = window.innerWidth;
 			window_h = window.innerHeight;
-			//document.getElementById('canvas').style.height=window_h;
-			//document.getElementById('canvas').style.width=window_w;
+			document.getElementById('canvas').style.height=window_h;
+			document.getElementById('canvas').style.width=window_w;
 			if(window_w < 480){mobileUser = true}
 			preload()
 		}
