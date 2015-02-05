@@ -1,3 +1,4 @@
+
 <html>
 <head>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0;">
@@ -7,8 +8,7 @@
 		#canvas {
 				position:absolute;
 				top:-2px;
-				left:-2px;
-				margin:none}
+				left:-2px;}
 	</style>
 	
 	
@@ -17,7 +17,7 @@
 	<canvas id=canvas width=720px height=480px style='border:1px solid black'></canvas>
 
 	
-	<script>
+	<script type=text/javascript script='?0000'>
 		var canvas = document.getElementById('canvas')
 		var ctx = canvas.getContext('2d')
 		var dt = 1
@@ -33,7 +33,7 @@
 			document.getElementById('canvas').style.width=window_w;
 			loadImages()
 		}
-		window.onorientationchange = windowSize;
+		
 		
 	function loadImages(){
 			console.log('loading images')
