@@ -98,7 +98,7 @@
 				e.changedTouches[0].clientY < balloons[i][1] + balloon_h + 15 &&
 				e.changedTouches[0].clientY > balloons[i][1]){
 												//animate balloon popping here!
-				if(!popped_this_click){balloons.splice(i,1); popped_this_click = true;}
+				if(!popped_this_click){balloons.splice(i,1); popped_this_click = true; score++}
 			}
 		}
 		
@@ -111,7 +111,7 @@
 				e.clientY < balloons[i][1] + balloon_h &&
 				e.clientY > balloons[i][1]){
 												//animate balloon popping here!
-				if(!popped_this_click){balloons.splice(i,1); popped_this_click = true;}
+				if(!popped_this_click){balloons.splice(i,1); popped_this_click = true; score++}
 			}
 		}
 		
@@ -172,6 +172,7 @@
 			balloons.push([Math.random()*(360-balloon_w),480+Math.random()*100,'r'])
 			balloons.push([Math.random()*(360-balloon_w),480+Math.random()*100,'b'])
 			balloons.push([Math.random()*(360-balloon_w),480+Math.random()*100,'g'])
+			if(score > 50){balloons.push([Math.random()*(360-balloon_w),480+Math.random()*100,'r'])}
 			},1500)
 		}
 	</script>
