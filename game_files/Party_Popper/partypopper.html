@@ -23,6 +23,10 @@
 		var mobileUser = false;
 		var score = 0;
 		var balloons = []
+		var balloon_h = 66
+		var balloon_w = 50
+		var balloon_x_var = 0;
+		var popped_this_click = false;
 
 		
 		function windowSize(){
@@ -42,6 +46,8 @@
 			console.log('preloading...')
 			balloon_red = new Image();
 			balloon_red.src = 'balloon_red1.png'
+			balloon_blue = new Image();
+			balloon_blue.src = 'balloon_blue1.png'
 			if(mobileUser){alert('please hold the device vertically')}
 			init()
 		}
@@ -53,17 +59,23 @@
 		}
 //62x68
 		function drawBalloons(){
+			balloon_x_var+=.1
 			for (i=0;i<balloons.length;i++){
+				balloons[i][1] --;
+				
 				if (balloons[i][2] == 'r') {
+					balloons[i][0] += Math.sin(balloon_x_var)*2
 					ctx.drawImage(balloon_red,balloons[i][0],balloons[i][1])
 				}
 				
 				else if(balloons[i][2] == 'g') {
-					
+					balloons[i][0] += Math.cos(balloon_x_var)*2
+					ctx.drawImage(balloon_blue,balloons[i][0],balloons[i][1])
 				}
 				
 				else if(balloons[i][2] == 'b') {
-					
+					balloons[i][0] += Math.sin(balloon_x_var/2)*4
+					ctx.drawImage(balloon_blue,balloons[i][0],balloons[i][1])
 				}
 				   
 			}
@@ -77,26 +89,47 @@
 
 		document.onkeydown=keyDown
 		
-		document.addEventListener('touchstart', touch(e))
-		document.addEventListener('touchend', function(){space=false})
-		
-		function touch(e){
-			alert(e.pageX,e.pageY)
+		document.addEventListener('touchstart', function(e){
+		for (i=0;i<balloons.length;i++){
+			if(e.clientX < balloons[i][0] + balloon_w &&
+				e.clientX> balloons[i][0] &&
+				e.clientY < balloons[i][1] + balloon_h &&
+				e.clientY > balloons[i][1]){
+												//animate balloon popping here!
+				if(!popped_this_click){balloons.splice(i,1); popped_this_click = true;}
+			}
 		}
+		
+		})
+		
+		document.addEventListener('click', function(e){
+		for (i=0;i<balloons.length;i++){
+			if(e.clientX < balloons[i][0] + balloon_w &&
+				e.clientX> balloons[i][0] &&
+				e.clientY < balloons[i][1] + balloon_h &&
+				e.clientY > balloons[i][1]){
+												//animate balloon popping here!
+				if(!popped_this_click){balloons.splice(i,1); popped_this_click = true;}
+			}
+		}
+		
+		})
+		document.addEventListener('touchend', function(){popped_this_click=false})
+		document.onmouseup=function(){popped_this_click=false}
+		
+		
 
 		
 	
 	
 		//check for collisions
 	function checkCollision(){
-		//for (i=0;i<walls.length;i++){
-		//	
-		//		if(player_x < walls[i][0] + pipe_w &&
-		//			player_x + player_w > walls[i][0] &&
-		//			player_y < walls[i][1] + walls[i][2] &&
-		//			player_y + player_h > walls[i][1])
-		//			{gameOver()}
-		//}
+		for (i=0;i<balloons.length;i++){
+			if (balloons[i][1] < -balloon_h){
+				balloons = []
+				alert('temporary game over alert')
+			}
+		}
 	}
 	function gameOver(){
 		if(localStorage.getItem('score')){
@@ -126,12 +159,15 @@
 		}
 		//initialize game
 	function init(){
-			gameLoop()			
+			gameLoop()
+			balloons.push([Math.random()*(360-balloon_w),480+Math.random()*100,'r'])
+			balloons.push([Math.random()*(360-balloon_w),480+Math.random()*100,'b'])
 		}
 		
 		
 	function log(){
-			balloons.push([100,100,'r'])
+			balloons.push([Math.random()*(360-balloon_w),480+Math.random()*100,'r'])
+			balloons.push([Math.random()*(360-balloon_w),480+Math.random()*100,'b'])
 		}
 	</script>
 </body>
