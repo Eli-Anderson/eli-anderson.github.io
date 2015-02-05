@@ -1,7 +1,7 @@
 
 <html>
 <head>
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0,">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0;">
 	<meta name="apple-mobile-web-app-capable" content="yes">
 	<style id=style onload=windowSize()>
 
@@ -17,7 +17,7 @@
 	<canvas id=canvas width=360px height=480px style='border:1px solid black'></canvas>
 
 	
-	<script type='text/javascript' id='script'>
+	<script type=text/javascript script='?0003'>
 		var canvas = document.getElementById('canvas');
 		var ctx = canvas.getContext('2d');
 		var mobileUser = false;
@@ -35,10 +35,7 @@
 			window_h = window.innerHeight;
 			//document.getElementById('canvas').style.height=window_h;
 			//document.getElementById('canvas').style.width=window_w;
-			if(window_w < 480){mobileUser = true;
-				//document.getElementById('canvas').style.height=window_h;
-				//document.getElementById('canvas').style.width=window_w;
-			}
+			if(window_w < 480){mobileUser = true}
 			preload()
 		}
 		
@@ -53,7 +50,7 @@
 			balloon_blue.src = 'balloon_blue1.png'
 			balloon_green = new Image();
 			balloon_green.src = 'balloon_green1.png'
-			if(mobileUser){alert('Version number '+document.getElementById('script').getAttribute('src').textContents)}
+			if(mobileUser){alert('please hold the device vertically')}
 			init()
 		}
 		
@@ -101,7 +98,7 @@
 				e.changedTouches[0].clientY < balloons[i][1] + balloon_h + 15 &&
 				e.changedTouches[0].clientY > balloons[i][1]){
 												//animate balloon popping here!
-				if(!popped_this_click){balloons.splice(i,1); popped_this_click = true; score++}
+				if(!popped_this_click){balloons.splice(i,1); popped_this_click = true;}
 			}
 		}
 		
@@ -114,7 +111,7 @@
 				e.clientY < balloons[i][1] + balloon_h &&
 				e.clientY > balloons[i][1]){
 												//animate balloon popping here!
-				if(!popped_this_click){balloons.splice(i,1); popped_this_click = true; score++}
+				if(!popped_this_click){balloons.splice(i,1); popped_this_click = true;}
 			}
 		}
 		
@@ -132,16 +129,16 @@
 		for (i=0;i<balloons.length;i++){
 			if (balloons[i][1] < -balloon_h){
 				balloons = []
-				gameOver()
+				alert('temporary game over alert')
 			}
 		}
 	}
 	function gameOver(){
-		if(localStorage.getItem('balloon_score')){
-			if (score > localStorage.getItem('balloon_score')){localStorage.setItem('balloon_score',score)}
-			var highscore = localStorage.getItem('balloon_score')
+		if(localStorage.getItem('score')){
+			if (score > localStorage.getItem('score')){localStorage.setItem('score',score)}
+			var highscore = localStorage.getItem('score')
 		}
-		else{localStorage.setItem('balloon_score',score)}
+		else{localStorage.setItem('score',score)}
 			alert('Game Over\nYour score: '+score+'\nHighscore: '+highscore)
 			score = 0
 	}
@@ -164,21 +161,18 @@
 		}
 		//initialize game
 	function init(){
-			startBalloons()
 			gameLoop()
+			balloons.push([Math.random()*(360-balloon_w),480+Math.random()*100,'r'])
+			balloons.push([Math.random()*(360-balloon_w),480+Math.random()*100,'b'])
 		}
-	
-	function startBalloons(){
+		
+		
+	function log(){
 			setInterval(function(){
 			balloons.push([Math.random()*(360-balloon_w),480+Math.random()*100,'r'])
 			balloons.push([Math.random()*(360-balloon_w),480+Math.random()*100,'b'])
 			balloons.push([Math.random()*(360-balloon_w),480+Math.random()*100,'g'])
-			if(score > 50){balloons.push([Math.random()*(360-balloon_w),480+Math.random()*100,'r'])}
 			},1500)
-		}	
-		
-	function log(){
-			
 		}
 	</script>
 </body>
