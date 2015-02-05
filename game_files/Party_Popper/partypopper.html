@@ -97,7 +97,7 @@
 		document.onkeydown=keyDown
 		
 		document.addEventListener('touchstart', function(e){
-		for (i=balloons.length;i>=0;i--){
+		for (i=balloons.length - 1;i>=0;i--){
 			if(e.changedTouches[0].clientX < balloons[i][0] + balloon_w + 12 &&
 				e.changedTouches[0].clientX> balloons[i][0] - 12 &&
 				e.changedTouches[0].clientY < balloons[i][1] + balloon_h + 12 &&
@@ -110,7 +110,7 @@
 		})
 		
 		document.addEventListener('click', function(e){
-		for (i=balloons.length;i>=0;i--){
+		for (i=balloons.length - 1;i>=0;i--){
 			if(e.clientX < balloons[i][0] + balloon_w + 10 &&
 				e.clientX> balloons[i][0] -10 &&
 				e.clientY < balloons[i][1] + balloon_h + 10 &&
