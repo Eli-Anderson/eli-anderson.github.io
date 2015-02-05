@@ -3,7 +3,7 @@
 <head>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0;">
 	<meta name="apple-mobile-web-app-capable" content="yes">
-	<style id=style>
+	<style id=style onload=windowSize()>
 
 		#canvas {
 				position:absolute;
@@ -14,7 +14,7 @@
 	
 </head>
 <body>
-	<canvas id=canvas width=720px height=480px style='border:1px solid black' onload=windowSize()></canvas>
+	<canvas id=canvas width=720px height=480px style='border:1px solid black'></canvas>
 
 	
 	<script type=text/javascript script='?0003'>
@@ -70,6 +70,7 @@
 			piped.src = '../images/piped.png'
 			console.log('images loaded successfully')
 			if(mobileUser){alert('please hold the device horizontally')}
+			else{}
 			init()
 		}
 		
