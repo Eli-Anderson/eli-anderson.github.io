@@ -33,9 +33,12 @@
 			console.log('get size')
 			window_w = window.innerWidth;
 			window_h = window.innerHeight;
-			document.getElementById('canvas').style.height=window_h;
-			document.getElementById('canvas').style.width=window_w;
-			if(window_w < 480){mobileUser = true}
+			//document.getElementById('canvas').style.height=window_h;
+			//document.getElementById('canvas').style.width=window_w;
+			if(window_w < 480){mobileUser = true;
+				document.getElementById('canvas').style.height=window_h;
+				document.getElementById('canvas').style.width=window_w;
+			}
 			preload()
 		}
 		
