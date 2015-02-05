@@ -215,7 +215,7 @@
 			for (i=0;i<walls.length;i++){
 				if (player_x - walls[i][0] < 1 && player_x - walls[i][0] > -1){
 					score ++
-					dt+=.05
+					if(dt < 2){dt+=.025}
 				}
 			}
 			ctx.fillStyle = 'yellow'
