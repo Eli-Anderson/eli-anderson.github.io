@@ -134,11 +134,11 @@
 		}
 	}
 	function gameOver(){
-		if(localStorage.getItem('score')){
-			if (score > localStorage.getItem('score')){localStorage.setItem('score',score)}
-			var highscore = localStorage.getItem('score')
+		if(localStorage.getItem('balloon_score')){
+			if (score > localStorage.getItem('balloon_score')){localStorage.setItem('balloon_score',score)}
+			var highscore = localStorage.getItem('balloon_score')
 		}
-		else{localStorage.setItem('score',score)}
+		else{localStorage.setItem('balloon_score',score)}
 			alert('Game Over\nYour score: '+score+'\nHighscore: '+highscore)
 			score = 0
 	}
