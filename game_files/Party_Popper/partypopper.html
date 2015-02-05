@@ -109,10 +109,10 @@
 		
 		document.addEventListener('click', function(e){
 		for (i=0;i<balloons.length;i++){
-			if(e.clientX < balloons[i][0] + balloon_w + 25 &&
-				e.clientX> balloons[i][0] &&
-				e.clientY < balloons[i][1] + balloon_h + 25 &&
-				e.clientY > balloons[i][1]){
+			if(e.clientX < balloons[i][0] + balloon_w + 10 &&
+				e.clientX> balloons[i][0] -10 &&
+				e.clientY < balloons[i][1] + balloon_h + 10 &&
+				e.clientY > balloons[i][1] -10){
 												//animate balloon popping here!
 				if(!popped_this_click){balloons.splice(i,1); popped_this_click = true; score++}
 			}
