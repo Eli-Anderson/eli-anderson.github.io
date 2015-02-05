@@ -17,7 +17,7 @@
 	<canvas id=canvas width=360px height=480px style='border:1px solid black'></canvas>
 
 	
-	<script type=text/javascript script='?0005'>
+	<script type=text/javascript src='?0005' id='script'>
 		var canvas = document.getElementById('canvas');
 		var ctx = canvas.getContext('2d');
 		var mobileUser = false;
@@ -50,7 +50,7 @@
 			balloon_blue.src = 'balloon_blue1.png'
 			balloon_green = new Image();
 			balloon_green.src = 'balloon_green1.png'
-			if(mobileUser){alert('please hold the device vertically')}
+			if(mobileUser){alert('Version number '+document.getElementById('script').getAttribute('src').textContents)}
 			init()
 		}
 		
