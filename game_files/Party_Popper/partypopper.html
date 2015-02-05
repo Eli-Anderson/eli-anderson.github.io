@@ -83,7 +83,7 @@
 					ctx.drawImage(balloon_blue,balloons[i][0],balloons[i][1])
 				}
 				
-				if (balloons[i][3]==0){balloons.splice(i,1);score++}
+				
 				   
 			}
 		}
@@ -103,7 +103,7 @@
 				e.changedTouches[0].clientY < balloons[i][1] + balloon_h + 12 &&
 				e.changedTouches[0].clientY > balloons[i][1] - 12){
 												//animate balloon popping here!
-				if(!popped_this_click){balloons[i][3] --; popped_this_click = true;}
+				if(!popped_this_click){popped_this_click = true;balloons.splice(i,1);score++}
 			}
 		}
 		
@@ -116,7 +116,7 @@
 				e.clientY < balloons[i][1] + balloon_h + 10 &&
 				e.clientY > balloons[i][1] -10){
 												//animate balloon popping here!
-				if(!popped_this_click){balloons[i][3] --; popped_this_click = true;}
+				if(!popped_this_click){popped_this_click = true;balloons.splice(i,1);score++}
 			}
 		}
 		
@@ -172,10 +172,10 @@
 	
 	function startBalloons(){
 			setInterval(function(){
-			balloons.push([Math.random()*(360-balloon_w),480+Math.random()*100,'r',1])
-			balloons.push([Math.random()*(360-balloon_w),480+Math.random()*100,'b',1])
-			balloons.push([Math.random()*(360-balloon_w),480+Math.random()*100,'g',1])
-			if(score > 50){balloons.push([Math.random()*(360-balloon_w),480+Math.random()*100,'r',1])}
+			balloons.push([Math.random()*(360-balloon_w),480+Math.random()*100,'r'])
+			balloons.push([Math.random()*(360-balloon_w),480+Math.random()*100,'b'])
+			balloons.push([Math.random()*(360-balloon_w),480+Math.random()*100,'g'])
+			if(score > 50){balloons.push([Math.random()*(360-balloon_w),480+Math.random()*100,'r'])}
 			},1500)
 		}	
 		
