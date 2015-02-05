@@ -1,0 +1,138 @@
+
+<html>
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0;">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<style id=style onload=windowSize()>
+
+		#canvas {
+				position:absolute;
+				top:-2px;
+				left:-2px;}
+	</style>
+	
+	
+</head>
+<body>
+	<canvas id=canvas width=360px height=480px style='border:1px solid black'></canvas>
+
+	
+	<script type=text/javascript script='?0003'>
+		var canvas = document.getElementById('canvas');
+		var ctx = canvas.getContext('2d');
+		var mobileUser = false;
+		var score = 0;
+		var balloons = []
+
+		
+		function windowSize(){
+			console.log('get size')
+			window_w = window.innerWidth;
+			window_h = window.innerHeight;
+			document.getElementById('canvas').style.height=window_h;
+			document.getElementById('canvas').style.width=window_w;
+			if(window_w < 480){mobileUser = true}
+			preload()
+		}
+		
+		window.onorientationchange=function(){location.reload(true)}
+		
+		function preload(){
+			console.log('preloading...')
+			balloon_red = new Image();
+			balloon_red.src = 'balloon_red1.png'
+			if(mobileUser){alert('please hold the device vertically')}
+			init()
+		}
+		
+		
+		function drawBackground(){
+			ctx.fillStyle='#6d9fff'
+			ctx.fillRect(0,0,360,480)
+		}
+//62x68
+		function drawBalloons(){
+			for (i=0;i<balloons.length;i++){
+				if (balloons[i][2] == 'r') {
+					ctx.drawImage(balloon_red,balloons[i][0],balloons[i][1])
+				}
+				
+				else if(balloons[i][2] == 'g') {
+					
+				}
+				
+				else if(balloons[i][2] == 'b') {
+					
+				}
+				   
+			}
+		}
+		
+	
+		var space = false
+	function keyDown(evt) {
+  			if (evt.keyCode == 32){space = true;}
+			if (evt.keyCode == 76){log()}
+		}
+	function keyUp(evt) {
+  			if (evt.keyCode == 32){space = false;}
+		}
+		document.onkeydown=keyDown
+		document.onkeyup=keyUp
+		
+		document.addEventListener('touchstart', function(){space=true})
+		document.addEventListener('touchend', function(){space=false})
+		
+
+		
+	
+	
+		//check for collisions
+	function checkCollision(){
+		//for (i=0;i<walls.length;i++){
+		//	
+		//		if(player_x < walls[i][0] + pipe_w &&
+		//			player_x + player_w > walls[i][0] &&
+		//			player_y < walls[i][1] + walls[i][2] &&
+		//			player_y + player_h > walls[i][1])
+		//			{gameOver()}
+		//}
+	}
+	function gameOver(){
+		if(localStorage.getItem('score')){
+			if (score > localStorage.getItem('score')){localStorage.setItem('score',score)}
+			var highscore = localStorage.getItem('score')
+		}
+		else{localStorage.setItem('score',score)}
+			alert('Game Over\nYour score: '+score+'\nHighscore: '+highscore)
+			score = 0
+	}
+
+	function updateScore(){
+			
+			ctx.fillStyle = 'yellow'
+			ctx.font='28px Georgia'
+			ctx.fillText('Score: '+score,25,25)
+		}
+		//loop game
+	function gameLoop(){
+			ctx.clearRect(0,0,720,480)
+			drawBackground()
+			drawBalloons()
+			
+			updateScore()
+			checkCollision()
+			requestAnimationFrame(gameLoop)
+		}
+		//initialize game
+	function init(){
+			gameLoop()			
+		}
+		
+		
+	function log(){
+			balloons.push([100,100,'r'])
+		}
+	</script>
+</body>
+</html>
