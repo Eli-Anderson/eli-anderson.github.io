@@ -17,7 +17,7 @@
 	<canvas id=canvas width=720px height=480px style='border:1px solid black'></canvas>
 
 	
-	<script type=text/javascript script='?0002'>
+	<script type=text/javascript script='?0003'>
 		var canvas = document.getElementById('canvas')
 		var ctx = canvas.getContext('2d')
 		var dt = 1
@@ -34,7 +34,7 @@
 			loadImages()
 		}
 		
-		window.onorientationchange=function(){location.reload()}
+		window.onorientationchange=function(){location.reload(true)}
 		
 	function loadImages(){
 			console.log('loading images')
