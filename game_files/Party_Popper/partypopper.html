@@ -29,13 +29,14 @@
 			console.log('get size')
 			window_w = window.innerWidth;
 			window_h = window.innerHeight;
-			document.getElementById('canvas').style.height=window_h;
-			document.getElementById('canvas').style.width=window_w;
+			//document.getElementById('canvas').style.height=window_h;
+			//document.getElementById('canvas').style.width=window_w;
 			if(window_w < 480){mobileUser = true}
 			preload()
 		}
 		
-		window.onorientationchange=function(){location.reload(true)}
+		//window.onorientationchange=function(){location.reload(true)}
+		
 		
 		function preload(){
 			console.log('preloading...')
@@ -71,18 +72,17 @@
 	
 		var space = false
 	function keyDown(evt) {
-  			if (evt.keyCode == 32){space = true;}
 			if (evt.keyCode == 76){log()}
 		}
-	function keyUp(evt) {
-  			if (evt.keyCode == 32){space = false;}
-		}
+
 		document.onkeydown=keyDown
-		document.onkeyup=keyUp
 		
-		document.addEventListener('touchstart', function(){balloons.push([100,100,'r'])})
+		document.addEventListener('touchstart', touch(e))
 		document.addEventListener('touchend', function(){space=false})
 		
+		function touch(e){
+			alert(e.pageX,e.pageY)
+		}
 
 		
 	
