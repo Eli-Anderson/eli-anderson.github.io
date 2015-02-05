@@ -3,7 +3,7 @@
 <head>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0;">
 	<meta name="apple-mobile-web-app-capable" content="yes">
-	<style id=style onload=windowSize()>
+	<style id=style>
 
 		#canvas {
 				position:absolute;
@@ -14,16 +14,17 @@
 	
 </head>
 <body>
-	<canvas id=canvas width=720px height=480px style='border:1px solid black'></canvas>
+	<canvas id=canvas width=720px height=480px style='border:1px solid black' onload=windowSize()></canvas>
 
 	
 	<script type=text/javascript script='?0003'>
-		var canvas = document.getElementById('canvas')
-		var ctx = canvas.getContext('2d')
-		var dt = 1
+		var canvas = document.getElementById('canvas');
+		var ctx = canvas.getContext('2d');
+		var dt = 1;
+		var mobileUser = false;
 		//draw background
 		
-		var floor_x = 0
+		var floor_x = 0;
 		
 		function windowSize(){
 			console.log('get size')
@@ -31,6 +32,7 @@
 			window_h = window.innerHeight;
 			document.getElementById('canvas').style.height=window_h;
 			document.getElementById('canvas').style.width=window_w;
+			if(window_w < 480){mobileUser = true}
 			loadImages()
 		}
 		
@@ -67,6 +69,7 @@
 			pipeu.src = '../images/pipeu.png'
 			piped.src = '../images/piped.png'
 			console.log('images loaded successfully')
+			if(mobileUser){alert('please hold the device horizontally')}
 			init()
 		}
 		
