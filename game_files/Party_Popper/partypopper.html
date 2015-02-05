@@ -96,10 +96,10 @@
 		
 		document.addEventListener('touchstart', function(e){
 		for (i=0;i<balloons.length;i++){
-			if(e.changedTouches[0].clientX < balloons[i][0] + balloon_w + 25 &&
-				e.changedTouches[0].clientX> balloons[i][0] &&
-				e.changedTouches[0].clientY < balloons[i][1] + balloon_h + 25 &&
-				e.changedTouches[0].clientY > balloons[i][1]){
+			if(e.changedTouches[0].clientX < balloons[i][0] + balloon_w + 12 &&
+				e.changedTouches[0].clientX> balloons[i][0] - 12 &&
+				e.changedTouches[0].clientY < balloons[i][1] + balloon_h + 12 &&
+				e.changedTouches[0].clientY > balloons[i][1] - 12){
 												//animate balloon popping here!
 				if(!popped_this_click){balloons.splice(i,1); popped_this_click = true; score++}
 			}
