@@ -216,7 +216,7 @@
 		score = 0
 	function updateScore(){
 			for (i=0;i<walls.length;i++){
-				if (player_x - walls[i][0] < 1 && player_x - walls[i][0] > -1){
+				if (player_x - walls[i][0] < 1 + dt/4 && player_x - walls[i][0] > -1 -dt/4){
 					score ++
 					if(dt < 2){dt+=.025}
 				}
