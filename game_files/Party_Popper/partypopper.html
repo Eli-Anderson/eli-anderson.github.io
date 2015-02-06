@@ -20,7 +20,7 @@
 </head>
 <body>
 	<canvas id=canvas width=360px height=480px style='border:1px solid black'></canvas>
-	<p>Instructions: Click or touch the balloons to pop them. Once a balloon is popped, its value will be added to the equation. Fill in all 5 spots in the equation to add up to the goal number!</p>
+	<p>Instructions: Click or touch the balloons to pop them. Once a balloon is popped, its value will be added to the equation. Fill in all the question marks (?) in the equation to add up exactly to the goal number!</p>
 	
 	<script type='text/javascript' id='script'>
 		var canvas = document.getElementById('canvas');
@@ -33,7 +33,6 @@
 		var balloon_x_var = 0;
 		var popped_this_click = false;
 		var equ = []
-		var goal = 10
 		var result = 0
 		var f_result = 0
 		var cloud1_x = 240
@@ -41,7 +40,16 @@
 		var cloud2_x = 100
 		var cloud2_y = 340
 		var cloud_w = 296
-
+		var bad_equation = false;
+		var level = 0
+		var level_array = [
+					[8,'?','+','?','+','?'],
+					[10,'3','+','?','-','?'],
+					[12,'1','+','?','?','9'],
+					[13,'4','2','?','?','?'],
+					[15,'2','?','?','?','4'],
+					[17,'?','+','?','+','?'],
+						  ]
 		
 		function windowSize(){
 			console.log('get size')
@@ -61,7 +69,7 @@
 		
 		function preload(){
 			console.log('preloading...')
-			alert('Version 1.3\nInstructions: Click or touch the balloons to pop them.\nOnce a balloon is popped, its value will be added to the equation.\nFill in all empty spots in the equation (5 total) to add up to the goal number!\nBe careful not to pop the blue balloons!'
+			alert('Version 1.4\nInstructions: Click or touch the balloons to pop them.\nOnce a balloon is popped, its value will be added to the equation.\nFill in all the question marks (?) in the equation to add up exactly to the goal number!\nBe careful not to pop the blue balloons!'
 				 
 				 )
 			balloon_red = new Image();
@@ -93,43 +101,46 @@
 		}
 		
 		function drawGoal(){
-			ctx.fillStyle='yellow'
-			if (equ[0] != undefined){
-				ctx.fillText(equ[0],20,475)
-			}
-			if (equ[1] != undefined){
-				ctx.fillText(equ[1],60,475)
-			}
-			if (equ[2] != undefined){
-				ctx.fillText(equ[2],100,475)
-			}
-			if (equ[3] != undefined){
-				ctx.fillText(equ[3],140,475)
-			}
-			if (equ[4] != undefined){
-				ctx.fillText(equ[4],180,475)
-			}
+			goal = level_array[level][0]
+			
+			
+			
+			ctx.fillStyle='#000'
+			ctx.fillText(equ[0],20,475)
+			ctx.fillText(equ[1],60,475)
+			ctx.fillText(equ[2],100,475)
+			ctx.fillText(equ[3],140,475)
+			ctx.fillText(equ[4],180,475)
+		
 			ctx.fillText('=',240,475)
 			ctx.fillText(goal,300,475)
 		}
 		
 		function compute_equation(){
-			result = 0 + String(equ[0]) + String(equ[1]) + String(equ[2]) + String(equ[3]) + String(equ[4])
-			if(equ[4] != undefined){
-				f_result = eval(result) || 0
+			result = 0 + equ[0] + equ[1] + equ[2] + equ[3] + equ[4]
+			
+			if(equ[4] == '*' || equ[4] == '/' || equ[4] == '+' || equ[4] == '-'){bad_equation = true; change_to_equation();}
+			else if((equ[0] == '*' || equ[0] == '/' || equ[0] == '+' || equ[0] == '-') && (equ[1] == '*' || equ[1] == '/' || equ[1] == '+' || equ[1] == '-')){bad_equation = true}
+			else if((equ[1] == '*' || equ[1] == '/' || equ[1] == '+' || equ[1] == '-') && (equ[2] == '*' || equ[2] == '/' || equ[2] == '+' || equ[2] == '-')){bad_equation = true}
+			else if((equ[2] == '*' || equ[2] == '/' || equ[2] == '+' || equ[2] == '-') && (equ[3] == '*' || equ[3] == '/' || equ[3] == '+' || equ[3] == '-')){bad_equation = true}
+			
+			if(!bad_equation){
+				f_result = eval(result);
 			}
-			if(f_result == goal){win()}
-			else if(f_result != goal && equ[4] != undefined){equ = []}
+			if(f_result != goal && equ[4] != undefined){change_to_equation();score-=7}
+			else if(f_result == goal && equ[4] != undefined){win()}
 		}
 		
 		function win(){
 			alert('Hoorah!')
 			balloons = []
 			equ = []
+			bad_equation = false;
 			result = 0
 			f_result = 0
-			score += goal
-			goal ++
+			score += 10*level
+			level++
+			change_to_equation()
 		}
 		
 		function drawBalloons(){
@@ -182,9 +193,12 @@
 					popped_this_click = true;
 					if (balloons[i][3] != 'X'){
 						equ.push(balloons[i][3]);
+						score++;
+						balloons_popped ++
 					}
+					else{score -= 15}
 					balloons.splice(i,1);
-					score++}
+				}
 			}
 		}
 		
@@ -200,10 +214,19 @@
 				if(!popped_this_click){
 					popped_this_click = true;
 					if (balloons[i][3] != 'X'){
-						equ.push(balloons[i][3]);
+						//equ.push(balloons[i][3]);
+						score++;
+						
+						if (equ[0] == '?'){equ[0] = balloons[i][3]}
+						else if (equ[1] == '?'){equ[1] = balloons[i][3]}
+						else if (equ[2] == '?'){equ[2] = balloons[i][3]}
+						else if (equ[3] == '?' && equ[4] != '?'){equ[3] = balloons[i][3];compute_equation()}
+						else if (equ[3] == '?'){equ[3] = balloons[i][3]}
+						else if (equ[4] == '?'){equ[4] = balloons[i][3];compute_equation()}
 					}
+					else{score -= 15}
 					balloons.splice(i,1);
-					score++}
+				}
 			}
 		}
 		
@@ -212,7 +235,13 @@
 		document.onmouseup=function(){popped_this_click=false}
 		
 		
-
+		function change_to_equation(){
+			equ[0] = level_array[level][1];
+			equ[1] = level_array[level][2];
+			equ[2] = level_array[level][3];
+			equ[3] = level_array[level][4];
+			equ[4] = level_array[level][5];
+		}
 		
 	
 	
@@ -246,7 +275,7 @@
 			drawBackground()
 			drawBalloons()
 			drawGoal()
-			compute_equation()
+			//compute_equation()
 			updateScore()
 			checkCollision()
 			requestAnimationFrame(gameLoop)
@@ -255,6 +284,7 @@
 	function init(){
 			startBalloons()
 			gameLoop()
+			change_to_equation()
 		}
 	
 	function startBalloons(){
@@ -275,10 +305,10 @@
 						s = '*'
 						break;
 				}
-			balloons.push([Math.random()*(360-balloon_w),480+Math.random()*100,'r',Math.floor((Math.random()*8)+1)])
+			balloons.push([Math.random()*(360-balloon_w),480+Math.random()*100,'r',Math.floor((Math.random()*9)+1)])
 			balloons.push([Math.random()*(360-balloon_w),480+Math.random()*100,'b','X'])
 			balloons.push([Math.random()*(360-balloon_w),480+Math.random()*100,'g',s])
-			if(score > 50){balloons.push([Math.random()*(360-balloon_w),480+Math.random()*100,'r'])}
+			//if(score > 50){balloons.push([Math.random()*(360-balloon_w),480+Math.random()*100,'r'])}
 			},1500)
 		}	
 		
