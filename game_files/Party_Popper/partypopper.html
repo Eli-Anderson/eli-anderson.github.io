@@ -102,7 +102,7 @@
 		
 		function drawGoal(){
 			goal = level_array[level][0]
-			
+			if (equ[0] == '?' || equ[1] == '?' || equ[2] == '?'){bad_equation = false}
 			
 			
 			ctx.fillStyle='#000'
@@ -119,15 +119,15 @@
 		function compute_equation(){
 			result = 0 + equ[0] + equ[1] + equ[2] + equ[3] + equ[4]
 			
-			if(equ[4] == '*' || equ[4] == '/' || equ[4] == '+' || equ[4] == '-'){bad_equation = true; change_to_equation();}
+			if(equ[4] == '*' || equ[4] == '/' || equ[4] == '+' || equ[4] == '-'){bad_equation = true;}
 			else if((equ[0] == '*' || equ[0] == '/' || equ[0] == '+' || equ[0] == '-') && (equ[1] == '*' || equ[1] == '/' || equ[1] == '+' || equ[1] == '-')){bad_equation = true}
 			else if((equ[1] == '*' || equ[1] == '/' || equ[1] == '+' || equ[1] == '-') && (equ[2] == '*' || equ[2] == '/' || equ[2] == '+' || equ[2] == '-')){bad_equation = true}
 			else if((equ[2] == '*' || equ[2] == '/' || equ[2] == '+' || equ[2] == '-') && (equ[3] == '*' || equ[3] == '/' || equ[3] == '+' || equ[3] == '-')){bad_equation = true}
-			
+			else{bad_equation = false}
 			if(!bad_equation){
 				f_result = eval(result);
 			}
-			if(f_result != goal && equ[4] != undefined){change_to_equation();score-=7}
+			if(f_result != goal && equ[4] != undefined){change_to_equation();score-=7;result=0}
 			else if(f_result == goal && equ[4] != undefined){win()}
 		}
 		
@@ -220,9 +220,9 @@
 						if (equ[0] == '?'){equ[0] = balloons[i][3]}
 						else if (equ[1] == '?'){equ[1] = balloons[i][3]}
 						else if (equ[2] == '?'){equ[2] = balloons[i][3]}
-						else if (equ[3] == '?' && equ[4] != '?'){equ[3] = balloons[i][3];compute_equation()}
+						else if (equ[3] == '?' && equ[4] != '?'){equ[3] = balloons[i][3];compute_equation();}
 						else if (equ[3] == '?'){equ[3] = balloons[i][3]}
-						else if (equ[4] == '?'){equ[4] = balloons[i][3];compute_equation()}
+						else if (equ[4] == '?'){equ[4] = balloons[i][3];compute_equation();}
 					}
 					else{score -= 15}
 					balloons.splice(i,1);
@@ -241,6 +241,7 @@
 			equ[2] = level_array[level][3];
 			equ[3] = level_array[level][4];
 			equ[4] = level_array[level][5];
+			bad_equation = false;
 		}
 		
 	
