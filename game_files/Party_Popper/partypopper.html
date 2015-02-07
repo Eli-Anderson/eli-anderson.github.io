@@ -107,65 +107,68 @@
 		function main_menu(){
 			
 			ctx.fillStyle='rgba(0,0,0,0.5)'
-			ctx.fillRect(0,0,320,480)
+			ctx.fillRect(0,0,320,460)
 			
 			ctx.fillStyle='rgba(0,0,0,0.4)'
-			ctx.fillRect(30,30,300,420)
+			ctx.fillRect(30,30,260,400)
 			
 			if(!at_help_screen){
 			
 			ctx.fillStyle='white'
 			ctx.font='42px Georgia'
-			ctx.fillText('Party Popper',60,80)
+			ctx.fillText('Party Popper',40,80)
 			
 			ctx.fillStyle='rgba(0,0,0,0.3)'
-			ctx.fillRect(90,200,180,60)
-				play_button = {x:90,y:200,w:180,h:60,f:function(){at_menu_screen=false;}}
-			ctx.fillRect(90,300,180,60)
-				help_button = {x:90,y:300,w:180,h:60}
+				play_button = {x:70,y:200,w:180,h:60}
+			
+			ctx.fillRect(play_button.x,play_button.y,play_button.w,play_button.h)
+				help_button = {x:70,y:300,w:180,h:60}
+			
+			ctx.fillRect(help_button.x,help_button.y,help_button.w,help_button.h)
+				
 			
 			ctx.fillStyle='white'
 			ctx.font='30px Georgia'
-			ctx.fillText('Play',150,240)
-			ctx.fillText('How to play',100,340)
+			ctx.fillText('Play',130,240)
+			ctx.fillText('How to play',80,340)
 			}
 			if (at_help_screen){
 				ctx.fillStyle='white'
 				ctx.font='24px Georgia'
-				ctx.fillText('Version '+version_number,120,80)
-				ctx.fillText('Click or tap to continue',60,440)
+				ctx.fillText('Version '+version_number,100,80)
+				ctx.fillText('Click or tap to continue',40,420)
 				switch(help_page){
 					case 1:
-						ctx.fillText('Click or touch the',80,200)
-						ctx.fillText('balloons to pop them.',60,240)
+						ctx.fillText('Click or touch the',60,200)
+						ctx.fillText('balloons to pop them.',40,240)
 						break;
 					case 2:
-						ctx.fillText('Once a balloon is',80,200)
-						ctx.fillText('popped, its value will',70,240)
-						ctx.fillText('be added to the',90,280)
-						ctx.fillText('equation',130,320)
-						ctx.fillText('?     +     3     +     ?',20,475)
-						ctx.drawImage(arrow,155,350)
+						ctx.fillText('Once a balloon is',60,200)
+						ctx.fillText('popped, its value will',50,240)
+						ctx.fillText('be added to the',70,280)
+						ctx.fillText('equation',110,320)
+						ctx.fillText('?     +     3     +     ?',20,455)
+						ctx.drawImage(arrow,155,330)
 						ctx.save()
 						//ctx.translate(0,350)
 						ctx.rotate(45*Math.PI/180)
-						ctx.drawImage(arrow,310,190)
+						ctx.drawImage(arrow,290,180)
 						ctx.restore()
 						break;
 					case 3:
-						ctx.fillText('Fill in all the',110,200)
-						ctx.fillText('question marks (?)',85,240)
-						ctx.fillText('in the equation to',90,280)
-						ctx.fillText('add up exactly to',90,320)
-						ctx.fillText('the goal number!',90,360)
-						ctx.fillText('=     10',260,475)
-						ctx.drawImage(arrow,275,350)
+						ctx.fillText('Fill in all the',90,200)
+						ctx.fillText('question marks (?)',75,240)
+						ctx.fillText('in the equation to',70,280)
+						ctx.fillText('add up exactly to',70,320)
+						ctx.fillText('the goal number!',70,360)
+						ctx.fillText('=     10',240,455)
+						ctx.drawImage(arrow,255,330)
 						break;
 					case 4:
-						ctx.fillText('Beware of the blue',85,200)
-						ctx.fillText('balloons; they will',85,240)
-						ctx.fillText('take away from your',70,280)
-						ctx.fillText('score!',150,320)
+						ctx.fillText('Beware of the blue',65,200)
+						ctx.fillText('balloons; they will',65,240)
+						ctx.fillText('take away from your',50,280)
+						ctx.fillText('score!',130,320)
 						break;
 					case 5:
 						at_help_screen = false;
@@ -183,7 +186,7 @@
 		
 		function drawBackground(){
 			ctx.fillStyle='#4182ff'
-			ctx.fillRect(0,0,320,480)
+			ctx.fillRect(0,0,320,460)
 			ctx.drawImage(cloud,cloud1_x,cloud1_y)
 			ctx.drawImage(cloud,cloud2_x,cloud2_y)
 			cloud1_x --;
@@ -198,14 +201,14 @@
 			
 			
 			ctx.fillStyle='#000'
-			ctx.fillText(equ[0],20,475)
-			ctx.fillText(equ[1],60,475)
-			ctx.fillText(equ[2],100,475)
-			ctx.fillText(equ[3],140,475)
-			ctx.fillText(equ[4],180,475)
+			ctx.fillText(equ[0],20,455)
+			ctx.fillText(equ[1],60,455)
+			ctx.fillText(equ[2],100,455)
+			ctx.fillText(equ[3],140,455)
+			ctx.fillText(equ[4],180,455)
 		
-			ctx.fillText('=',240,475)
-			ctx.fillText(goal,300,475)
+			ctx.fillText('=',240,455)
+			ctx.fillText(goal,300,455)
 		}
 		
 		function compute_equation(){
@@ -273,8 +276,14 @@
 		}
 
 		document.onkeydown=keyDown
-		
+		var new_time = new Date();
+		var last_time = new_time.getDate()
 		canvas.addEventListener('touchstart', function(e){
+			time = new Date();
+			this_time = time.getDate()
+			if (this_time - last_time < 100){last_time = this_time}
+			else{
+				last_time = this_time
 			if(at_menu_screen){
 				if( e.changedTouches[0].clientX < play_button.x + play_button.w &&
 					e.changedTouches[0].clientX > play_button.x &&
@@ -314,7 +323,7 @@
 				}
 			}
 		}
-		
+			}
 		})
 		
 		canvas.addEventListener('click', function(e){
