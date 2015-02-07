@@ -278,7 +278,12 @@
 		document.onkeydown=keyDown
 		var new_time = new Date();
 		var last_time = new_time.getDate()
-		document.addEventListener('touchstart', function(e){
+		document.addEventListener('touchstart', touch_event, false)
+		
+		document.addEventListener('click', click_event, false)
+		
+		
+		function touch_event(e){
 			time = new Date();
 			this_time = time.getDate()
 			if (this_time - last_time < 100){last_time = this_time}
@@ -307,7 +312,7 @@
 												//animate balloon popping here!
 				if(!popped_this_click){
 					popped_this_click = true;
-					if (balloons[i][3] != 'X'){
+					if (balloons[i][2] != 'b'){
 						
 						score++;
 						
@@ -324,9 +329,13 @@
 			}
 		}
 			}
-		})
 		
-		document.addEventListener('click', function(e){
+		
+		}
+		
+		
+		
+		function click_event(e){
 			if(at_menu_screen){
 				if( e.clientX < play_button.x + play_button.w &&
 					e.clientX > play_button.x &&
@@ -342,32 +351,34 @@
 				}
 			
 		
-		for (i=balloons.length - 1;i>=0;i--){
-			if(e.clientX < balloons[i][0] + balloon_w + 10 &&
-				e.clientX> balloons[i][0] -10 &&
-				e.clientY < balloons[i][1] + balloon_h + 10 &&
-				e.clientY > balloons[i][1] -10){
+			for (i=balloons.length - 1;i>=0;i--){
+				if(e.clientX < balloons[i][0] + balloon_w + 10 &&
+					e.clientX> balloons[i][0] -10 &&
+					e.clientY < balloons[i][1] + balloon_h + 10 &&
+					e.clientY > balloons[i][1] -10){
 												//animate balloon popping here!
-				if(!popped_this_click){
-					popped_this_click = true;
-					if (balloons[i][3] != 'X'){
+					if(!popped_this_click){
+						popped_this_click = true;
+						if (balloons[i][2] != 'b'){
 						
-						score++;
+							score++;
 						
-						if (equ[0] == '?'){equ[0] = balloons[i][3]}
-						else if (equ[1] == '?'){equ[1] = balloons[i][3]}
-						else if (equ[2] == '?'){equ[2] = balloons[i][3]}
-						else if (equ[3] == '?' && equ[4] != '?'){equ[3] = balloons[i][3];compute_equation();}
-						else if (equ[3] == '?'){equ[3] = balloons[i][3]}
-						else if (equ[4] == '?'){equ[4] = balloons[i][3];compute_equation();}
+							if (equ[0] == '?'){equ[0] = balloons[i][3]}
+							else if (equ[1] == '?'){equ[1] = balloons[i][3]}
+							else if (equ[2] == '?'){equ[2] = balloons[i][3]}
+							else if (equ[3] == '?' && equ[4] != '?'){equ[3] = balloons[i][3];compute_equation();}
+							else if (equ[3] == '?'){equ[3] = balloons[i][3]}
+							else if (equ[4] == '?'){equ[4] = balloons[i][3];compute_equation();}
+						}
+						else{score -= 15}
+						balloons.splice(i,1);
 					}
-					else{score -= 15}
-					balloons.splice(i,1);
 				}
 			}
-		}
 		
-		})
+		
+			}
+		
 		document.addEventListener('touchend', function(){popped_this_click=false})
 		document.onmouseup=function(){popped_this_click=false}
 		
