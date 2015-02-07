@@ -324,6 +324,16 @@
 		function touch_event(e){
 			
 			starting_move_x = e.changedTouches[0].clientX;
+			if(at_menu_screen || at_help_screen || at_level_screen){
+				touch_menu_nav(e);
+			}
+			else{
+				in_game_touch(e);
+			}
+			
+		}
+		
+		function touch_menu_nav(e) {
 			if(at_level_screen){
 					for(var i in level_select_list){
 						if(e.changedTouches[0].clientX < level_select_list[i].x + level_select_list[i].w &&
@@ -341,7 +351,7 @@
 						}
 					}
 				}
-			if(at_menu_screen){
+			else if(at_menu_screen){
 				if( e.changedTouches[0].clientX < play_button.x + play_button.w &&
 					e.changedTouches[0].clientX > play_button.x &&
 					e.changedTouches[0].clientY < play_button.y + play_button.h &&
@@ -351,12 +361,12 @@
 					e.changedtouches[0].clientX > help_button.x &&
 					e.changedtouches[0].clientY < help_button.y + help_button.h &&
 					e.changedtouches[0].clientY > help_button.y){at_help_screen = true;}
-				
-				if(at_help_screen){help_page ++}
 			}
-			
-			else{
-				for (i=balloons.length - 1;i>=0;i--){
+			else if(at_help_screen){help_page ++}
+		}
+		
+		function in_game_touch(e) {
+			for (i=balloons.length - 1;i>=0;i--){
 					if(e.changedTouches[0].clientX < balloons[i][0] + balloon_w + 12 &&
 						e.changedTouches[0].clientX> balloons[i][0] - 12 &&
 						e.changedTouches[0].clientY < balloons[i][1] + balloon_h + 12 &&
@@ -380,16 +390,19 @@
 							}
 						}
 				}
-			
-		
-		
-			
-			}
-			
 		}
 		
 		
 		function click_event(e){
+			if(at_menu_screen || at_help_screen || at_level_screen){
+				click_menu_nav(e)
+			}
+			else{
+				in_game_click(e)
+			}
+		}
+		
+		function click_menu_nav(e) {
 			if(at_level_screen){
 					for(var i in level_select_list){
 						if(e.clientX < level_select_list[i].x + level_select_list[i].w &&
@@ -419,12 +432,9 @@
 					e.clientY > help_button.y){at_help_screen = true;}
 			}
 				if(at_help_screen){help_page ++}
-			
-			
-			
-			
-			else{
-				for (i=balloons.length - 1;i>=0;i--){
+		}
+		function in_game_click(e){
+			for (i=balloons.length - 1;i>=0;i--){
 					if(e.clientX < balloons[i][0] + balloon_w + 10 &&
 					   e.clientX> balloons[i][0] -10 &&
 					   e.clientY < balloons[i][1] + balloon_h + 10 &&
@@ -448,10 +458,9 @@
 							}
 						}
 				}
-		
-		
-			}
 		}
+		
+		
 		var starting_move_x;
 		canvas.addEventListener('touchmove', function(e) {
   			e.preventDefault();
