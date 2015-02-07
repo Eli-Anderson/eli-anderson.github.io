@@ -322,12 +322,11 @@
 		canvas.addEventListener('click', click_event, false)
 		
 		function touch_event(e){
-			
-			starting_move_x = e.changedTouches[0].clientX;
 			if(at_menu_screen || at_help_screen || at_level_screen){
 				touch_menu_nav(e);
 			}
 			else{
+				starting_move_x = e.changedTouches[0].clientX;
 				in_game_touch(e);
 			}
 			
@@ -377,13 +376,8 @@
 								if (balloons[i][2] != 'b'){
 						
 									score++;
-						
-									if (equ[0] == '?'){equ[0] = balloons[i][3]}
-									else if (equ[1] == '?'){equ[1] = balloons[i][3]}
-									else if (equ[2] == '?'){equ[2] = balloons[i][3]}
-									else if (equ[3] == '?' && equ[4] != '?'){equ[3] = balloons[i][3];compute_equation();}
-									else if (equ[3] == '?'){equ[3] = balloons[i][3]}
-									else if (equ[4] == '?'){equ[4] = balloons[i][3];compute_equation();}
+									
+									insert_into_equation(balloons[i][3])
 								}
 								else{score -= 15}
 								balloons.splice(i,1);
@@ -391,7 +385,14 @@
 						}
 				}
 		}
-		
+		function insert_into_equation(i){
+			if (equ[0] == '?'){equ[0] = i}
+									else if (equ[1] == '?'){equ[1] = i}
+									else if (equ[2] == '?'){equ[2] = i}
+									else if (equ[3] == '?' && equ[4] != '?'){equ[3] = i;compute_equation();}
+									else if (equ[3] == '?'){equ[3] = i}
+									else if (equ[4] == '?'){equ[4] = i;compute_equation();}
+		}
 		
 		function click_event(e){
 			if(at_menu_screen || at_help_screen || at_level_screen){
@@ -468,7 +469,7 @@
 			if(e.changedTouches[0].clientX > starting_move_x + 200){at_menu_screen = true}
 		}, false); 
 		
-		//canvas.addEventListener('touchend', function(){popped_this_click=false})
+		canvas.addEventListener('touchend', function(){popped_this_click=false})
 		canvas.onmouseup=function(){popped_this_click=false}
 		
 
