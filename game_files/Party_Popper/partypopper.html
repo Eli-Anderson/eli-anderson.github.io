@@ -15,7 +15,7 @@
 	
 </head>
 <body>
-	<canvas id=canvas width=640px height=960px style='border:1px solid black'></canvas>
+	<canvas id=canvas width=320px height=480px style='border:1px solid black'></canvas>
 	
 	<script type='text/javascript' id='script'>
 		var version_number = 1.5
@@ -54,14 +54,14 @@
 		
 		function windowSize(){
 			console.log('get size')
-			window_w = window.innerWidth;
-			window_h = window.innerHeight;
+			window_w = window.outerWidth;
+			window_h = window.outerHeight;
 			//window_w = window_h * 3/4
 			//document.getElementById('canvas').style.width=window_w;
 			//document.getElementById('canvas').style.height=window_h;
 			if(window_w < 480){mobileUser = true;
-				document.getElementById('canvas').style.height=640;
-				document.getElementById('canvas').style.width=960;
+				document.getElementById('canvas').style.height=window_h;
+				document.getElementById('canvas').style.width=window_w;
 			}
 			preload()
 		}
@@ -107,7 +107,7 @@
 		function main_menu(){
 			
 			ctx.fillStyle='rgba(0,0,0,0.5)'
-			ctx.fillRect(0,0,360,480)
+			ctx.fillRect(0,0,320,480)
 			
 			ctx.fillStyle='rgba(0,0,0,0.4)'
 			ctx.fillRect(30,30,300,420)
@@ -183,13 +183,13 @@
 		
 		function drawBackground(){
 			ctx.fillStyle='#4182ff'
-			ctx.fillRect(0,0,360,480)
+			ctx.fillRect(0,0,320,480)
 			ctx.drawImage(cloud,cloud1_x,cloud1_y)
 			ctx.drawImage(cloud,cloud2_x,cloud2_y)
 			cloud1_x --;
 			cloud2_x ++;
-			if(cloud2_x > 360){cloud2_x = -cloud_w - Math.floor(Math.random()*100);cloud2_y = 300 + Math.floor(Math.random()*100)}
-			if(cloud1_x < -cloud_w){cloud1_x = 360 + Math.floor(Math.random()*100);cloud1_y = 50 + Math.floor(Math.random()*100)}
+			if(cloud2_x > 320){cloud2_x = -cloud_w - Math.floor(Math.random()*100);cloud2_y = 300 + Math.floor(Math.random()*100)}
+			if(cloud1_x < -cloud_w){cloud1_x = 320 + Math.floor(Math.random()*100);cloud1_y = 50 + Math.floor(Math.random()*100)}
 		}
 		
 		function drawGoal(){
@@ -393,9 +393,9 @@
 						s = '*'
 						break;
 				}
-			balloons.push([Math.random()*(360-balloon_w),480+Math.random()*100,'r',Math.floor((Math.random()*9)+1)])
-			balloons.push([Math.random()*(360-balloon_w),480+Math.random()*100,'b',blue_array[Math.floor(Math.random()*blue_array.length)]])
-			balloons.push([Math.random()*(360-balloon_w),480+Math.random()*100,'g',s])
+			balloons.push([Math.random()*(320-balloon_w),480+Math.random()*100,'r',Math.floor((Math.random()*9)+1)])
+			balloons.push([Math.random()*(320-balloon_w),480+Math.random()*100,'b',blue_array[Math.floor(Math.random()*blue_array.length)]])
+			balloons.push([Math.random()*(320-balloon_w),480+Math.random()*100,'g',s])
 				}
 			},1500)
 			
