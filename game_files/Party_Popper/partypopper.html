@@ -315,20 +315,37 @@
 		
 		
 		function touch_event(e){
-			
+			starting_move_x = e.changedTouches[0].clientX;
+			if(at_level_screen){
+					for(var i in level_select_list){
+						if(e.changedTouches[0].clientX < level_select_list[i].x + level_select_list[i].w &&
+						e.changedTouches[0].clientX > level_select_list[i].x &&
+						e.changedTouches[0].clientY < level_select_list[i].y + level_select_list[i].h &&
+						e.changedTouches[0].clientY > level_select_list[i].y){
+							
+							if(at_level_screen && at_menu_screen && !level_select_list[i].t.isNaN){
+								at_level_screen=false;at_menu_screen=false;
+								level_select_list[i].f();
+							}
+							else{
+								level_select_list[i].f();
+							}
+						}
+					}
+				}
 			if(at_menu_screen){
 				if( e.changedTouches[0].clientX < play_button.x + play_button.w &&
 					e.changedTouches[0].clientX > play_button.x &&
 					e.changedTouches[0].clientY < play_button.y + play_button.h &&
 					e.changedTouches[0].clientY > play_button.y){at_level_screen = true;}
 				
-				if( e.changedTouches[0].clientX < help_button.x + help_button.w &&
-					e.changedTouches[0].clientX > help_button.x &&
-					e.changedTouches[0].clientY < help_button.y + help_button.h &&
-					e.changedTouches[0].clientY > help_button.y){at_help_screen = true;}
+				else if( e.clientX < help_button.x + help_button.w &&
+					e.changedtouches[0].clientX > help_button.x &&
+					e.changedtouches[0].clientY < help_button.y + help_button.h &&
+					e.changedtouches[0].clientY > help_button.y){at_help_screen = true;}
 				
 				if(at_help_screen){help_page ++}
-				}
+			}
 			
 			else{
 				for (i=balloons.length - 1;i>=0;i--){
@@ -424,11 +441,12 @@
 		
 		
 			}
-			log()
 		}
-		
-		document.addEventListener('touchmove', function(event) {
-  			event.preventDefault();
+		var starting_move_x;
+		document.addEventListener('touchmove', function(e) {
+  			e.preventDefault();
+			//starting_move_x = e.changedTouches[0].clientX;
+			if(e.changedTouches[0].clientX > starting_move_x + 200){at_menu_screen = true}
 		}, false); 
 		
 		document.addEventListener('touchend', function(){popped_this_click=false})
