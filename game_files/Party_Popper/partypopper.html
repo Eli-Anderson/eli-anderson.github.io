@@ -278,7 +278,7 @@
 		document.onkeydown=keyDown
 		var new_time = new Date();
 		var last_time = new_time.getDate()
-		canvas.addEventListener('touchstart', function(e){
+		document.addEventListener('touchstart', function(e){
 			time = new Date();
 			this_time = time.getDate()
 			if (this_time - last_time < 100){last_time = this_time}
@@ -326,7 +326,7 @@
 			}
 		})
 		
-		canvas.addEventListener('click', function(e){
+		document.addEventListener('click', function(e){
 			if(at_menu_screen){
 				if( e.clientX < play_button.x + play_button.w &&
 					e.clientX > play_button.x &&
