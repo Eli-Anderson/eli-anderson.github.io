@@ -85,7 +85,7 @@
 			balloon_red2.src = 'balloon_red2.png'
 			balloon_red3 = new Image();
 			balloon_red3.src = 'balloon_red3.png'
-			
+			balloon_red4 = new Image();
 			balloon_red4.src = 'balloon_red4.png'
 			balloon_red5 = new Image();
 			balloon_red5.src = 'balloon_red5.png'
@@ -367,6 +367,7 @@
 		document.addEventListener('touchend', function(){popped_this_click=false})
 		document.onmouseup=function(){popped_this_click=false}
 		
+
 		
 		function change_to_equation(){
 			equ[0] = level_array[level][1];
@@ -382,6 +383,7 @@
 				if(!at_menu_screen){
 				var t = Math.floor(Math.random()*4)+1;
 				var s;
+				var blue_array = [0,1,2,3,4,5,6,7,8,9,'-','*','+','/']
 				switch(t){
 					case 1:
 						s = '+'
@@ -397,7 +399,7 @@
 						break;
 				}
 			balloons.push([Math.random()*(360-balloon_w),480+Math.random()*100,'r',Math.floor((Math.random()*9)+1)])
-			balloons.push([Math.random()*(360-balloon_w),480+Math.random()*100,'b','X'])
+			balloons.push([Math.random()*(360-balloon_w),480+Math.random()*100,'b',blue_array[Math.floor(Math.random()*blue_array.length)]])
 			balloons.push([Math.random()*(360-balloon_w),480+Math.random()*100,'g',s])
 				}
 			},1500)
@@ -452,7 +454,7 @@
 	
 		
 	function log(){
-			main_menu()
+			ctx.drawImage(balloon_red3,100,100)
 		}
 	</script>
 </body>
