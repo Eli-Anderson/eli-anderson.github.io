@@ -23,6 +23,7 @@
 	<p>Instructions: Click or touch the balloons to pop them. Once a balloon is popped, its value will be added to the equation. Fill in all the question marks (?) in the equation to add up exactly to the goal number!</p>
 	
 	<script type='text/javascript' id='script'>
+		var version_number = 1.5
 		var canvas = document.getElementById('canvas');
 		var ctx = canvas.getContext('2d');
 		var mobileUser = false;
@@ -50,13 +51,19 @@
 					[15,'2','?','?','?','4'],
 					[17,'?','+','?','+','?'],
 						  ]
+		var at_menu_screen = true;
+		var at_help_screen = false;
+		var play_button;
+		var help_button;
+		var help_page = 0;
 		
 		function windowSize(){
 			console.log('get size')
 			window_w = window.innerWidth;
 			window_h = window.innerHeight;
-			//document.getElementById('canvas').style.height=window_h;
+			window_w = window_h * 3/4
 			//document.getElementById('canvas').style.width=window_w;
+			//document.getElementById('canvas').style.height=window_h;
 			if(window_w < 480){mobileUser = true;
 				document.getElementById('canvas').style.height=window_h;
 				document.getElementById('canvas').style.width=window_w;
@@ -69,22 +76,99 @@
 		
 		function preload(){
 			console.log('preloading...')
-			alert('Version 1.4\nInstructions: Click or touch the balloons to pop them.\nOnce a balloon is popped, its value will be added to the equation.\nFill in all the question marks (?) in the equation to add up exactly to the goal number!\nBe careful not to pop the blue balloons!'
+			
 				 
-				 )
+				 
 			balloon_red = new Image();
 			balloon_red.src = 'balloon_red1.png'
 			balloon_blue = new Image();
 			balloon_blue.src = 'balloon_blue1.png'
 			balloon_green = new Image();
 			balloon_green.src = 'balloon_green1.png'
-			cloud = new Image()
+			cloud = new Image();
 			cloud.src = 'cloud.png'
+			arrow = new Image();
+			arrow.src = 'arrow.png'
 			init()
 		}
 		
 		
 		
+		
+			
+		function main_menu(){
+			
+			ctx.fillStyle='rgba(0,0,0,0.5)'
+			ctx.fillRect(0,0,360,480)
+			
+			ctx.fillStyle='rgba(0,0,0,0.4)'
+			ctx.fillRect(30,30,300,420)
+			
+			if(!at_help_screen){
+			
+			ctx.fillStyle='white'
+			ctx.font='42px Georgia'
+			ctx.fillText('Party Popper',60,80)
+			
+			ctx.fillStyle='rgba(0,0,0,0.3)'
+			ctx.fillRect(90,200,180,60)
+				play_button = {x:90,y:200,w:180,h:60,f:function(){at_menu_screen=false;}}
+			ctx.fillRect(90,300,180,60)
+				help_button = {x:90,y:300,w:180,h:60}
+			
+			ctx.fillStyle='white'
+			ctx.font='30px Georgia'
+			ctx.fillText('Play',150,240)
+			ctx.fillText('How to play',100,340)
+			}
+			if (at_help_screen){
+				ctx.fillStyle='white'
+				ctx.font='24px Georgia'
+				ctx.fillText('Version '+version_number,120,80)
+				ctx.fillText('Click or tap to continue',60,440)
+				switch(help_page){
+					case 1:
+						ctx.fillText('Click or touch the',80,200)
+						ctx.fillText('balloons to pop them.',60,240)
+						break;
+					case 2:
+						ctx.fillText('Once a balloon is',80,200)
+						ctx.fillText('popped, its value will',70,240)
+						ctx.fillText('be added to the',90,280)
+						ctx.fillText('equation',130,320)
+						ctx.fillText('?     +     3     +     ?',20,475)
+						ctx.drawImage(arrow,155,350)
+						ctx.save()
+						//ctx.translate(0,350)
+						ctx.rotate(45*Math.PI/180)
+						ctx.drawImage(arrow,310,190)
+						ctx.restore()
+						break;
+					case 3:
+						ctx.fillText('Fill in all the',110,200)
+						ctx.fillText('question marks (?)',85,240)
+						ctx.fillText('in the equation to',90,280)
+						ctx.fillText('add up exactly to',90,320)
+						ctx.fillText('the goal number!',90,360)
+						ctx.fillText('=     10',260,475)
+						ctx.drawImage(arrow,275,350)
+						break;
+					case 4:
+						ctx.fillText('Beware of the blue',85,200)
+						ctx.fillText('balloons; they will',85,240)
+						ctx.fillText('take away from your',70,280)
+						ctx.fillText('score!',150,320)
+						break;
+					case 5:
+						at_help_screen = false;
+						help_page = 0
+				}
+			//Fill in all the question marks (?) in the equation to add up exactly to the goal number!\nBe careful not to pop the blue balloons!',60,80)
+			
+			}
+			
+			
+		}
 		
 		
 		
@@ -117,7 +201,7 @@
 		}
 		
 		function compute_equation(){
-			result = 0 + equ[0] + equ[1] + equ[2] + equ[3] + equ[4]
+			result = String(equ[0] + equ[1] + equ[2] + equ[3] + equ[4])
 			
 			if(equ[4] == '*' || equ[4] == '/' || equ[4] == '+' || equ[4] == '-'){bad_equation = true;}
 			else if((equ[0] == '*' || equ[0] == '/' || equ[0] == '+' || equ[0] == '-') && (equ[1] == '*' || equ[1] == '/' || equ[1] == '+' || equ[1] == '-')){bad_equation = true}
@@ -182,7 +266,7 @@
 
 		document.onkeydown=keyDown
 		
-		document.addEventListener('touchstart', function(e){
+		canvas.addEventListener('touchstart', function(e){
 		for (i=balloons.length - 1;i>=0;i--){
 			if(e.changedTouches[0].clientX < balloons[i][0] + balloon_w + 12 &&
 				e.changedTouches[0].clientX> balloons[i][0] - 12 &&
@@ -192,9 +276,15 @@
 				if(!popped_this_click){
 					popped_this_click = true;
 					if (balloons[i][3] != 'X'){
-						equ.push(balloons[i][3]);
+						//equ.push(balloons[i][3]);
 						score++;
-						balloons_popped ++
+						
+						if (equ[0] == '?'){equ[0] = balloons[i][3]}
+						else if (equ[1] == '?'){equ[1] = balloons[i][3]}
+						else if (equ[2] == '?'){equ[2] = balloons[i][3]}
+						else if (equ[3] == '?' && equ[4] != '?'){equ[3] = balloons[i][3];compute_equation();}
+						else if (equ[3] == '?'){equ[3] = balloons[i][3]}
+						else if (equ[4] == '?'){equ[4] = balloons[i][3];compute_equation();}
 					}
 					else{score -= 15}
 					balloons.splice(i,1);
@@ -204,7 +294,22 @@
 		
 		})
 		
-		document.addEventListener('click', function(e){
+		canvas.addEventListener('click', function(e){
+			if(at_menu_screen){
+				if( e.clientX < play_button.x + play_button.w &&
+					e.clientX > play_button.x &&
+					e.clientY < play_button.y + play_button.h &&
+					e.clientY > play_button.y){at_menu_screen = false;}
+				
+				if( e.clientX < help_button.x + help_button.w &&
+					e.clientX > help_button.x &&
+					e.clientY < help_button.y + help_button.h &&
+					e.clientY > help_button.y){at_help_screen = true;}
+				
+				if(at_help_screen){help_page ++}
+				}
+			
+		
 		for (i=balloons.length - 1;i>=0;i--){
 			if(e.clientX < balloons[i][0] + balloon_w + 10 &&
 				e.clientX> balloons[i][0] -10 &&
@@ -244,7 +349,32 @@
 			bad_equation = false;
 		}
 		
-	
+		function startBalloons(){
+			setInterval(function(){
+				if(!at_menu_screen){
+				var t = Math.floor(Math.random()*4)+1;
+				var s;
+				switch(t){
+					case 1:
+						s = '+'
+						break;
+					case 2:
+						s = '-'
+						break;
+					case 3:
+						s = '/'
+						break;
+					case 4:
+						s = '*'
+						break;
+				}
+			balloons.push([Math.random()*(360-balloon_w),480+Math.random()*100,'r',Math.floor((Math.random()*9)+1)])
+			balloons.push([Math.random()*(360-balloon_w),480+Math.random()*100,'b','X'])
+			balloons.push([Math.random()*(360-balloon_w),480+Math.random()*100,'g',s])
+				}
+			},1500)
+			
+		}
 	
 		//check for collisions
 	function checkCollision(){
@@ -274,11 +404,15 @@
 	function gameLoop(){
 			ctx.clearRect(0,0,720,480)
 			drawBackground()
-			drawBalloons()
-			drawGoal()
-			//compute_equation()
-			updateScore()
-			checkCollision()
+			if (at_menu_screen){
+				main_menu()
+			}
+			else{
+				drawBalloons()
+				drawGoal()
+				updateScore()
+				checkCollision()
+			}
 			requestAnimationFrame(gameLoop)
 		}
 		//initialize game
@@ -288,34 +422,9 @@
 			change_to_equation()
 		}
 	
-	function startBalloons(){
-			setInterval(function(){
-				var t = Math.floor(Math.random()*4)+1;
-				var s;
-				switch(t){
-					case 1:
-						s = '+'
-						break;
-					case 2:
-						s = '-'
-						break;
-					case 3:
-						s = '/'
-						break;
-					case 4:
-						s = '*'
-						break;
-				}
-			balloons.push([Math.random()*(360-balloon_w),480+Math.random()*100,'r',Math.floor((Math.random()*9)+1)])
-			balloons.push([Math.random()*(360-balloon_w),480+Math.random()*100,'b','X'])
-			balloons.push([Math.random()*(360-balloon_w),480+Math.random()*100,'g',s])
-			//if(score > 50){balloons.push([Math.random()*(360-balloon_w),480+Math.random()*100,'r'])}
-			},1500)
-		}	
 		
 	function log(){
-			console.log(result)
-			console.log(f_result)
+			main_menu()
 		}
 	</script>
 </body>
