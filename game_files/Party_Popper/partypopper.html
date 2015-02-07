@@ -45,6 +45,14 @@
 					[13,'4','2','?','?','?'],
 					[15,'2','?','?','?','4'],
 					[17,'?','+','?','+','?'],
+					[16,'4','+','?','*','?'],
+					[0,'?','?','?','+','?'],
+					[15,'?','/','?','*','?'],
+					[49,'?','*','?','*','?'],
+					[31,'?','?','?','/','?'],
+					[17,'?','+','?','+','?'],
+					[17,'?','+','?','+','?'],
+					[17,'?','+','?','+','?'],
 						  ]
 		var at_menu_screen = true;
 		var at_help_screen = false;
@@ -309,9 +317,9 @@
 		document.onkeydown=keyDown
 		var new_time = new Date();
 		var last_time = new_time.getDate()
-		document.addEventListener('touchstart', touch_event, false)
+		canvas.addEventListener('touchstart', touch_event, false)
 		
-		document.addEventListener('click', click_event, false)
+		canvas.addEventListener('click', click_event, false)
 		
 		
 		function touch_event(e){
@@ -443,14 +451,14 @@
 			}
 		}
 		var starting_move_x;
-		document.addEventListener('touchmove', function(e) {
+		canvas.addEventListener('touchmove', function(e) {
   			e.preventDefault();
 			//starting_move_x = e.changedTouches[0].clientX;
 			if(e.changedTouches[0].clientX > starting_move_x + 200){at_menu_screen = true}
 		}, false); 
 		
-		document.addEventListener('touchend', function(){popped_this_click=false})
-		document.onmouseup=function(){popped_this_click=false}
+		canvas.addEventListener('touchend', function(){popped_this_click=false})
+		canvas.onmouseup=function(){popped_this_click=false}
 		
 
 		
