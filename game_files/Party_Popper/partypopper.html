@@ -48,6 +48,8 @@
 						  ]
 		var at_menu_screen = true;
 		var at_help_screen = false;
+		var at_level_screen = false;
+		var level_select_list;
 		var play_button;
 		var help_button;
 		var help_page = 0;
@@ -112,25 +114,28 @@
 			ctx.fillStyle='rgba(0,0,0,0.4)'
 			ctx.fillRect(30,30,260,400)
 			
-			if(!at_help_screen){
+			if(!at_help_screen && !at_level_screen){
 			
 			ctx.fillStyle='white'
 			ctx.font='42px Georgia'
 			ctx.fillText('Party Popper',40,80)
 			
 			ctx.fillStyle='rgba(0,0,0,0.3)'
-				play_button = {x:70,y:200,w:180,h:60}
 			
+				play_button = {x:70,y:150,w:180,h:60}
 			ctx.fillRect(play_button.x,play_button.y,play_button.w,play_button.h)
-				help_button = {x:70,y:300,w:180,h:60}
 			
+			
+				help_button = {x:70,y:250,w:180,h:60}
 			ctx.fillRect(help_button.x,help_button.y,help_button.w,help_button.h)
+			
+			
 				
 			
 			ctx.fillStyle='white'
 			ctx.font='30px Georgia'
-			ctx.fillText('Play',130,240)
-			ctx.fillText('How to play',80,340)
+			ctx.fillText('Play',130,play_button.y+40)
+			ctx.fillText('How to play',80,help_button.y+40)
 			}
 			if (at_help_screen){
 				ctx.fillStyle='white'
@@ -140,17 +145,16 @@
 				switch(help_page){
 					case 1:
 						ctx.fillText('Click or touch the',60,200)
-						ctx.fillText('balloons to pop them.',40,240)
+						ctx.fillText('balloons to pop them.',45,240)
 						break;
 					case 2:
-						ctx.fillText('Once a balloon is',60,200)
+						ctx.fillText('Once a balloon is',65,200)
 						ctx.fillText('popped, its value will',50,240)
 						ctx.fillText('be added to the',70,280)
 						ctx.fillText('equation',110,320)
 						ctx.fillText('?     +     3     +     ?',20,455)
 						ctx.drawImage(arrow,155,330)
 						ctx.save()
-						//ctx.translate(0,350)
 						ctx.rotate(45*Math.PI/180)
 						ctx.drawImage(arrow,290,180)
 						ctx.restore()
@@ -174,7 +178,34 @@
 						at_help_screen = false;
 						help_page = 0
 				}
-			//Fill in all the question marks (?) in the equation to add up exactly to the goal number!\nBe careful not to pop the blue balloons!',60,80)
+			
+			}
+			if (at_level_screen){
+				level_select_list = {
+					level1: {x:50,y:60,w:60,h:60,t:1,f: function(){level=0}},
+					level2: {x:130,y:60,w:60,h:60,t:2,f: function(){level=1}},
+					level3: {x:210,y:60,w:60,h:60,t:3,f: function(){level=2}},
+					level4: {x:50,y:130,w:60,h:60,t:4,f: function(){level=3}},
+					level5: {x:130,y:130,w:60,h:60,t:5,f: function(){level=4}},
+					level6: {x:210,y:130,w:60,h:60,t:6,f: function(){level=5}},
+					level7: {x:50,y:200,w:60,h:60,t:7,f: function(){level=6}},
+					level8: {x:130,y:200,w:60,h:60,t:8,f: function(){level=7}},
+					level9: {x:210,y:200,w:60,h:60,t:9,f: function(){level=8}},
+					level10: {x:50,y:270,w:60,h:60,t:10,f: function(){level=9}},
+					level11: {x:130,y:270,w:60,h:60,t:11,f: function(){level=10}},
+					level12: {x:210,y:270,w:60,h:60,t:12,f: function(){level=11}},
+					level13: {x:50,y:340,w:60,h:60,t:'<-',f: function(){at_menu_screen=true;at_level_screen=false;}},
+					level14: {x:130,y:340,w:60,h:60,t:13,f: function(){level=13}},
+					level15: {x:210,y:340,w:60,h:60,t:'->',f: function(){}},
+					
+				}
+			for (var i in level_select_list){
+				ctx.fillStyle='rgba(0,0,0,0.3)'
+				ctx.fillRect(level_select_list[i].x,level_select_list[i].y,level_select_list[i].w,level_select_list[i].h)
+				ctx.fillStyle='white'
+				ctx.fillText(level_select_list[i].t,level_select_list[i].x+20,level_select_list[i].y+35)
+			}
+			
 			
 			}
 			
@@ -289,7 +320,7 @@
 				if( e.changedTouches[0].clientX < play_button.x + play_button.w &&
 					e.changedTouches[0].clientX > play_button.x &&
 					e.changedTouches[0].clientY < play_button.y + play_button.h &&
-					e.changedTouches[0].clientY > play_button.y){at_menu_screen = false;}
+					e.changedTouches[0].clientY > play_button.y){at_level_screen = true;}
 				
 				if( e.changedTouches[0].clientX < help_button.x + help_button.w &&
 					e.changedTouches[0].clientX > help_button.x &&
@@ -332,19 +363,38 @@
 		
 		
 		function click_event(e){
+			if(at_level_screen){
+					for(var i in level_select_list){
+						if(e.clientX < level_select_list[i].x + level_select_list[i].w &&
+						e.clientX > level_select_list[i].x &&
+						e.clientY < level_select_list[i].y + level_select_list[i].h &&
+						e.clientY > level_select_list[i].y){
+							
+							if(at_level_screen && at_menu_screen && !level_select_list[i].t.isNaN){
+								at_level_screen=false;at_menu_screen=false;
+								level_select_list[i].f();
+							}
+							else{
+								level_select_list[i].f();
+							}
+						}
+					}
+				}
 			if(at_menu_screen){
 				if( e.clientX < play_button.x + play_button.w &&
 					e.clientX > play_button.x &&
 					e.clientY < play_button.y + play_button.h &&
-					e.clientY > play_button.y){at_menu_screen = false;}
+					e.clientY > play_button.y){at_level_screen = true;}
 				
-				if( e.clientX < help_button.x + help_button.w &&
+				else if( e.clientX < help_button.x + help_button.w &&
 					e.clientX > help_button.x &&
 					e.clientY < help_button.y + help_button.h &&
 					e.clientY > help_button.y){at_help_screen = true;}
 				
 				if(at_help_screen){help_page ++}
-				}
+			}
+			
+			
 			
 			else{
 				for (i=balloons.length - 1;i>=0;i--){
@@ -374,7 +424,13 @@
 		
 		
 			}
+			log()
 		}
+		
+		document.addEventListener('touchmove', function(event) {
+  			event.preventDefault();
+		}, false); 
+		
 		document.addEventListener('touchend', function(){popped_this_click=false})
 		document.onmouseup=function(){popped_this_click=false}
 		
@@ -465,7 +521,9 @@
 	
 		
 	function log(){
-			ctx.drawImage(balloon_red3,100,100)
+			console.log('at menu: '+at_menu_screen)
+			console.log('at help: '+at_help_screen)
+			console.log('at level: '+at_level_screen)
 		}
 	</script>
 </body>
