@@ -81,6 +81,19 @@
 				 
 			balloon_red = new Image();
 			balloon_red.src = 'balloon_red1.png'
+			balloon_red2 = new Image();
+			balloon_red2.src = 'balloon_red2.png'
+			balloon_red3 = new Image();
+			balloon_red3.src = 'balloon_red3.png'
+			
+			balloon_red4.src = 'balloon_red4.png'
+			balloon_red5 = new Image();
+			balloon_red5.src = 'balloon_red5.png'
+			balloon_red6 = new Image();
+			balloon_red6.src = 'balloon_red6.png'
+			balloon_red7 = new Image();
+			balloon_red7.src = 'balloon_red7.png'
+			
 			balloon_blue = new Image();
 			balloon_blue.src = 'balloon_blue1.png'
 			balloon_green = new Image();
@@ -267,6 +280,21 @@
 		document.onkeydown=keyDown
 		
 		canvas.addEventListener('touchstart', function(e){
+			if(at_menu_screen){
+				if( e.changedTouches[0].clientX < play_button.x + play_button.w &&
+					e.changedTouches[0].clientX > play_button.x &&
+					e.changedTouches[0].clientY < play_button.y + play_button.h &&
+					e.changedTouches[0].clientY > play_button.y){at_menu_screen = false;}
+				
+				if( e.changedTouches[0].clientX < help_button.x + help_button.w &&
+					e.changedTouches[0].clientX > help_button.x &&
+					e.changedTouches[0].clientY < help_button.y + help_button.h &&
+					e.changedTouches[0].clientY > help_button.y){at_help_screen = true;}
+				
+				if(at_help_screen){help_page ++}
+				}
+			
+			
 		for (i=balloons.length - 1;i>=0;i--){
 			if(e.changedTouches[0].clientX < balloons[i][0] + balloon_w + 12 &&
 				e.changedTouches[0].clientX> balloons[i][0] - 12 &&
@@ -276,7 +304,7 @@
 				if(!popped_this_click){
 					popped_this_click = true;
 					if (balloons[i][3] != 'X'){
-						//equ.push(balloons[i][3]);
+						
 						score++;
 						
 						if (equ[0] == '?'){equ[0] = balloons[i][3]}
@@ -319,7 +347,7 @@
 				if(!popped_this_click){
 					popped_this_click = true;
 					if (balloons[i][3] != 'X'){
-						//equ.push(balloons[i][3]);
+						
 						score++;
 						
 						if (equ[0] == '?'){equ[0] = balloons[i][3]}
