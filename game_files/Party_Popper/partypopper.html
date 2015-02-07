@@ -9,17 +9,13 @@
 				position:absolute;
 				top:-2px;
 				left:-2px;}
-		p {
-				position:relative;
-				top:480px;
-				
-		}
+		
 	</style>
 	
 	
 </head>
 <body>
-	<canvas id=canvas width=320px height=480px style='border:1px solid black'></canvas>
+	<canvas id=canvas width=360px height=480px style='border:1px solid black'></canvas>
 	
 	<script type='text/javascript' id='script'>
 		var version_number = 1.5
@@ -60,7 +56,7 @@
 			console.log('get size')
 			window_w = window.innerWidth - 30;
 			window_h = window.innerHeight;
-			window_w = window_h * 3/4
+			//window_w = window_h * 3/4
 			//document.getElementById('canvas').style.width=window_w;
 			//document.getElementById('canvas').style.height=window_h;
 			if(window_w < 480){mobileUser = true;
