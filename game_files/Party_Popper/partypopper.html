@@ -321,9 +321,13 @@
 		
 		canvas.addEventListener('click', click_event, false)
 		
-		
+		var last = new Date();
+		var last_touch = last.getDate
 		function touch_event(e){
-			
+			var new_time = new Date();
+			var this_touch = new_time.getDate
+			if(this_touch - last_touch < 100){}
+			else{
 			starting_move_x = e.changedTouches[0].clientX;
 			if(at_level_screen){
 					for(var i in level_select_list){
@@ -384,6 +388,7 @@
 			
 		
 		
+			}
 			}
 		}
 		
