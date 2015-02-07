@@ -18,7 +18,7 @@
 	<canvas id=canvas width=320px height=460px style='border:1px solid black'></canvas>
 	
 	<script type='text/javascript' id='script'>
-		var version_number = 1.5
+		var version_number = 1.6
 		var canvas = document.getElementById('canvas');
 		var ctx = canvas.getContext('2d');
 		var mobileUser = false;
@@ -323,6 +323,7 @@
 		
 		
 		function touch_event(e){
+			alert('e')
 			starting_move_x = e.changedTouches[0].clientX;
 			if(at_level_screen){
 					for(var i in level_select_list){
