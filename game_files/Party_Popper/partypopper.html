@@ -284,11 +284,7 @@
 		
 		
 		function touch_event(e){
-			time = new Date();
-			this_time = time.getDate()
-			if (this_time - last_time < 100){last_time = this_time}
-			else{
-				last_time = this_time
+			
 			if(at_menu_screen){
 				if( e.changedTouches[0].clientX < play_button.x + play_button.w &&
 					e.changedTouches[0].clientX > play_button.x &&
@@ -303,36 +299,36 @@
 				if(at_help_screen){help_page ++}
 				}
 			
-			
-		for (i=balloons.length - 1;i>=0;i--){
-			if(e.changedTouches[0].clientX < balloons[i][0] + balloon_w + 12 &&
-				e.changedTouches[0].clientX> balloons[i][0] - 12 &&
-				e.changedTouches[0].clientY < balloons[i][1] + balloon_h + 12 &&
-				e.changedTouches[0].clientY > balloons[i][1] - 12){
+			else{
+				for (i=balloons.length - 1;i>=0;i--){
+					if(e.changedTouches[0].clientX < balloons[i][0] + balloon_w + 12 &&
+						e.changedTouches[0].clientX> balloons[i][0] - 12 &&
+						e.changedTouches[0].clientY < balloons[i][1] + balloon_h + 12 &&
+						e.changedTouches[0].clientY > balloons[i][1] - 12){
 												//animate balloon popping here!
-				if(!popped_this_click){
-					popped_this_click = true;
-					if (balloons[i][2] != 'b'){
+							if(!popped_this_click){
+								popped_this_click = true;
+								if (balloons[i][2] != 'b'){
 						
-						score++;
+									score++;
 						
-						if (equ[0] == '?'){equ[0] = balloons[i][3]}
-						else if (equ[1] == '?'){equ[1] = balloons[i][3]}
-						else if (equ[2] == '?'){equ[2] = balloons[i][3]}
-						else if (equ[3] == '?' && equ[4] != '?'){equ[3] = balloons[i][3];compute_equation();}
-						else if (equ[3] == '?'){equ[3] = balloons[i][3]}
-						else if (equ[4] == '?'){equ[4] = balloons[i][3];compute_equation();}
-					}
-					else{score -= 15}
-					balloons.splice(i,1);
+									if (equ[0] == '?'){equ[0] = balloons[i][3]}
+									else if (equ[1] == '?'){equ[1] = balloons[i][3]}
+									else if (equ[2] == '?'){equ[2] = balloons[i][3]}
+									else if (equ[3] == '?' && equ[4] != '?'){equ[3] = balloons[i][3];compute_equation();}
+									else if (equ[3] == '?'){equ[3] = balloons[i][3]}
+									else if (equ[4] == '?'){equ[4] = balloons[i][3];compute_equation();}
+								}
+								else{score -= 15}
+								balloons.splice(i,1);
+							}
+						}
 				}
+			
+		
+		
 			}
 		}
-			}
-		
-		
-		}
-		
 		
 		
 		function click_event(e){
@@ -350,35 +346,35 @@
 				if(at_help_screen){help_page ++}
 				}
 			
-		
-			for (i=balloons.length - 1;i>=0;i--){
-				if(e.clientX < balloons[i][0] + balloon_w + 10 &&
-					e.clientX> balloons[i][0] -10 &&
-					e.clientY < balloons[i][1] + balloon_h + 10 &&
-					e.clientY > balloons[i][1] -10){
+			else{
+				for (i=balloons.length - 1;i>=0;i--){
+					if(e.clientX < balloons[i][0] + balloon_w + 10 &&
+					   e.clientX> balloons[i][0] -10 &&
+					   e.clientY < balloons[i][1] + balloon_h + 10 &&
+					   e.clientY > balloons[i][1] -10){
 												//animate balloon popping here!
-					if(!popped_this_click){
-						popped_this_click = true;
-						if (balloons[i][2] != 'b'){
+							if(!popped_this_click){
+								popped_this_click = true;
+								if (balloons[i][2] != 'b'){
 						
-							score++;
+									score++;
 						
-							if (equ[0] == '?'){equ[0] = balloons[i][3]}
-							else if (equ[1] == '?'){equ[1] = balloons[i][3]}
-							else if (equ[2] == '?'){equ[2] = balloons[i][3]}
-							else if (equ[3] == '?' && equ[4] != '?'){equ[3] = balloons[i][3];compute_equation();}
-							else if (equ[3] == '?'){equ[3] = balloons[i][3]}
-							else if (equ[4] == '?'){equ[4] = balloons[i][3];compute_equation();}
+									if (equ[0] == '?'){equ[0] = balloons[i][3]}
+									else if (equ[1] == '?'){equ[1] = balloons[i][3]}
+									else if (equ[2] == '?'){equ[2] = balloons[i][3]}
+									else if (equ[3] == '?' && equ[4] != '?'){equ[3] = balloons[i][3];compute_equation();}
+									else if (equ[3] == '?'){equ[3] = balloons[i][3]}
+									else if (equ[4] == '?'){equ[4] = balloons[i][3];compute_equation();}
+								}
+								else{score -= 15}
+								balloons.splice(i,1);
+							}
 						}
-						else{score -= 15}
-						balloons.splice(i,1);
-					}
 				}
-			}
 		
 		
 			}
-		
+		}
 		document.addEventListener('touchend', function(){popped_this_click=false})
 		document.onmouseup=function(){popped_this_click=false}
 		
