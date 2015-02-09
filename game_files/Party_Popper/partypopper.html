@@ -23,6 +23,7 @@
 		var version_number = '1.7.0'
 		var canvas = document.getElementById('canvas');
 		var ctx = canvas.getContext('2d');
+		var imagesLoaded = 0;
 		var mobileUser = false;
 		var score = 0;
 		var balloons = []
@@ -41,34 +42,34 @@
 		var bad_equation = false;
 		var level = 0
 		var level_array = [
-					[8,'?','+','?','+','?'], //1
-					[10,'3','+','?','-','?'], //2
-					[12,'1','+','?','?','9'], //3
-					[13,'4','2','?','?','?'], //4
-					[15,'2','?','?','?','4'], //5
-					[17,'?','+','?','+','?'], //6
-					[16,'4','+','?','*','?'], //7
-					[0,'?','?','?','+','?'], //8
-					[15,'?','/','?','*','?'], //9
-					[49,'?','*','?','*','?'], //10
-					[31,'?','?','?','/','?'], //11
-					[-15,'?','?','?','?','?'], //12
-					[729,'9','?','?','*','?'], //13
+			[8,'?','+','?','+','?'], //1
+			[10,'3','+','?','-','?'], //2
+			[12,'1','+','?','?','9'], //3
+			[13,'4','2','?','?','?'], //4
+			[15,'2','?','?','?','4'], //5
+			[17,'?','+','?','+','?'], //6
+			[16,'4','+','?','*','?'], //7
+			[0,'?','?','?','+','?'], //8
+			[15,'?','/','?','*','?'], //9
+			[49,'?','*','?','*','?'], //10
+			[31,'?','?','?','/','?'], //11
+			[-15,'?','?','?','?','?'], //12
+			[729,'9','?','?','*','?'], //13
 			
-					[24,'?','+','8','*','?'], //14
-					[.125,'?','?','/','?','?'], //15
-					[17,'?','+','?','+','?'], //16
-					[17,'?','+','?','+','?'], //17
-					[17,'?','+','?','+','?'], //18
-					[17,'?','+','?','+','?'], //19
-					[17,'?','+','?','+','?'], //20
-					[17,'?','+','?','+','?'], //21
-					[17,'?','+','?','+','?'], //22
-					[17,'?','+','?','+','?'], //23
-					[17,'?','+','?','+','?'], //24
-					[17,'?','+','?','+','?'], //25
-					[17,'?','+','?','+','?'], //26
-						  ]
+			[24,'?','+','8','*','?'], //14
+			[.125,'?','?','/','?','?'], //15
+			[17,'?','+','?','+','?'], //16
+			[17,'?','+','?','+','?'], //17
+			[17,'?','+','?','+','?'], //18
+			[17,'?','+','?','+','?'], //19
+			[17,'?','+','?','+','?'], //20
+			[17,'?','+','?','+','?'], //21
+			[17,'?','+','?','+','?'], //22
+			[17,'?','+','?','+','?'], //23
+			[17,'?','+','?','+','?'], //24
+			[17,'?','+','?','+','?'], //25
+			[17,'?','+','?','+','?'], //26
+		]
 		var at_menu_screen = true;
 		var at_help_screen = false;
 		var at_level_screen = false;
@@ -136,16 +137,25 @@
 			cloud = new Image();
 			arrow = new Image();
 			check = new Image();
+			balloon_red.onload = handleImageLoad;
 			balloon_red.src = 'balloon_red1.png'
+			balloon_blue.onload = handleImageLoad;
 			balloon_blue.src = 'balloon_blue1.png'
+			balloon_green.onload = handleImageLoad;
 			balloon_green.src = 'balloon_green1.png'
+			cloud.onload = handleImageLoad;
 			cloud.src = 'cloud.png'
+			arrow.onload = handleImageLoad;
 			arrow.src = 'arrow.png'
+			check.onload = handleImageLoad;
 			check.src = 'check.png'
 			
-			if(balloon_red.complete && balloon_blue.complete && balloon_green.complete && cloud.complete && arrow.complete && check.complete){init()}
 			
 		}
+			function handleImageLoad(e){
+				imagesLoaded++;
+				if(imagesLoaded == 6){imagesLoaded=0;init();}
+			}
 		
 		function save_game(){
 				for (var i in level_select_list){
