@@ -8,7 +8,8 @@
 		#canvas {
 				position:absolute;
 				top:-2px;
-				left:-2px;}
+				left:-2px;
+				}
 		
 	</style>
 	
@@ -16,9 +17,10 @@
 </head>
 <body>
 	<canvas id=canvas width=320px height=460px style='border:1px solid black'></canvas>
+	<audio id=sound hidden=true src='pop.mp3'></audio>
 	
 	<script type='text/javascript' id='script'>
-		var version_number = '1.6.5'
+		var version_number = '1.7.0'
 		var canvas = document.getElementById('canvas');
 		var ctx = canvas.getContext('2d');
 		var mobileUser = false;
@@ -39,31 +41,79 @@
 		var bad_equation = false;
 		var level = 0
 		var level_array = [
-					[8,'?','+','?','+','?'],
-					[10,'3','+','?','-','?'],
-					[12,'1','+','?','?','9'],
-					[13,'4','2','?','?','?'],
-					[15,'2','?','?','?','4'],
-					[17,'?','+','?','+','?'],
-					[16,'4','+','?','*','?'],
-					[0,'?','?','?','+','?'],
-					[15,'?','/','?','*','?'],
-					[49,'?','*','?','*','?'],
-					[31,'?','?','?','/','?'],
-					[17,'?','+','?','+','?'],
-					[17,'?','+','?','+','?'],
-					[17,'?','+','?','+','?'],
+					[8,'?','+','?','+','?'], //1
+					[10,'3','+','?','-','?'], //2
+					[12,'1','+','?','?','9'], //3
+					[13,'4','2','?','?','?'], //4
+					[15,'2','?','?','?','4'], //5
+					[17,'?','+','?','+','?'], //6
+					[16,'4','+','?','*','?'], //7
+					[0,'?','?','?','+','?'], //8
+					[15,'?','/','?','*','?'], //9
+					[49,'?','*','?','*','?'], //10
+					[31,'?','?','?','/','?'], //11
+					[-15,'?','?','?','?','?'], //12
+					[729,'9','?','?','*','?'], //13
+			
+					[24,'?','+','8','*','?'], //14
+					[.125,'?','?','/','?','?'], //15
+					[17,'?','+','?','+','?'], //16
+					[17,'?','+','?','+','?'], //17
+					[17,'?','+','?','+','?'], //18
+					[17,'?','+','?','+','?'], //19
+					[17,'?','+','?','+','?'], //20
+					[17,'?','+','?','+','?'], //21
+					[17,'?','+','?','+','?'], //22
+					[17,'?','+','?','+','?'], //23
+					[17,'?','+','?','+','?'], //24
+					[17,'?','+','?','+','?'], //25
+					[17,'?','+','?','+','?'], //26
 						  ]
 		var at_menu_screen = true;
 		var at_help_screen = false;
 		var at_level_screen = false;
+		var at_option_screen = false;
 		var level_select_list;
 		var play_button;
 		var help_button;
+		var option_button;
 		var help_page = 0;
+		var level_page = 1;
+		var paused = false;
+		level_select_list = {
+					level1: {x:50,y:60,w:60,h:60,c:false,t:1,f: function(){level=0}},
+					level2: {x:130,y:60,w:60,h:60,c:false,t:2,f: function(){level=1}},
+					level3: {x:210,y:60,w:60,h:60,c:false,t:3,f: function(){level=2}},
+					level4: {x:50,y:130,w:60,h:60,c:false,t:4,f: function(){level=3}},
+					level5: {x:130,y:130,w:60,h:60,c:false,t:5,f: function(){level=4}},
+					level6: {x:210,y:130,w:60,h:60,c:false,t:6,f: function(){level=5}},
+					level7: {x:50,y:200,w:60,h:60,c:false,t:7,f: function(){level=6}},
+					level8: {x:130,y:200,w:60,h:60,c:false,t:8,f: function(){level=7}},
+					level9: {x:210,y:200,w:60,h:60,c:false,t:9,f: function(){level=8}},
+					level10: {x:50,y:270,w:60,h:60,c:false,t:10,f: function(){level=9}},
+					level11: {x:130,y:270,w:60,h:60,c:false,t:11,f: function(){level=10}},
+					level12: {x:210,y:270,w:60,h:60,c:false,t:12,f: function(){level=11}},
+					level13: {x:130,y:340,w:60,h:60,c:false,t:13,f: function(){level=12}},
+			
+					level14: {x:50,y:60,w:60,h:60,c:false,t:14,f: function(){level=13}},
+					level15: {x:130,y:60,w:60,h:60,c:false,t:15,f: function(){level=14}},
+					level16: {x:210,y:60,w:60,h:60,c:false,t:16,f: function(){level=15}},
+					level17: {x:50,y:130,w:60,h:60,c:false,t:17,f: function(){level=16}},
+					level18: {x:130,y:130,w:60,h:60,c:false,t:18,f: function(){level=17}},
+					level19: {x:210,y:130,w:60,h:60,c:false,t:19,f: function(){level=18}},
+					level20: {x:50,y:200,w:60,h:60,c:false,t:20,f: function(){level=19}},
+					level21: {x:130,y:200,w:60,h:60,c:false,t:21,f: function(){level=20}},
+					level22: {x:210,y:200,w:60,h:60,c:false,t:22,f: function(){level=21}},
+					level23: {x:50,y:270,w:60,h:60,c:false,t:23,f: function(){level=22}},
+					level24: {x:130,y:270,w:60,h:60,c:false,t:24,f: function(){level=23}},
+					level25: {x:210,y:270,w:60,h:60,c:false,t:25,f: function(){level=24}},
+					level26: {x:130,y:340,w:60,h:60,c:false,t:26,f: function(){level=25}},
+					next: {x:210,y:340,w:60,h:60,t:'->',f: function(){at_menu_screen=true;at_level_screen=true;level_page ++}},
+					back: {x:50,y:340,w:60,h:60,t:'<-',f: function(){if(level_page == 1){at_menu_screen=true;at_level_screen=false;}else{level_page--;at_menu_screen=true;at_level_screen=true;}}},
+				}
+			
 		
 		function windowSize(){
-			console.log('get size')
 			window_w = window.outerWidth;
 			window_h = window.outerHeight;
 			//window_w = window_h * 3/4
@@ -80,24 +130,47 @@
 		
 		
 		function preload(){
-			console.log('preloading...')
-			
-				 
-				 
 			balloon_red = new Image();
-			balloon_red.src = 'balloon_red1.png'
 			balloon_blue = new Image();
-			balloon_blue.src = 'balloon_blue1.png'
 			balloon_green = new Image();
-			balloon_green.src = 'balloon_green1.png'
 			cloud = new Image();
-			cloud.src = 'cloud.png'
 			arrow = new Image();
+			check = new Image();
+			balloon_red.src = 'balloon_red1.png'
+			balloon_blue.src = 'balloon_blue1.png'
+			balloon_green.src = 'balloon_green1.png'
+			cloud.src = 'cloud.png'
 			arrow.src = 'arrow.png'
-			init()
+			check.src = 'check.png'
+			
+			if(balloon_red.complete && balloon_blue.complete && balloon_green.complete && cloud.complete && arrow.complete && check.complete){init()}
+			
 		}
 		
+		function save_game(){
+				for (var i in level_select_list){
+					localStorage.setItem(i,level_select_list[i].c)
+				}
+			
+			}
+			
+		function load_game(){
+			for (var i in level_select_list){
+				
+				level_select_list[i].c = localStorage.getItem(i)
+			}
+		}
 		
+		function clear_save(){
+			var confirm_clear = confirm('Are you sure?')
+			if (confirm_clear){
+				for (var i in level_select_list){
+					level_select_list[i].c = false
+					localStorage.setItem(i,false)
+				}
+			}
+		}
+			
 		
 		
 			
@@ -109,7 +182,7 @@
 			ctx.fillStyle='rgba(0,0,0,0.4)'
 			ctx.fillRect(30,30,260,400)
 			
-			if(!at_help_screen && !at_level_screen){
+			if(!at_help_screen && !at_level_screen && !at_option_screen){
 			
 			ctx.fillStyle='white'
 			ctx.font='42px Georgia'
@@ -124,6 +197,8 @@
 				help_button = {x:70,y:250,w:180,h:60}
 			ctx.fillRect(help_button.x,help_button.y,help_button.w,help_button.h)
 			
+				option_button = {x:70,y:350,w:180,h:60}
+			ctx.fillRect(option_button.x,option_button.y,option_button.w,option_button.h)
 			
 				
 			
@@ -131,6 +206,7 @@
 			ctx.font='30px Georgia'
 			ctx.fillText('Play',130,play_button.y+40)
 			ctx.fillText('How to play',80,help_button.y+40)
+			ctx.fillText('Options',110,option_button.y+40)
 			}
 			if (at_help_screen){
 				ctx.fillStyle='white'
@@ -176,38 +252,69 @@
 			
 			}
 			if (at_level_screen){
-				level_select_list = {
-					level1: {x:50,y:60,w:60,h:60,t:1,f: function(){level=0}},
-					level2: {x:130,y:60,w:60,h:60,t:2,f: function(){level=1}},
-					level3: {x:210,y:60,w:60,h:60,t:3,f: function(){level=2}},
-					level4: {x:50,y:130,w:60,h:60,t:4,f: function(){level=3}},
-					level5: {x:130,y:130,w:60,h:60,t:5,f: function(){level=4}},
-					level6: {x:210,y:130,w:60,h:60,t:6,f: function(){level=5}},
-					level7: {x:50,y:200,w:60,h:60,t:7,f: function(){level=6}},
-					level8: {x:130,y:200,w:60,h:60,t:8,f: function(){level=7}},
-					level9: {x:210,y:200,w:60,h:60,t:9,f: function(){level=8}},
-					level10: {x:50,y:270,w:60,h:60,t:10,f: function(){level=9}},
-					level11: {x:130,y:270,w:60,h:60,t:11,f: function(){level=10}},
-					level12: {x:210,y:270,w:60,h:60,t:12,f: function(){level=11}},
-					level13: {x:50,y:340,w:60,h:60,t:'<-',f: function(){at_menu_screen=true;at_level_screen=false;}},
-					level14: {x:130,y:340,w:60,h:60,t:13,f: function(){level=13}},
-					level15: {x:210,y:340,w:60,h:60,t:'->',f: function(){}},
-					
+				ctx.font='30px Georgia'
+				for (var i in level_select_list){
+					switch(level_page){
+							case 1:
+								if(i != 'level14' && i != 'level15' && i != 'level16' &&
+								   i != 'level17' && i != 'level18' && i != 'level19' &&
+								   i != 'level20' && i != 'level21' && i != 'level22' &&
+								   i != 'level23' && i != 'level24' && i != 'level25' &&
+								   i != 'level26' ){
+								ctx.fillStyle='rgba(0,0,0,0.3)'
+								ctx.fillRect(level_select_list[i].x,level_select_list[i].y,level_select_list[i].w,level_select_list[i].h)
+								ctx.fillStyle='white'
+								ctx.fillText(level_select_list[i].t,level_select_list[i].x+20,level_select_list[i].y+35)
+								if(level_select_list[i].c == 'true'){ctx.drawImage(check,level_select_list[i].x,level_select_list[i].y)}
+								}
+								break;
+							case 2:
+								if(i != 'level1' && i != 'level2' && i != 'level3' &&
+								   i != 'level4' && i != 'level5' && i != 'level6' &&
+								   i != 'level7' && i != 'level8' && i != 'level9' &&
+								   i != 'level10' && i != 'level11' && i != 'level12' &&
+								   i != 'level13'){
+								ctx.fillStyle='rgba(0,0,0,0.3)'
+								ctx.fillRect(level_select_list[i].x,level_select_list[i].y,level_select_list[i].w,level_select_list[i].h)
+								ctx.fillStyle='white'
+								ctx.fillText(level_select_list[i].t,level_select_list[i].x+20,level_select_list[i].y+35)
+								if(level_select_list[i].c == 'true'){ctx.drawImage(check,level_select_list[i].x,level_select_list[i].y)}
+								}
+								break;
+					}
 				}
-			for (var i in level_select_list){
-				ctx.fillStyle='rgba(0,0,0,0.3)'
-				ctx.fillRect(level_select_list[i].x,level_select_list[i].y,level_select_list[i].w,level_select_list[i].h)
+			}
+			
+			else if (at_option_screen){
+				option_back_button = {x:70,y:350,w:180,h:60}
+				ctx.fillRect(option_back_button.x,option_back_button.y,option_back_button.w,option_back_button.h)
+				ctx.fillStyle='rgba(255,0,0,0.3)'
+				clear_save_button = {x:70,y:250,w:180,h:60}
+				ctx.fillRect(clear_save_button.x,clear_save_button.y,clear_save_button.w,clear_save_button.h)
 				ctx.fillStyle='white'
-				ctx.fillText(level_select_list[i].t,level_select_list[i].x+20,level_select_list[i].y+35)
+				ctx.fillText('Delete save',85,clear_save_button.y+40)
+				ctx.fillText('Back',130,option_back_button.y+40)
 			}
-			
-			
-			}
-			
 			
 		}
 		
-		
+		function level_win_popup(){
+			paused = true;
+			popup = {
+				x: 50,
+				y: 100,
+				w: 220,
+				h: 150,
+			}
+			ctx.fillStyle='rgba(0,0,0,0.5)'
+			ctx.fillRect(popup.x,popup.y,popup.w,popup.h)
+			ctx.fillStyle='white'
+			ctx.fillText('Success!',popup.x+60,popup.y+30)
+			ctx.font='20px Georgia'
+			ctx.fillText('Level '+(level+1)+' completed',popup.x+30,popup.y+90)
+			ctx.font='14px Georgia'
+			ctx.fillText('click to continue',popup.x+60,popup.y+140)
+		}
 		
 		
 		function drawBackground(){
@@ -234,11 +341,14 @@
 			ctx.fillText(equ[4],180,455)
 		
 			ctx.fillText('=',220,455)
-			ctx.fillText(goal,270,455)
+			if(goal.toString().length < 3){
+				ctx.fillText(goal,270,455)
+			}
+			else{ctx.fillText(goal,250,455)}
 		}
 		
 		function compute_equation(){
-			result = String(equ[0] + equ[1] + equ[2] + equ[3] + equ[4])
+			result = String(equ[0]) + String(equ[1]) + String(equ[2]) + String(equ[3]) + String(equ[4])
 			
 			if(equ[4] == '*' || equ[4] == '/' || equ[4] == '+' || equ[4] == '-'){bad_equation = true;}
 			else if((equ[0] == '*' || equ[0] == '/' || equ[0] == '+' || equ[0] == '-') && (equ[1] == '*' || equ[1] == '/' || equ[1] == '+' || equ[1] == '-')){bad_equation = true}
@@ -253,15 +363,9 @@
 		}
 		
 		function win(){
-			alert('Hoorah!')
-			balloons = []
-			equ = []
-			bad_equation = false;
-			result = 0
-			f_result = 0
-			score += 10*level
-			level++
-			change_to_equation()
+			level_win_popup()
+			save_game()
+			
 		}
 		
 		function drawBalloons(){
@@ -382,7 +486,7 @@
 		}
 		
 		function click_event(e){
-			if(at_menu_screen || at_help_screen || at_level_screen){
+			if(at_menu_screen || at_help_screen || at_level_screen || paused){
 				click_menu_nav(e)
 			}
 			else{
@@ -393,22 +497,57 @@
 		function click_menu_nav(e) {
 			if(at_level_screen){
 					for(var i in level_select_list){
-						if(e.clientX < level_select_list[i].x + level_select_list[i].w &&
-						e.clientX > level_select_list[i].x &&
-						e.clientY < level_select_list[i].y + level_select_list[i].h &&
-						e.clientY > level_select_list[i].y){
+						switch(level_page){
+							case 1:
+								if(i != 'level14' && i != 'level15' && i != 'level16' &&
+								   i != 'level17' && i != 'level18' && i != 'level19' &&
+								   i != 'level20' && i != 'level21' && i != 'level22' &&
+								   i != 'level23' && i != 'level24' && i != 'level25' &&
+								   i != 'level26'){
+									if(e.clientX < level_select_list[i].x + level_select_list[i].w &&
+									e.clientX > level_select_list[i].x &&
+									e.clientY < level_select_list[i].y + level_select_list[i].h &&
+									e.clientY > level_select_list[i].y){
 							
-							if(at_level_screen && at_menu_screen && !level_select_list[i].t.isNaN){
-								at_level_screen=false;at_menu_screen=false;
-								level_select_list[i].f();
-							}
-							else{
-								level_select_list[i].f();
-							}
+										if(at_level_screen && at_menu_screen && !level_select_list[i].t.isNaN){
+											at_level_screen=false;at_menu_screen=false;
+											level_select_list[i].f();
+											change_to_equation();
+										}
+										else{
+											level_select_list[i].f();
+										}
+									}
+								}
+								break;
+							case 2:
+								if(i != 'level1' && i != 'level2' && i != 'level3' &&
+								   i != 'level4' && i != 'level5' && i != 'level6' &&
+								   i != 'level7' && i != 'level8' && i != 'level9' &&
+								   i != 'level10' && i != 'level11' && i != 'level12' &&
+								   i != 'level13'){
+									if(e.clientX < level_select_list[i].x + level_select_list[i].w &&
+									e.clientX > level_select_list[i].x &&
+									e.clientY < level_select_list[i].y + level_select_list[i].h &&
+									e.clientY > level_select_list[i].y){
+							
+										if(at_level_screen && at_menu_screen && !level_select_list[i].t.isNaN){
+											at_level_screen=false;at_menu_screen=false;
+											level_select_list[i].f();
+											change_to_equation();
+										}
+										else{
+											level_select_list[i].f();
+										}
+									}
+								}
+								break;
 						}
 					}
 				}
-			if(at_menu_screen && !at_level_screen && !at_help_screen){
+			else if(at_menu_screen && !at_level_screen && !at_help_screen && !at_option_screen){
+				option_back_button = {}
+				clear_save_button = {}
 				if( e.clientX < play_button.x + play_button.w &&
 					e.clientX > play_button.x &&
 					e.clientY < play_button.y + play_button.h &&
@@ -418,8 +557,125 @@
 					e.clientX > help_button.x &&
 					e.clientY < help_button.y + help_button.h &&
 					e.clientY > help_button.y){at_help_screen = true;}
+				
+				else if( e.clientX < option_button.x + option_button.w &&
+					e.clientX > option_button.x &&
+					e.clientY < option_button.y + option_button.h &&
+					e.clientY > option_button.y){at_option_screen = true;}
 			}
 				if(at_help_screen){help_page ++}
+			
+			else if(at_option_screen && !at_level_screen){
+					if(e.clientX < clear_save_button.x + clear_save_button.w &&
+					e.clientX > clear_save_button.x &&
+					e.clientY < clear_save_button.y + clear_save_button.h &&
+					e.clientY > clear_save_button.y){clear_save();}
+					
+					else if(e.clientX < option_back_button.x + option_back_button.w &&
+					e.clientX > option_back_button.x &&
+					e.clientY < option_back_button.y + option_back_button.h &&
+					e.clientY > option_back_button.y){at_option_screen=false;at_menu_screen=true;}
+				}
+			
+				if(paused){
+					paused = false;
+					balloons = []
+					equ = []
+					bad_equation = false;
+					result = 0
+					f_result = 0
+					score += 10*level
+					change_to_equation()
+					at_menu_screen = true;
+					at_level_screen = true;
+					
+					switch(level){
+						case 0:
+							level_select_list.level1.c = true;
+							break;
+						case 1:
+							level_select_list.level2.c = true;
+							break;
+						case 2:
+							level_select_list.level3.c = true;
+							break;
+						case 3:
+							level_select_list.level4.c = true;
+							break;
+						case 4:
+							level_select_list.level5.c = true;
+							break;
+						case 5:
+							level_select_list.level6.c = true;
+							break;
+						case 6:
+							level_select_list.level7.c = true;
+							break;
+						case 7:
+							level_select_list.level8.c = true;
+							break;
+						case 8:
+							level_select_list.level9.c = true;
+							break;
+						case  9:
+							level_select_list.level10.c = true;
+							break;
+						case  10:
+							level_select_list.level11.c = true;
+							break;
+						case  11:
+							level_select_list.level12.c = true;
+							break;
+						case  12:
+							level_select_list.level13.c = true;
+							break;
+						case  13:
+							level_select_list.level14.c = true;
+							break;
+							
+						case  14:
+							level_select_list.level15.c = true;
+							break;
+						case  15:
+							level_select_list.level16.c = true;
+							break;
+						case  16:
+							level_select_list.level17.c = true;
+							break;
+						case  17:
+							level_select_list.level18.c = true;
+							break;
+						case  18:
+							level_select_list.level19.c = true;
+							break;
+						case  19:
+							level_select_list.level20.c = true;
+							break;
+						case  20:
+							level_select_list.level20.c = true;
+							break;
+						case  21:
+							level_select_list.level21.c = true;
+							break;
+						case  22:
+							level_select_list.level22.c = true;
+							break;
+						case  23:
+							level_select_list.level23.c = true;
+							break;
+						case  24:
+							level_select_list.level24.c = true;
+							break;
+						case  25:
+							level_select_list.level25.c = true;
+							break;
+						case  26:
+							level_select_list.level26.c = true;
+							break;
+					}
+					save_game()
+					level++
+				}
 		}
 		function in_game_click(e){
 			for (i=balloons.length - 1;i>=0;i--){
@@ -443,6 +699,7 @@
 								}
 								else{score -= 15}
 								balloons.splice(i,1);
+								play_sound('pop');
 							}
 						}
 				}
@@ -472,7 +729,7 @@
 		
 		function startBalloons(){
 			setInterval(function(){
-				if(!at_menu_screen){
+				if(!at_menu_screen && !at_help_screen && !at_level_screen && !paused){
 				var t = Math.floor(Math.random()*4)+1;
 				var s;
 				var blue_array = [0,1,2,3,4,5,6,7,8,9,'-','*','+','/']
@@ -517,13 +774,20 @@
 	}
 
 	function updateScore(){
-			
 			ctx.fillStyle = 'yellow'
 			ctx.font='28px Georgia'
 			ctx.fillText('Score: '+score,25,25)
 		}
+	function play_sound(sound){
+		document.getElementById('sound').src = sound+'.mp3'
+		document.getElementById('sound').play();
+	}
 		//loop game
 	function gameLoop(){
+		
+		load_game()
+		//save_game()
+		if(!paused){
 			ctx.clearRect(0,0,720,480)
 			drawBackground()
 			if (at_menu_screen){
@@ -535,7 +799,9 @@
 				updateScore()
 				checkCollision()
 			}
+		}
 			requestAnimationFrame(gameLoop)
+		
 		}
 		//initialize game
 	function init(){
