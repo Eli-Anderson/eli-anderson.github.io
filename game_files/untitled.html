@@ -51,9 +51,12 @@
 		function draw_background(){
 			beta = beta||0;
 			
-			ctx.fillStyle='rgb('+(beta+127)+',0,0)'
+			ctx.fillStyle='rgb('+(2.8*beta+127)+',0,0)'
 			ctx.fillRect(0,0,canvas_width,canvas_height)
 		}
+		(-45,0)
+		(0,127)
+		(45,255)
 		
 		window.ondeviceorientation = function (e){
 			//var a = Math.round(e.alpha) //Tilt (y-axis) in degrees
