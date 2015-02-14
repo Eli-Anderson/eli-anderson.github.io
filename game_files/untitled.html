@@ -35,10 +35,13 @@
 		//
 		//
 		//
-		var alpha = 255
-		var beta = 255
-		var gamma = 255
+		var alpha = 0
+		var beta;
+		var gamma;
 		var level = 1
+		var box1_red = 255
+		var box1_green = 255
+		var box1_blue = 255
 		function init(){
 			change_bg_color()
 			game_loop()
@@ -58,9 +61,7 @@
 			var x = canvas_width/4
 			var y = x*5/4
 			
-			box1_red = Math.floor((2*beta)+82)
-			box1_green = Math.floor((alpha/8)+82)
-			box1_blue = Math.floor((2*gamma)+82)
+			
 			
 			ctx.fillStyle='rgb('+box1_red+','+box1_green+','+box1_blue+')'
 			ctx.fillRect(x,y,2*x,8/3*y)
@@ -88,11 +89,28 @@
 					   alert(beta);
 					   alert(gamma)
 					  }
+		
+		var alpha_old = alpha;
+		var beta_old = beta;
+		var gamma_old = gamma;
+		
 		window.ondeviceorientation = function (e){
+			console.log('alpha: '+alpha)
 			alpha = Math.floor(e.alpha) //Tilt (y-axis) in degrees
 			beta = Math.floor(e.beta) //Tilt (z-axis)in degrees
 			gamma = Math.floor(e.gamma) //Tilt (x-axis)
 			
+			if(alpha-alpha_old >= 5){box1_red += 5}
+			else if(alpha_old-alpha >= 5){box1_red -= 5}
+			if(beta-beta_old >= 5){box1_green += 5}
+			else if(beta_old-beta >=5){box1_green -= 5}
+			if(gamma-gamma_old >= 5){box1_blue += 5}
+			else if(gamma_old-gamma >= 5){box1_blue -= 5}
+			
+			
+			alpha_old = alpha;
+			beta_old = beta;
+			gamma_old = gamma;
 		}
 	</script>
 </html>
