@@ -426,10 +426,10 @@
 			if(at_menu_screen || at_help_screen || at_level_screen){
 				touch_menu_nav(e);
 			}
-			else{
-				starting_move_x = e.changedTouches[0].clientX;
-				in_game_touch(e);
-			}
+		//	else{
+		//		starting_move_x = e.changedTouches[0].clientX;
+		//		in_game_touch(e);
+		//	}
 			
 		}
 		
@@ -486,14 +486,7 @@
 						}
 				}
 		}
-		function insert_into_equation(i){
-			if (equ[0] == '?'){equ[0] = i}
-									else if (equ[1] == '?'){equ[1] = i}
-									else if (equ[2] == '?'){equ[2] = i}
-									else if (equ[3] == '?' && equ[4] != '?'){equ[3] = i;compute_equation();}
-									else if (equ[3] == '?'){equ[3] = i}
-									else if (equ[4] == '?'){equ[4] = i;compute_equation();}
-		}
+		
 		
 		function click_event(e){
 			if(at_menu_screen || at_help_screen || at_level_screen || paused){
@@ -715,6 +708,14 @@
 				}
 		}
 		
+		function insert_into_equation(i){
+			if (equ[0] == '?'){equ[0] = i}
+									else if (equ[1] == '?'){equ[1] = i}
+									else if (equ[2] == '?'){equ[2] = i}
+									else if (equ[3] == '?' && equ[4] != '?'){equ[3] = i;compute_equation();}
+									else if (equ[3] == '?'){equ[3] = i}
+									else if (equ[4] == '?'){equ[4] = i;compute_equation();}
+		}
 		
 		var starting_move_x;
 		canvas.addEventListener('touchmove', function(e) {

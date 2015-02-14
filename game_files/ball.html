@@ -56,6 +56,7 @@
 		function game_loop(){
 			draw_background()
 			draw_ball()
+			check_collision()
 			requestAnimationFrame(game_loop)
 		}
 		function draw_background(){
@@ -83,6 +84,13 @@
 		
 		function round5(x){
 			return (x % 5) >= 2.5 ? parseInt(x / 5) * 5 + 5 : parseInt(x / 5) * 5;
+		}
+		
+		// if ball.x is between goal.x-r and goal.x+r
+		// if ball.y is between goal.y-r and goal.y+r
+		
+		function check_collision(){
+			if((player_ball.x - goal_hole.x)*(player_ball.x - goal_hole.x) + (player_ball.y - goal_hole.y)*(player_ball.y - goal_hole.y) < goal_hole.r*goal_hole.r){alert('win')}
 		}
 		
 		function win(){
