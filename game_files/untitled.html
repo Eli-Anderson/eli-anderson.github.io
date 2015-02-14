@@ -38,6 +38,7 @@
 		var alpha = 255
 		var beta = 255
 		var gamma = 255
+		var level = 1
 		function init(){
 			change_bg_color()
 			game_loop()
@@ -67,13 +68,36 @@
 		}
 		
 		function change_bg_color(){
-			c1 = Math.floor(Math.random()*255)
-			c2 = Math.floor(Math.random()*255)
-			c3 = Math.floor(Math.random()*255)
+			level = level||1
+			if(level==1){
+				c1 = 255
+				c2 = 0
+				c3 = 0
+			}
+			else if(level==2){
+				c1 = 0
+				c2 = 255
+				c3 = 0
+			}
+			else if(level==3){
+				c1 = 0
+				c2 = 0
+				c3 = 255
+			}
+			else{
+			//	c1 = Math.floor(Math.random()*255)
+				c2 = Math.floor(Math.random()*255)
+				c3 = Math.floor(Math.random()*255)
+			}
 			background_color = 'rgb('+c1+','+c2+','+c3+')'
 		}
 		function calc_diff(){
-			if(Math.abs(c1-box1_red) < 5 && Math.abs(c2-box1_green) < 5 && Math.abs(c3-box1_blue) < 5){alert('win')}
+			if(Math.abs(c1-box1_red) < 5 && Math.abs(c2-box1_green) < 5 && Math.abs(c3-box1_blue) < 5){win()}
+		}
+		function win(){
+			alert('win')
+			level++
+			change_bg_color()
 		}
 		
 		window.ondeviceorientation = function (e){
