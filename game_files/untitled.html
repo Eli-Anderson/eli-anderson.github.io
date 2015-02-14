@@ -49,7 +49,15 @@
 		}
 		
 		function draw_background(){
+			ctx.fillStyle='black'
 			ctx.fillRect(0,0,canvas_width,canvas_height)
+		}
+		
+		window.ondevicemotion = function (e){
+			var str = event.accelerationIncludingGravity.x
+			ctx.fillStyle='white'
+			ctx.font='20px Georgia'
+			ctx.fillText(str,200,200)
 		}
 	</script>
 </html>
