@@ -1,0 +1,110 @@
+<html>
+	<head>
+		<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+	</head>
+	
+	<canvas id=canvas width=320px height=460px style='border:1px solid black;position:absolute;top:0px;left:0px'>
+	</canvas>
+	<script>
+		var canvas = document.getElementById('canvas');
+		var ctx = canvas.getContext('2d');
+		function pre_preload(){
+			if(window.innerHeight > window.innerWidth){preload()}
+			else{alert('Please hold the device vertically')
+			setTimeout(pre_preload,3000)}
+		}
+		window.onload=pre_preload()
+		function preload(){
+			canvas_width = window.innerWidth;
+			canvas_height = window.innerHeight;
+			canvas.setAttribute('width',canvas_width)
+			canvas.setAttribute('height',canvas_height)
+			load_images()
+		}
+		function load_images(){
+			handle_image_load()
+		}
+		function handle_image_load(){
+			var num_of_images = num_of_images||0;
+			num_of_images ++
+			if(num_of_images == 1){init()}
+		}
+		//
+		//
+		//
+		//
+		//
+		alpha = 0
+		beta = 0
+		gamma = 0
+		level;
+		player_ball;
+		
+		function init(){
+			level = 1
+			player_ball = {
+			x: canvas_width/2,
+			y: canvas_height/2,
+			r: 10,
+		}
+			change_background()
+			game_loop()
+		}
+		
+		function game_loop(){
+			draw_background()
+			draw_ball()
+			requestAnimationFrame(game_loop)
+		}
+		function draw_background(){
+			ctx.fillStyle='black'
+			ctx.fillRect(0,0,canvas_width,canvas_height)
+			ctx.fillStyle='gray'
+			ctx.beginPath();
+			ctx.arc(goal_hole.x,goal_hole.y,goal_hole.r,0,2*Math.PI)
+			ctx.closePath();
+			ctx.fill();
+		}
+		function draw_ball(){
+			ctx.fillStyle='white'
+			ctx.beginPath();
+			ctx.arc(player_ball.x,player_ball.y,player_ball.r,0,2*Math.PI)
+			ctx.closePath();
+			ctx.fill();
+		}
+		
+		function change_background(){
+			var ranx = Math.floor(Math.random()*(canvas_width-20))+5
+			var rany = Math.floor(Math.random()*(canvas_height-20))+5
+			goal_hole = {x:ranx,y:rany,r:15}
+		}
+		
+		function round5(x){
+			return (x % 5) >= 2.5 ? parseInt(x / 5) * 5 + 5 : parseInt(x / 5) * 5;
+		}
+		
+		function win(){
+			alert('win')
+			level++
+			change_background()
+		}
+		document.addEventListener('touchstart',log,false)
+		function log(){alert(alpha);
+					   alert(beta);
+					   alert(gamma)
+					  }
+		
+		
+		
+		window.ondeviceorientation = function (e){
+			
+			alpha = Math.floor(e.alpha) //Tilt (y-axis) in degrees
+			beta = Math.floor(e.beta) //Tilt (z-axis)in degrees
+			gamma = Math.floor(e.gamma) //Tilt (x-axis)
+			
+			player_ball.x += beta/5
+			player_ball.y += gamma/5
+		}
+	</script>
+</html>
