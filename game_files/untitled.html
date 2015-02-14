@@ -60,25 +60,212 @@
 		function draw_box(){
 			var x = canvas_width/4
 			var y = x*5/4
-			
-			
-			
+			switch(round5(alpha)){
+				case -45:
+					box1_red = 0
+					break;
+				case -40:
+					box1_red = 14
+					break;
+				case -35:
+					box1_red = 28
+					break;
+				case -30:
+					box1_red = 42
+					break;
+				case -25:
+					box1_red = 56
+					break;
+				case -20:
+					box1_red = 70
+					break;
+				case -15:
+					box1_red = 84
+					break;
+				case -10:
+					box1_red = 98
+					break;
+				case -5:
+					box1_red = 112
+					break;
+				case 0:
+					box1_red = 126
+					break;
+				case 5:
+					box1_red = 140
+					break;
+				case 10:
+					box1_red = 154
+					break;
+				case 15:
+					box1_red = 168
+					break;
+				case 20:
+					box1_red = 182
+					break;
+				case 25:
+					box1_red = 196
+					break;
+				case 30:
+					box1_red = 210
+					break;
+				case 35:
+					box1_red = 224
+					break;
+				case 40:
+					box1_red = 238
+					break;
+				case 45:
+					box1_red = 252
+					break;
+			}
+			switch(round5(beta)){
+				case -45:
+					box1_green = 0
+					break;
+				case -40:
+					box1_green = 14
+					break;
+				case -35:
+					box1_green = 28
+					break;
+				case -30:
+					box1_green = 42
+					break;
+				case -25:
+					box1_green = 56
+					break;
+				case -20:
+					box1_green = 70
+					break;
+				case -15:
+					box1_green = 84
+					break;
+				case -10:
+					box1_green = 98
+					break;
+				case -5:
+					box1_green = 112
+					break;
+				case 0:
+					box1_green = 126
+					break;
+				case 5:
+					box1_green = 140
+					break;
+				case 10:
+					box1_green = 154
+					break;
+				case 15:
+					box1_green = 168
+					break;
+				case 20:
+					box1_green = 182
+					break;
+				case 25:
+					box1_green = 196
+					break;
+				case 30:
+					box1_green = 210
+					break;
+				case 35:
+					box1_green = 224
+					break;
+				case 40:
+					box1_green = 238
+					break;
+				case 45:
+					box1_green = 252
+					break;
+			}
+			switch(round5(gamma)){
+				case -45:
+					box1_blue = 0
+					break;
+				case -40:
+					box1_blue = 14
+					break;
+				case -35:
+					box1_blue = 28
+					break;
+				case -30:
+					box1_blue = 42
+					break;
+				case -25:
+					box1_blue = 56
+					break;
+				case -20:
+					box1_blue = 70
+					break;
+				case -15:
+					box1_blue = 84
+					break;
+				case -10:
+					box1_blue = 98
+					break;
+				case -5:
+					box1_blue = 112
+					break;
+				case 0:
+					box1_blue = 126
+					break;
+				case 5:
+					box1_blue = 140
+					break;
+				case 10:
+					box1_blue = 154
+					break;
+				case 15:
+					box1_blue = 168
+					break;
+				case 20:
+					box1_blue = 182
+					break;
+				case 25:
+					box1_blue = 196
+					break;
+				case 30:
+					box1_blue = 210
+					break;
+				case 35:
+					box1_blue = 224
+					break;
+				case 40:
+					box1_blue = 238
+					break;
+				case 45:
+					box1_blue = 252
+					break;
+			}
+			console.log('alpha: '+round5(alpha))
+			console.log('beta: '+round5(beta))
+			console.log('gamma: '+round5(gamma))
 			ctx.fillStyle='rgb('+box1_red+','+box1_green+','+box1_blue+')'
 			ctx.fillRect(x,y,2*x,8/3*y)
 			//console.log(box1_color)
 		}
 		
 		function change_bg_color(){
-			
-				c1 = Math.floor(Math.random()*90)+82
-				c2 = Math.floor(Math.random()*90)+82
-				c3 = Math.floor(Math.random()*90)+82
+			var available_colors = [
+				0,14,28,42,56,70,84,98,112,126,140,154,168,182,196,210,224,238,252
+			]
+			var ran1 = Math.floor(Math.random()*available_colors.length)
+			var ran2 = Math.floor(Math.random()*available_colors.length)
+			var ran3 = Math.floor(Math.random()*available_colors.length)
+				c1 = available_colors[ran1]
+				c2 = available_colors[ran2]
+				c3 = available_colors[ran3]
 			
 			background_color = 'rgb('+c1+','+c2+','+c3+')'
 		}
 		function calc_diff(){
 			if(Math.abs(c1-box1_red) < 5 && Math.abs(c2-box1_green) < 5 && Math.abs(c3-box1_blue) < 5){win()}
 		}
+		
+		function round5(x){
+			return (x % 5) >= 2.5 ? parseInt(x / 5) * 5 + 5 : parseInt(x / 5) * 5;
+		}
+		
 		function win(){
 			alert('win')
 			level++
@@ -90,27 +277,14 @@
 					   alert(gamma)
 					  }
 		
-		var alpha_old = alpha;
-		var beta_old = beta;
-		var gamma_old = gamma;
+		
 		
 		window.ondeviceorientation = function (e){
-			console.log('alpha: '+alpha)
+			
 			alpha = Math.floor(e.alpha) //Tilt (y-axis) in degrees
 			beta = Math.floor(e.beta) //Tilt (z-axis)in degrees
 			gamma = Math.floor(e.gamma) //Tilt (x-axis)
 			
-			if(alpha-alpha_old >= 5){box1_red += 5}
-			else if(alpha_old-alpha >= 5){box1_red -= 5}
-			if(beta-beta_old >= 5){box1_green += 5}
-			else if(beta_old-beta >=5){box1_green -= 5}
-			if(gamma-gamma_old >= 5){box1_blue += 5}
-			else if(gamma_old-gamma >= 5){box1_blue -= 5}
-			
-			
-			alpha_old = alpha;
-			beta_old = beta;
-			gamma_old = gamma;
 		}
 	</script>
 </html>
