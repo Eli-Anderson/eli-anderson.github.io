@@ -58,9 +58,9 @@
 			var x = canvas_width/4
 			var y = x*5/4
 			
-			box1_red = Math.floor((2.8*beta)+127)
-			box1_green = Math.floor((2.8*alpha)+127)
-			box1_blue = Math.floor((2.8*gamma)+127)
+			box1_red = Math.floor((2*beta)+82)
+			box1_green = Math.floor((2*alpha)+82)
+			box1_blue = Math.floor((2*gamma)+82)
 			
 			ctx.fillStyle='rgb('+box1_red+','+box1_green+','+box1_blue+')'
 			ctx.fillRect(x,y,2*x,8/3*y)
@@ -68,27 +68,11 @@
 		}
 		
 		function change_bg_color(){
-			level = level||1
-			if(level==1){
-				c1 = 255
-				c2 = 0
-				c3 = 0
-			}
-			else if(level==2){
-				c1 = 0
-				c2 = 255
-				c3 = 0
-			}
-			else if(level==3){
-				c1 = 0
-				c2 = 0
-				c3 = 255
-			}
-			else{
-			//	c1 = Math.floor(Math.random()*255)
-				c2 = Math.floor(Math.random()*255)
-				c3 = Math.floor(Math.random()*255)
-			}
+			
+				c1 = Math.floor(Math.random()*90)+82
+				c2 = Math.floor(Math.random()*90)+82
+				c3 = Math.floor(Math.random()*90)+82
+			
 			background_color = 'rgb('+c1+','+c2+','+c3+')'
 		}
 		function calc_diff(){
