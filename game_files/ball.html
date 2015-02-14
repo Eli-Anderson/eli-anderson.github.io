@@ -42,7 +42,7 @@
 		player_ball;
 		
 		function init(){
-			alert('update .02')
+			alert('update .03')
 			level = 1
 			player_ball = {
 			x: canvas_width/2,
@@ -104,8 +104,8 @@
 			beta = Math.floor(e.beta) //Tilt (z-axis)in degrees
 			gamma = Math.floor(e.gamma) //Tilt (x-axis)
 			
-			player_ball.x += gamma/5
-			player_ball.y += beta/5
+			player_ball.x += gamma*2/5
+			player_ball.y += beta*2/5
 		}
 	</script>
 </html>
