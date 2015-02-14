@@ -35,31 +35,51 @@
 		//
 		//
 		//
+		var alpha = 255
+		var beta = 255
+		var gamma = 255
 		function init(){
+			change_bg_color()
 			game_loop()
 		}
 		
 		function game_loop(){
 			draw_background()
+			draw_box()
+			calc_diff()
 			requestAnimationFrame(game_loop)
 		}
-		
-		var game = {
-			level: 1,
-		}
-		var beta;
 		function draw_background(){
-			beta = beta||0;
-			
-			ctx.fillStyle='rgb('+(2.8*beta+127)+',0,0)'
+			ctx.fillStyle=background_color;
 			ctx.fillRect(0,0,canvas_width,canvas_height)
 		}
+		function draw_box(){
+			var x = canvas_width/4
+			var y = x*5/4
+			
+			box1_red = Math.floor((2.8*beta)+127)
+			box1_green = Math.floor((2.8*alpha)+127)
+			box1_blue = Math.floor((2.8*gamma)+127)
+			
+			ctx.fillStyle='rgb('+box1_red+','+box1_green+','+box1_blue+')'
+			ctx.fillRect(x,y,2*x,8/3*y)
+			//console.log(box1_color)
+		}
 		
+		function change_bg_color(){
+			c1 = Math.floor(Math.random()*255)
+			c2 = Math.floor(Math.random()*255)
+			c3 = Math.floor(Math.random()*255)
+			background_color = 'rgb('+c1+','+c2+','+c3+')'
+		}
+		function calc_diff(){
+			if(Math.abs(c1-box1_red) < 10 && Math.abs(c2-box1_green) < 10 && Math.abs(c3-box1_blue) < 10){alert('win')}
+		}
 		
 		window.ondeviceorientation = function (e){
-			//var a = Math.round(e.alpha) //Tilt (y-axis) in degrees
-			beta = Math.round(e.beta) //Tilt (z-axis)in degrees
-			//var g = Math.round(e.gamma) //Tilt (x-axis)
+			alpha = Math.floor(e.alpha) //Tilt (y-axis) in degrees
+			beta = Math.floor(e.beta) //Tilt (z-axis)in degrees
+			gamma = Math.floor(e.gamma) //Tilt (x-axis)
 			
 		}
 	</script>
