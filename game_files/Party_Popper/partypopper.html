@@ -20,7 +20,7 @@
 	<audio id=sound hidden=true src='pop.mp3'></audio>
 	
 	<script type='text/javascript' id='script'>
-		var version_number = '1.7.1'
+		var version_number = '1.7.2'
 		var canvas = document.getElementById('canvas');
 		var ctx = canvas.getContext('2d');
 		var imagesLoaded = 0;
@@ -423,9 +423,9 @@
 		canvas.addEventListener('click', click_event, false)
 		
 		function touch_event(e){
-			if(at_menu_screen || at_help_screen || at_level_screen){
-				touch_menu_nav(e);
-			}
+		//	if(at_menu_screen || at_help_screen || at_level_screen){
+		//		touch_menu_nav(e);
+		//	}
 		//	else{
 		//		starting_move_x = e.changedTouches[0].clientX;
 		//		in_game_touch(e);
