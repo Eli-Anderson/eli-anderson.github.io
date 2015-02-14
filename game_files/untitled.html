@@ -1,0 +1,50 @@
+<html>
+	<canvas id=canvas width=320px height=460px style='border:1px solid black;position:absolute;top:0px;left:0px'>
+	</canvas>
+	<script>
+		var canvas = document.getElementById('canvas');
+		var ctx = canvas.getContext('2d');
+		function pre_preload(){
+			if(window.innerHeight < window.innerWidth){preload()}
+			else{alert('Please hold the device horizontally')
+			setTimeout(pre_preload,3000)}
+		}
+		window.onload=pre_preload()
+		function preload(){
+			canvas_width = window.innerWidth;
+			canvas_height = window.innerHeight-20
+			canvas.setAttribute('width',canvas_width)
+			canvas.setAttribute('height',canvas_height)
+			load_images()
+		}
+		function load_images(){
+			handle_image_load()
+		}
+		function handle_image_load(){
+			var num_of_images = num_of_images||0;
+			num_of_images ++
+			if(num_of_images == 1){init()}
+		}
+		//
+		//
+		//
+		//
+		//
+		function init(){
+			game_loop()
+		}
+		
+		function game_loop(){
+			draw_background()
+			requestAnimationFrame(game_loop)
+		}
+		
+		var game = {
+			level: 1,
+		}
+		
+		function draw_background(){
+			ctx.fillRect(0,0,canvas_width,canvas_height)
+		}
+	</script>
+</html>
