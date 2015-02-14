@@ -83,7 +83,11 @@
 			level++
 			change_bg_color()
 		}
-		
+		document.addEventListener('touchstart',log,false)
+		function log(){alert(alpha);
+					   alert(beta);
+					   alert(gamma)
+					  }
 		window.ondeviceorientation = function (e){
 			alpha = Math.floor(e.alpha) //Tilt (y-axis) in degrees
 			beta = Math.floor(e.beta) //Tilt (z-axis)in degrees
