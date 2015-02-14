@@ -53,11 +53,15 @@
 			ctx.fillRect(0,0,canvas_width,canvas_height)
 		}
 		
-		window.ondevicemotion = function (e){
-			var str = e.accelerationIncludingGravity.z
+		window.ondeviceorientation = function (e){
+			var a = Math.round(e.alpha)
+			var b = Math.round(e.beta)
+			var g = Math.round(e.gamma)
 			ctx.fillStyle='white'
 			ctx.font='20px Georgia'
-			ctx.fillText(str,200,200)
+			ctx.fillText('alpha: '+a,200,200)
+			ctx.fillText('beta: '+b,200,225)
+			ctx.fillText('gamma: '+g,200,250)
 		}
 	</script>
 </html>
