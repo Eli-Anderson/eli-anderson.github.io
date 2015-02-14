@@ -47,21 +47,19 @@
 		var game = {
 			level: 1,
 		}
-		
+		var beta;
 		function draw_background(){
-			ctx.fillStyle='black'
+			beta = beta||0;
+			
+			ctx.fillStyle='rgb('+beta+',0,0)'
 			ctx.fillRect(0,0,canvas_width,canvas_height)
 		}
 		
 		window.ondeviceorientation = function (e){
-			var a = Math.round(e.alpha)
-			var b = Math.round(e.beta)
-			var g = Math.round(e.gamma)
-			ctx.fillStyle='white'
-			ctx.font='20px Georgia'
-			ctx.fillText('alpha: '+a,200,200)
-			ctx.fillText('beta: '+b,200,225)
-			ctx.fillText('gamma: '+g,200,250)
+			//var a = Math.round(e.alpha) //Tilt (y-axis) in degrees
+			beta = Math.round(e.beta) //Tilt (z-axis)in degrees
+			//var g = Math.round(e.gamma) //Tilt (x-axis)
+			
 		}
 	</script>
 </html>
