@@ -17,10 +17,10 @@
 </head>
 <body>
 	<canvas id=canvas width=320px height=460px style='border:1px solid black'>Your browser does not support CANVAS</canvas>
-	<audio id=sound hidden=true src='pop.mp3'></audio>
+	
 	
 	<script type='text/javascript' id='script'>
-		var version_number = '1.7.2'
+		var version_number = '1.7.3'
 		var canvas = document.getElementById('canvas');
 		var ctx = canvas.getContext('2d');
 		var imagesLoaded = 0;
@@ -117,12 +117,7 @@
 		function windowSize(){
 			window_w = window.outerWidth;
 			window_h = window.outerHeight;
-			//window_w = window_h * 3/4
-			//document.getElementById('canvas').style.width=window_w;
-			//document.getElementById('canvas').style.height=window_h;
 			if(window_w < 480){mobileUser = true;
-				//document.getElementById('canvas').style.height=window_h;
-				//document.getElementById('canvas').style.width=window_w;
 			}
 			preload()
 		}
@@ -137,6 +132,8 @@
 			cloud = new Image();
 			arrow = new Image();
 			check = new Image();
+			pop = new Audio('pop.mp3');
+			pop.onload = handleImageLoad;
 			balloon_red.onload = handleImageLoad;
 			balloon_red.src = 'balloon_red1.png'
 			balloon_blue.onload = handleImageLoad;
@@ -702,7 +699,7 @@
 								}
 								else{score -= 15}
 								balloons.splice(i,1);
-								play_sound('pop');
+								play_sound(pop);
 							}
 						}
 				}
@@ -790,8 +787,7 @@
 			ctx.fillText('Level: '+(level+1),25,25)
 		}
 	function play_sound(sound){
-		document.getElementById('sound').src = sound+'.mp3'
-		document.getElementById('sound').play();
+		sound.play();
 	}
 		//loop game
 	function gameLoop(){
