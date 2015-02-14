@@ -10,8 +10,8 @@
 		var canvas = document.getElementById('canvas');
 		var ctx = canvas.getContext('2d');
 		function pre_preload(){
-			if(window.innerHeight < window.innerWidth){preload()}
-			else{alert('Please hold the device horizontally')
+			if(window.innerHeight > window.innerWidth){preload()}
+			else{alert('Please hold the device vertically')
 			setTimeout(pre_preload,3000)}
 		}
 		window.onload=pre_preload()
