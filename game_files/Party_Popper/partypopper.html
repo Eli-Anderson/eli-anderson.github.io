@@ -421,7 +421,7 @@
 		canvas.addEventListener('touchstart', function(e){if(mobileUser){touch_event(e)}}, false)
 		
 		function touch_event(e){
-			if(at_menu_screen || at_help_screen || at_level_screen){
+			if(at_menu_screen || at_help_screen || at_level_screen || paused){
 				touch_menu_nav(e);
 			}
 			else{
@@ -505,7 +505,7 @@
 			else if(at_option_screen && !at_level_screen){
 					if(e.changedTouches[0].clientX < clear_save_button.x + clear_save_button.w &&
 					e.changedTouches[0].clientX > clear_save_button.x &&
-					e.changedTouches[0].changedTouches[0].clientY < clear_save_button.y + clear_save_button.h &&
+					e.changedTouches[0].clientY < clear_save_button.y + clear_save_button.h &&
 					e.changedTouches[0].clientY > clear_save_button.y){clear_save();}
 					
 					else if(e.changedTouches[0].clientX < option_back_button.x + option_back_button.w &&
