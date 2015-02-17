@@ -136,17 +136,24 @@
 			check = new Image();
 			pop = new Audio('pop.mp3');
 			pop.onload = handleImageLoad;
-			balloon_red.onload = handleImageLoad;
+			pop.onerror = handleImageError;
+			balloon_red.onload = handleImageLoad('balloon_red');
+			balloon_red.onerror = handleImageError;
 			balloon_red.src = 'balloon_red1.png'
 			balloon_blue.onload = handleImageLoad;
+			balloon_blue.onerror = handleImageError('balloon_blue');
 			balloon_blue.src = 'balloon_blue1.png'
 			balloon_green.onload = handleImageLoad;
+			balloon_green.onerror = handleImageError('balloon_green');
 			balloon_green.src = 'balloon_green1.png'
 			cloud.onload = handleImageLoad;
+			cloud.onerror = handleImageError('cloud');
 			cloud.src = 'cloud.png'
 			arrow.onload = handleImageLoad;
+			arrow.onerror = handleImageError('arrow');
 			arrow.src = 'arrow.png'
 			check.onload = handleImageLoad;
+			check.onerror = handleImageError('check');
 			check.src = 'check.png'
 			
 			
@@ -155,6 +162,10 @@
 				ctx.fillText("loading...",0,20+imagesLoaded*25)
 				imagesLoaded++;
 				if(imagesLoaded == 6){imagesLoaded=0;init();}
+			}
+			function handleImageError(e){
+				ctx.fillText("error in loading image: "+e,0,200)
+				ctx.fillText('please reload the page',0,250)
 			}
 		
 		function save_game(){
