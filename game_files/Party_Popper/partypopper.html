@@ -431,35 +431,188 @@
 			
 		}
 		function touch_menu_nav(e) {
+			
 			if(at_level_screen){
 					for(var i in level_select_list){
-						if(e.changedTouches[0].clientX < level_select_list[i].x + level_select_list[i].w &&
-						e.changedTouches[0].clientX > level_select_list[i].x &&
-						e.changedTouches[0].clientY < level_select_list[i].y + level_select_list[i].h &&
-						e.changedTouches[0].clientY > level_select_list[i].y){
+						switch(level_page){
+							case 1:
+								if(i != 'level14' && i != 'level15' && i != 'level16' &&
+								   i != 'level17' && i != 'level18' && i != 'level19' &&
+								   i != 'level20' && i != 'level21' && i != 'level22' &&
+								   i != 'level23' && i != 'level24' && i != 'level25' &&
+								   i != 'level26'){
+									if(e.changedTouches[0].clientX < level_select_list[i].x + level_select_list[i].w &&
+									e.changedTouches[0].clientX > level_select_list[i].x &&
+									e.changedTouches[0].clientY < level_select_list[i].y + level_select_list[i].h &&
+									e.changedTouches[0].clientY > level_select_list[i].y){
 							
-							if(at_level_screen && at_menu_screen && !level_select_list[i].t.isNaN){
-								at_level_screen=false;at_menu_screen=false;
-								level_select_list[i].f();
-							}
-							else{
-								level_select_list[i].f();
-							}
+										if(at_level_screen && at_menu_screen && !level_select_list[i].t.isNaN){
+											at_level_screen=false;at_menu_screen=false;
+											level_select_list[i].f();
+											change_to_equation();
+										}
+										else{
+											level_select_list[i].f();
+										}
+									}
+								}
+								break;
+							case 2:
+								if(i != 'level1' && i != 'level2' && i != 'level3' &&
+								   i != 'level4' && i != 'level5' && i != 'level6' &&
+								   i != 'level7' && i != 'level8' && i != 'level9' &&
+								   i != 'level10' && i != 'level11' && i != 'level12' &&
+								   i != 'level13'){
+									if(e.changedTouches[0].clientX < level_select_list[i].x + level_select_list[i].w &&
+									e.changedTouches[0].clientX > level_select_list[i].x &&
+									e.changedTouches[0].clientY < level_select_list[i].y + level_select_list[i].h &&
+									e.changedTouches[0].clientY > level_select_list[i].y){
+							
+										if(at_level_screen && at_menu_screen && !level_select_list[i].t.isNaN){
+											at_level_screen=false;at_menu_screen=false;
+											level_select_list[i].f();
+											change_to_equation();
+										}
+										else{
+											level_select_list[i].f();
+										}
+									}
+								}
+								break;
 						}
 					}
 				}
-			else if(at_menu_screen){
+			else if(at_menu_screen && !at_level_screen && !at_help_screen && !at_option_screen){
+				option_back_button = {}
+				clear_save_button = {}
 				if( e.changedTouches[0].clientX < play_button.x + play_button.w &&
 					e.changedTouches[0].clientX > play_button.x &&
 					e.changedTouches[0].clientY < play_button.y + play_button.h &&
 					e.changedTouches[0].clientY > play_button.y){at_level_screen = true;}
 				
-				else if( e.clientX < help_button.x + help_button.w &&
-					e.changedtouches[0].clientX > help_button.x &&
-					e.changedtouches[0].clientY < help_button.y + help_button.h &&
-					e.changedtouches[0].clientY > help_button.y){at_help_screen = true;}
+				else if( e.changedTouches[0].clientX < help_button.x + help_button.w &&
+					e.changedTouches[0].clientX > help_button.x &&
+					e.changedTouches[0].clientY < help_button.y + help_button.h &&
+					e.changedTouches[0].clientY > help_button.y){at_help_screen = true;}
+				
+				else if( e.changedTouches[0].clientX < option_button.x + option_button.w &&
+					e.changedTouches[0].clientX > option_button.x &&
+					e.changedTouches[0].clientY < option_button.y + option_button.h &&
+					e.changedTouches[0].clientY > option_button.y){at_option_screen = true;}
 			}
-			else if(at_help_screen){help_page ++}
+				if(at_help_screen){help_page ++}
+			
+			else if(at_option_screen && !at_level_screen){
+					if(e.changedTouches[0].clientX < clear_save_button.x + clear_save_button.w &&
+					e.changedTouches[0].clientX > clear_save_button.x &&
+					e.changedTouches[0].changedTouches[0].clientY < clear_save_button.y + clear_save_button.h &&
+					e.changedTouches[0].clientY > clear_save_button.y){clear_save();}
+					
+					else if(e.changedTouches[0].clientX < option_back_button.x + option_back_button.w &&
+					e.changedTouches[0].clientX > option_back_button.x &&
+					e.changedTouches[0].clientY < option_back_button.y + option_back_button.h &&
+					e.changedTouches[0].clientY > option_back_button.y){at_option_screen=false;at_menu_screen=true;}
+				}
+			
+				if(paused){
+					paused = false;
+					balloons = []
+					equ = []
+					bad_equation = false;
+					result = 0
+					f_result = 0
+					score += 10*level
+					change_to_equation()
+					at_menu_screen = true;
+					at_level_screen = true;
+					
+					switch(level){
+						case 0:
+							level_select_list.level1.c = true;
+							break;
+						case 1:
+							level_select_list.level2.c = true;
+							break;
+						case 2:
+							level_select_list.level3.c = true;
+							break;
+						case 3:
+							level_select_list.level4.c = true;
+							break;
+						case 4:
+							level_select_list.level5.c = true;
+							break;
+						case 5:
+							level_select_list.level6.c = true;
+							break;
+						case 6:
+							level_select_list.level7.c = true;
+							break;
+						case 7:
+							level_select_list.level8.c = true;
+							break;
+						case 8:
+							level_select_list.level9.c = true;
+							break;
+						case  9:
+							level_select_list.level10.c = true;
+							break;
+						case  10:
+							level_select_list.level11.c = true;
+							break;
+						case  11:
+							level_select_list.level12.c = true;
+							break;
+						case  12:
+							level_select_list.level13.c = true;
+							break;
+						case  13:
+							level_select_list.level14.c = true;
+							break;
+							
+						case  14:
+							level_select_list.level15.c = true;
+							break;
+						case  15:
+							level_select_list.level16.c = true;
+							break;
+						case  16:
+							level_select_list.level17.c = true;
+							break;
+						case  17:
+							level_select_list.level18.c = true;
+							break;
+						case  18:
+							level_select_list.level19.c = true;
+							break;
+						case  19:
+							level_select_list.level20.c = true;
+							break;
+						case  20:
+							level_select_list.level20.c = true;
+							break;
+						case  21:
+							level_select_list.level21.c = true;
+							break;
+						case  22:
+							level_select_list.level22.c = true;
+							break;
+						case  23:
+							level_select_list.level23.c = true;
+							break;
+						case  24:
+							level_select_list.level24.c = true;
+							break;
+						case  25:
+							level_select_list.level25.c = true;
+							break;
+						case  26:
+							level_select_list.level26.c = true;
+							break;
+					}
+					save_game()
+					level++
+				}
 		}
  		
 		function in_game_touch(e) {
