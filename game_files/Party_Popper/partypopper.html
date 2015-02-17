@@ -717,7 +717,9 @@
 			ctx.fillText('Level: '+(level+1),25,25)
 		}
 	function play_sound(sound){
-		sound.play();
+		if(!mobileUser){
+			sound.play();
+		}
 	}
 		//loop game
 	function gameLoop(){
