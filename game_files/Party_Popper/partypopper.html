@@ -126,6 +126,8 @@
 		
 		
 		function preload(){
+			ctx.font='20px Georgia'
+			ctx.fillText("loading...",0,0)
 			balloon_red = new Image();
 			balloon_blue = new Image();
 			balloon_green = new Image();
@@ -150,6 +152,7 @@
 			
 		}
 			function handleImageLoad(e){
+				ctx.fillText("loading...",0,imagesLoaded*25)
 				imagesLoaded++;
 				if(imagesLoaded == 6){imagesLoaded=0;init();}
 			}
