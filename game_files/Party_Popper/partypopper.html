@@ -417,8 +417,8 @@
 		var last_time = new_time.getDate()
 		
 		
-		canvas.addEventListener('click', function(){if(!mobileUser){click_event}}, false)
-		canvas.addEventListener('touchstart', function(){if(mobileUser){touch_event}}, false)
+		canvas.addEventListener('click', function(e){if(!mobileUser){click_event(e)}}, false)
+		canvas.addEventListener('touchstart', function(e){if(mobileUser){touch_event(e)}}, false)
 		
 		function touch_event(e){
 			if(at_menu_screen || at_help_screen || at_level_screen){
