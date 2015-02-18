@@ -275,6 +275,7 @@ function game_loop(){
 		check_collision()
 		draw_player()
 		draw_drop()
+		if(debugMode){debug()}
 		requestAnimationFrame(game_loop)
 	}
 }
@@ -332,5 +333,16 @@ function keyUp(e){
 }
 
 function log(){
-	player.f()
+	debugMode = true;
+}
+
+function debug(){
+	ctx.rect(player.hitbox_x(),player.hitbox_y(),player.hitbox_w(),player.hitbox_h())
+	ctx.stroke();
+	for (var i = 0;i<drops.length;i++){
+		ctx.rect(drops[i][0],drops[i][1],drop.w,drop.h)
+		ctx.stroke();
+		
+	}
+	
 }
