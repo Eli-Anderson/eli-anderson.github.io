@@ -66,8 +66,8 @@ function gameLoop(){
 	requestAnimationFrame(gameLoop)
 }
 
-document.onkeydown = keyDown;
-document.onkeyup = keyUp;
+document.addEventListener('keydown',keyDown,false)
+document.addEventListener('keyup',keyUp,false)
 function keyDown(e){
 	console.log('key pressed')
 	if(e.keyCode == 39){player.movingRight = true;}
