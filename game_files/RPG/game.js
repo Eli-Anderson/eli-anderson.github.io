@@ -77,5 +77,8 @@ function keyDown(e){
 }
 function keyUp(e){
 	console.log('key up')
-	if(e.keyCode == 39){player.movingRight = false;}
+	if(e.keyCode == 37 || e.keyCode == 38 || e.keyCode == 39 || e.keyCode == 40 ||){
+		player.moving = false;
+		if(e.keyCode == 39){player.movingRight = false;}
+	}
 }
