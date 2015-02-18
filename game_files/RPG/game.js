@@ -70,14 +70,14 @@ document.addEventListener('keydown',keyDown,false)
 document.addEventListener('keyup',keyUp,false)
 function keyDown(e){
 	console.log('key pressed')
-	if(e.keyCode == 37 || e.keyCode == 38 || e.keyCode == 39 || e.keyCode == 40 ||){
+	if(e.keyCode == 37 || e.keyCode == 38 || e.keyCode == 39 || e.keyCode == 40){
 		player.moving = true;
 		if(e.keyCode == 39){player.movingRight = true;}
 	}
 }
 function keyUp(e){
 	console.log('key up')
-	if(e.keyCode == 37 || e.keyCode == 38 || e.keyCode == 39 || e.keyCode == 40 ||){
+	if(e.keyCode == 37 || e.keyCode == 38 || e.keyCode == 39 || e.keyCode == 40){
 		player.moving = false;
 		if(e.keyCode == 39){player.movingRight = false;}
 	}
