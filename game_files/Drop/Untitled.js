@@ -151,7 +151,7 @@ var game = {
 	playing: false,
 	idle: false,
 	score: 0,
-	start(){
+	start: function(){
 		if(game.playing == false){
 			this.playing = true;
 			menu_list = []
