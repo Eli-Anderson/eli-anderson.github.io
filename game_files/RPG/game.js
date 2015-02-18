@@ -4,7 +4,7 @@ var player = {
 	currentSprite: playersprite,
 	currentSpriteX: 0,
 	spriteWidth: 16,
-	moving: false,
+	movingRight: false,
 	x: 100,
 	y: 100,
 }
