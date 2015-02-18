@@ -4,6 +4,7 @@ var menu_list = [];
 var text_list = [];
 var image_list = [];
 var highscores = [];
+var debugMode = false;
 function menu_loop(){
 	if(!game.playing){
 		ctx.clearRect(0,0,720,480)
