@@ -34,6 +34,7 @@ function drawPlayer(){
 function animatePlayer(){
 	if (player.walking){
 		if(player.movingRight){
+			console.log('player moved')
 			player.x += 2;
 			if(frame % 2 == 0){
 				player.currentSpriteX = 1*player.spriteWidth
@@ -69,14 +70,17 @@ function gameLoop(){
 document.addEventListener('keydown',keyDown,false)
 document.addEventListener('keyup',keyUp,false)
 function keyDown(e){
-	console.log('key pressed')
+	//console.log('key pressed')
 	if(e.keyCode == 37 || e.keyCode == 38 || e.keyCode == 39 || e.keyCode == 40){
 		player.moving = true;
-		if(e.keyCode == 39){player.movingRight = true;}
+		if(e.keyCode == 39){
+			player.movingRight = true;
+			console.log('moving right')
+		}
 	}
 }
 function keyUp(e){
-	console.log('key up')
+	//console.log('key up')
 	if(e.keyCode == 37 || e.keyCode == 38 || e.keyCode == 39 || e.keyCode == 40){
 		player.moving = false;
 		if(e.keyCode == 39){player.movingRight = false;}
