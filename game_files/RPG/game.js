@@ -2,7 +2,11 @@ var playersprite = new Image();
 playersprite.src = 'grass.png'
 var player = {
 	currentSprite: playersprite,
+	currentSpriteX: 0,
 	spriteWidth: 16,
+	moving: false,
+	x: 200,
+	y: 200,
 }
 var tick = 0;
 var frame = 0;
