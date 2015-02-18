@@ -28,6 +28,9 @@
 //
 //
 //
+menu_list = []
+text_list = []
+image_list = []
 function create_text(r,g,b,a,f,t,x,y,m){
 	text_list.push([r,g,b,a,f,t,x,y,m])
 }
