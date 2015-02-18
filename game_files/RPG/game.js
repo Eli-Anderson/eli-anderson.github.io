@@ -1,5 +1,5 @@
 var playersprite = new Image();
-playersprite.src = 'grass.png'
+playersprite.src = 'images/tiles_grass.png'
 var player = {
 	currentSprite: playersprite,
 	currentSpriteX: 0,
