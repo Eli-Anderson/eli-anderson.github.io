@@ -339,10 +339,10 @@ function log(){
 
 function debug(){
 	ctx.rect(player.hitbox_x(),player.hitbox_y(),player.hitbox_w(),player.hitbox_h())
-	ctx.stroke();
+	//ctx.stroke();
 	for (var i = 0;i<drops.length;i++){
 		ctx.rect(drops[i][0],drops[i][1],drop.w,drop.h)
-		ctx.stroke();
+		//ctx.stroke();
 		
 	}
 	
