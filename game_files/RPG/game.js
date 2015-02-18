@@ -5,8 +5,8 @@ var player = {
 	currentSpriteX: 0,
 	spriteWidth: 16,
 	moving: false,
-	x: 200,
-	y: 200,
+	x: 100,
+	y: 100,
 }
 var tick = 0;
 var frame = 0;
