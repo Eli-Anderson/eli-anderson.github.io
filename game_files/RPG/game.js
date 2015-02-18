@@ -3,6 +3,7 @@ var player = {
 	currentSprite: playersprite,
 	currentSpriteX: 0,
 	spriteWidth: 16,
+	walking: false,
 	movingRight: false,
 	x: 100,
 	y: 100,
@@ -72,7 +73,7 @@ document.addEventListener('keyup',keyUp,false)
 function keyDown(e){
 	//console.log('key pressed')
 	if(e.keyCode == 37 || e.keyCode == 38 || e.keyCode == 39 || e.keyCode == 40){
-		player.moving = true;
+		player.walking = true;
 		if(e.keyCode == 39){
 			player.movingRight = true;
 			console.log('moving right')
