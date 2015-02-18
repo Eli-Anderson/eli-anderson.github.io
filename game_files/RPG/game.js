@@ -34,6 +34,7 @@ function drawPlayer(){
 function animatePlayer(){
 	if (player.walking){
 		if(player.movingRight){
+			player.x += 2;
 			if(frame % 2 == 0){
 				player.currentSpriteX = 1*player.spriteWidth
 			}
@@ -63,4 +64,13 @@ function gameLoop(){
 	ctx.font = '20px Georgia'
 	ctx.fillText(frame,100,100)
 	requestAnimationFrame(gameLoop)
+}
+
+document.onkeydown = keyDown;
+document.onkeyup = keyUp;
+function keyDown(e){
+	if(e.keyCode == 39){player.movingRight = true;}
+}
+function keyUp(e){
+	if(e.keyCode == 39){player.movingRight = false;}
 }
