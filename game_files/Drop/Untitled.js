@@ -338,11 +338,16 @@ function log(){
 }
 
 function debug(){
+	ctx.beginPath();
 	ctx.rect(player.hitbox_x(),player.hitbox_y(),player.hitbox_w(),player.hitbox_h())
-	//ctx.stroke();
+	ctx.closePath();
+	ctx.stroke();
 	for (var i = 0;i<drops.length;i++){
+		ctx.beginPath();
 		ctx.rect(drops[i][0],drops[i][1],drop.w,drop.h)
-		//ctx.stroke();
+		ctx.closePath();
+		ctx.stroke();
+		
 		
 	}
 	
