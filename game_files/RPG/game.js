@@ -56,7 +56,10 @@ function gameLoop(){
 	ctx.clearRect(0,0,480,480)
 	ctx.fillStyle='#c79a33'
 	ctx.fillRect(0,0,480,480)
+	
+	animatePlayer()
 	drawTiles()
+	drawPlayer()
 	ctx.font = '20px Georgia'
 	ctx.fillText(frame,100,100)
 	requestAnimationFrame(gameLoop)
