@@ -66,11 +66,13 @@ function gameLoop(){
 	requestAnimationFrame(gameLoop)
 }
 
-document.onkeydown = keyDown;
-document.onkeyup = keyUp;
+document.onkeydown = keyDown(e);
+document.onkeyup = keyUp(e);
 function keyDown(e){
+	console.log('key pressed')
 	if(e.keyCode == 39){player.movingRight = true;}
 }
 function keyUp(e){
+	console.log('key up')
 	if(e.keyCode == 39){player.movingRight = false;}
 }
