@@ -27,7 +27,8 @@ function drawTiles(){
 }
 
 function drawPlayer(){
-	ctx.drawImage(player.currentSprite,player.x,player.y)
+	ctx.fillRect(player.x,player.y,64,64)
+	//ctx.drawImage(player.currentSprite,player.x,player.y)
 }
 
 function animatePlayer(){
