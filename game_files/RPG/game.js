@@ -1,25 +1,19 @@
-<<<<<<< HEAD
 var playersprite = new Image();
 playersprite.src = 'images/player.png'
-=======
 var playersprite = tile_grass
->>>>>>> FETCH_HEAD
 var player = {
 	currentSprite: playersprite,
 	currentSpriteX: 0,
 	spriteWidth: 16,
 	walking: false,
 	movingRight: false,
-<<<<<<< HEAD
     movingLeft: false,
     movingUp: false,
     movingDown: false,
 	x: 0,
 	y: 0,
-=======
 	x: 100,
 	y: 100,
->>>>>>> FETCH_HEAD
 }
 var tick = 0;
 var frame = 0;
@@ -41,17 +35,13 @@ function drawTiles(){
 }
 
 function drawPlayer(){
-<<<<<<< HEAD
 	ctx.drawImage(player.currentSprite,player.currentSpriteX,0,player.spriteWidth,16,player.x,player.y,48,48)
-=======
 	ctx.fillRect(player.x,player.y,64,64)
 	//ctx.drawImage(player.currentSprite,player.x,player.y)
->>>>>>> FETCH_HEAD
 }
 
 function animatePlayer(){
 	if (player.walking){
-<<<<<<< HEAD
 		if(player.movingRight && !checkCollision('right')){
 			player.x += 2;
 			if(frame % 2 == 0){
@@ -126,7 +116,6 @@ function checkCollision(direction){
 			if(currentMap[y+1][x] != 0){return true}
 			break;
 	}
-=======
 		if(player.movingRight){
 			console.log('player moved')
 			player.x += 2;
@@ -139,7 +128,6 @@ function checkCollision(direction){
 		}
 	}
 	else{player.currentSpriteX = 0}
->>>>>>> FETCH_HEAD
 }
 
 function game_init(){
@@ -148,28 +136,22 @@ function game_init(){
 }
 
 function gameLoop(){
-<<<<<<< HEAD
 	tick += 1;
 	animatePlayer()
-=======
 	tick += 1
->>>>>>> FETCH_HEAD
 	if(tick % 16 == 0){frame ++}
 	ctx.clearRect(0,0,480,480)
 	ctx.fillStyle='#c79a33'
 	ctx.fillRect(0,0,480,480)
-<<<<<<< HEAD
 	checkCollision()
 	drawTiles()
 	drawPlayer()
-=======
 	
 	animatePlayer()
 	drawTiles()
 	drawPlayer()
 	ctx.font = '20px Georgia'
 	ctx.fillText(frame,100,100)
->>>>>>> FETCH_HEAD
 	requestAnimationFrame(gameLoop)
 }
 
@@ -181,7 +163,6 @@ function keyDown(e){
 		player.walking = true;
 		if(e.keyCode == 39){
 			player.movingRight = true;
-<<<<<<< HEAD
 		}
         else if(e.keyCode == 37){
 			player.movingLeft = true;
@@ -191,24 +172,19 @@ function keyDown(e){
 		}
         else if(e.keyCode == 40){
 			player.movingDown = true;
-=======
 			console.log('moving right')
->>>>>>> FETCH_HEAD
 		}
 	}
 }
 function keyUp(e){
 	//console.log('key up')
 	if(e.keyCode == 37 || e.keyCode == 38 || e.keyCode == 39 || e.keyCode == 40){
-<<<<<<< HEAD
 		player.walking = false;
 		if(e.keyCode == 39){player.movingRight = false;}
         else if(e.keyCode == 37){player.movingLeft = false;}
         if(e.keyCode == 38){player.movingUp = false;}
         else if(e.keyCode == 40){player.movingDown = false;}
-=======
 		player.moving = false;
 		if(e.keyCode == 39){player.movingRight = false;}
->>>>>>> FETCH_HEAD
 	}
 }
