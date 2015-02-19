@@ -4,6 +4,7 @@ var menu_list = [];
 var text_list = [];
 var image_list = [];
 var highscores = [];
+var debugMode = false;
 function menu_loop(){
 	if(!game.playing){
 		ctx.clearRect(0,0,720,480)
@@ -151,7 +152,7 @@ var game = {
 	playing: false,
 	idle: false,
 	score: 0,
-	start(){
+	start: function(){
 		if(game.playing == false){
 			this.playing = true;
 			menu_list = []
@@ -275,6 +276,7 @@ function game_loop(){
 		check_collision()
 		draw_player()
 		draw_drop()
+		if(debugMode){debug()}
 		requestAnimationFrame(game_loop)
 	}
 }
@@ -332,5 +334,21 @@ function keyUp(e){
 }
 
 function log(){
-	player.f()
+	debugMode = true;
+}
+
+function debug(){
+	ctx.beginPath();
+	ctx.rect(player.hitbox_x(),player.hitbox_y(),player.hitbox_w(),player.hitbox_h())
+	ctx.closePath();
+	ctx.stroke();
+	for (var i = 0;i<drops.length;i++){
+		ctx.beginPath();
+		ctx.rect(drops[i][0],drops[i][1],drop.w,drop.h)
+		ctx.closePath();
+		ctx.stroke();
+		
+		
+	}
+	
 }
