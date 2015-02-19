@@ -1,6 +1,5 @@
 var playersprite = new Image();
 playersprite.src = 'images/player.png'
-var playersprite = tile_grass
 var player = {
 	currentSprite: playersprite,
 	currentSpriteX: 0,
@@ -12,8 +11,6 @@ var player = {
     movingDown: false,
 	x: 0,
 	y: 0,
-	x: 100,
-	y: 100,
 }
 var tick = 0;
 var frame = 0;
@@ -36,8 +33,6 @@ function drawTiles(){
 
 function drawPlayer(){
 	ctx.drawImage(player.currentSprite,player.currentSpriteX,0,player.spriteWidth,16,player.x,player.y,48,48)
-	ctx.fillRect(player.x,player.y,64,64)
-	//ctx.drawImage(player.currentSprite,player.x,player.y)
 }
 
 function animatePlayer(){
@@ -126,7 +121,6 @@ function game_init(){
 function gameLoop(){
 	tick += 1;
 	animatePlayer()
-	tick += 1
 	if(tick % 16 == 0){frame ++}
 	ctx.clearRect(0,0,480,480)
 	ctx.fillStyle='#c79a33'
@@ -134,12 +128,6 @@ function gameLoop(){
 	checkCollision()
 	drawTiles()
 	drawPlayer()
-	
-	animatePlayer()
-	drawTiles()
-	drawPlayer()
-	ctx.font = '20px Georgia'
-	ctx.fillText(frame,100,100)
 	requestAnimationFrame(gameLoop)
 }
 
@@ -160,7 +148,6 @@ function keyDown(e){
 		}
         else if(e.keyCode == 40){
 			player.movingDown = true;
-			console.log('moving right')
 		}
 	}
 }
@@ -172,7 +159,5 @@ function keyUp(e){
         else if(e.keyCode == 37){player.movingLeft = false;}
         if(e.keyCode == 38){player.movingUp = false;}
         else if(e.keyCode == 40){player.movingDown = false;}
-		player.moving = false;
-		if(e.keyCode == 39){player.movingRight = false;}
 	}
 }
