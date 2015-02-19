@@ -116,18 +116,6 @@ function checkCollision(direction){
 			if(currentMap[y+1][x] != 0){return true}
 			break;
 	}
-		if(player.movingRight){
-			console.log('player moved')
-			player.x += 2;
-			if(frame % 2 == 0){
-				player.currentSpriteX = 1*player.spriteWidth
-			}
-			else{
-				player.currentSpriteX = 2*player.spriteWidth
-			}
-		}
-	}
-	else{player.currentSpriteX = 0}
 }
 
 function game_init(){
