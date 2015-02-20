@@ -286,5 +286,7 @@ function keyUp(e){
 }
 
 function log(){
+    //var p = document.getElementById('log')
+    //p.innerHTML += collidables.indexOf(currentMap[y][x+1]
 	console.log(collidables.indexOf(2))
 }
