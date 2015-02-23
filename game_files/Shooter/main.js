@@ -295,13 +295,16 @@ function drawText(){
 				tempfired = true;
 				text = 'Cannon Unlocked'
 				break;
+		}
+	}
+	else{
+		switch(player.totalkills){
 			case 21:
 			case 41:
 			case 76:
 			case 100:
 				tempfired = false;
 				break;
-				
 		}
 	}
 	ctx.fillText(text,265,220)
