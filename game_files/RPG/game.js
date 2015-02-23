@@ -11,6 +11,12 @@ var player = {
     movingDown: false,
 	x: 0,
 	y: 0,
+	hitbox: {
+		x: 10,
+		y: 6,
+		w: 27,
+		h: 40,
+	},
     inventory: [item_block,item2,item3],
     interact: function(){alert('interact')}
 }
@@ -20,6 +26,9 @@ var frame = 0;
 
 
 function loadGame(){
+	createEnemy(432,432,'asdf')
+	//setInterval(function(){console.log(enemies[0][0]%48)},500)
+	
 	preDrawTiles()
 	game_init()
 }
@@ -47,44 +56,92 @@ function animatePlayer(){
 	if (player.walking){
 		if(player.movingRight && !checkCollision('right') && !player.movingLeft && !player.movingDown && !player.movingUp){
 			player.x += 2;
-			if(frame % 2 == 0){
+			if(frame % 6 == 0){
 				player.currentSpriteX = 1*player.spriteWidth
 			}
-			else{
+			else if(frame % 6 == 1){
 				player.currentSpriteX = 2*player.spriteWidth
 			}
+			else if(frame % 6 == 2){
+				player.currentSpriteX = 1*player.spriteWidth
+			}
+			else if(frame % 6 == 3){
+				player.currentSpriteX = 3*player.spriteWidth
+			}
+			else if(frame % 6 == 4){
+				player.currentSpriteX = 4*player.spriteWidth
+			}
+			else{
+				player.currentSpriteX = 3*player.spriteWidth
+			}
+			
 		}
         else if(player.movingLeft && !checkCollision('left') && !player.movingRight && !player.movingDown && !player.movingUp){
 			player.x -= 2;
-			if(frame % 2 == 0){
+			if(frame % 6 == 0){
+				player.currentSpriteX = 11*player.spriteWidth
+			}
+			else if(frame % 6 == 1){
+				player.currentSpriteX = 12*player.spriteWidth
+			}
+			else if(frame % 6 == 2){
+				player.currentSpriteX = 11*player.spriteWidth
+			}
+			else if(frame % 6 == 3){
+				player.currentSpriteX = 13*player.spriteWidth
+			}
+			else if(frame % 6 == 4){
+				player.currentSpriteX = 14*player.spriteWidth
+			}
+			else{
+				player.currentSpriteX = 13*player.spriteWidth
+			}
+		}
+        if(player.movingUp && !checkCollision('up') && !player.movingLeft && !player.movingDown && !player.movingRight){
+			player.y -= 2;
+			if(frame % 6 == 0){
+				player.currentSpriteX = 16*player.spriteWidth
+			}
+			else if(frame % 6 == 1){
+				player.currentSpriteX = 17*player.spriteWidth
+			}
+			else if(frame % 6 == 2){
+				player.currentSpriteX = 16*player.spriteWidth
+			}
+			else if(frame % 6 == 3){
+				player.currentSpriteX = 18*player.spriteWidth
+			}
+			else if(frame % 6 == 4){
+				player.currentSpriteX = 19*player.spriteWidth
+			}
+			else{
+				player.currentSpriteX = 18*player.spriteWidth
+			}
+		}
+        else if(player.movingDown && !checkCollision('down') && !player.movingLeft && !player.movingRight && !player.movingUp){
+			player.y += 2;
+			if(frame % 6 == 0){
+				player.currentSpriteX = 6*player.spriteWidth
+			}
+			else if(frame % 6 == 1){
 				player.currentSpriteX = 7*player.spriteWidth
+			}
+			else if(frame % 6 == 2){
+				player.currentSpriteX = 6*player.spriteWidth
+			}
+			else if(frame % 6 == 3){
+				player.currentSpriteX = 8*player.spriteWidth
+			}
+			else if(frame % 6 == 4){
+				player.currentSpriteX = 9*player.spriteWidth
 			}
 			else{
 				player.currentSpriteX = 8*player.spriteWidth
 			}
 		}
-        if(player.movingUp && !checkCollision('up') && !player.movingLeft && !player.movingDown && !player.movingRight){
-			player.y -= 2;
-			if(frame % 2 == 0){
-				player.currentSpriteX = 10*player.spriteWidth
-			}
-			else{
-				player.currentSpriteX = 11*player.spriteWidth
-			}
-		}
-        else if(player.movingDown && !checkCollision('down') && !player.movingLeft && !player.movingRight && !player.movingUp){
-			player.y += 2;
-			if(frame % 2 == 0){
-				player.currentSpriteX = 4*player.spriteWidth
-			}
-			else{
-				player.currentSpriteX = 5*player.spriteWidth
-			}
-		}
 	}
 	else{
 		var v = player.currentSpriteX/48
-		console.log(v)
         switch(v){
 			case 0:
 				break;
@@ -95,103 +152,116 @@ function animatePlayer(){
 				player.currentSpriteX = 0;
 				break;
 			case 3:
-				player.currentSpriteX = 3*48;
+				player.currentSpriteX = 0;
 				break;
 			case 4:
-				player.currentSpriteX = 3*48;
+				player.currentSpriteX = 0;
 				break;
 			case 5:
-				player.currentSpriteX = 3*48;
+				player.currentSpriteX = 5*48;
 				break;
 			case 6:
-				player.currentSpriteX = 6*48;
+				player.currentSpriteX = 5*48;
 				break;
 			case 7:
-				player.currentSpriteX = 6*48;
+				player.currentSpriteX = 5*48;
 				break;
 			case 8:
-				player.currentSpriteX = 6*48;
+				player.currentSpriteX = 5*48;
 				break;
 			case 9:
-				player.currentSpriteX = 9*48;
+				player.currentSpriteX = 5*48;
 				break;
 			case 10:
-				player.currentSpriteX = 9*48;
+				player.currentSpriteX = 10*48;
 				break;
 			case 11:
-				player.currentSpriteX = 9*48;
+				player.currentSpriteX = 10*48;
 				break;
+			case 12:
+				player.currentSpriteX = 10*48;
+				break;
+			case 13:
+				player.currentSpriteX = 10*48;
+				break;
+			case 14:
+				player.currentSpriteX = 10*48;
+				break;
+			case 15:
+				player.currentSpriteX = 15*48;
+				break;
+			case 16:
+				player.currentSpriteX = 15*48;
+				break;
+			case 17:
+				player.currentSpriteX = 15*48;
+				break;
+			case 18:
+				player.currentSpriteX = 15*48;
+				break;
+			case 19:
+				player.currentSpriteX = 15*48;
+				break;
+				
 		}
 		
 		
-        if(player.x % 48 != 0){
-            if(player.x % 48 >= 25){player.x += (player.x % 48)/6}
-            else{player.x -= (player.x % 48)/6}
-        }
-        if(player.y % 48 != 0){
-            if(player.y % 48 >= 25){player.y += (player.y % 48)/6}
-            else{player.y -= (player.y % 48)/6}
-        }
+        
         
     }
 }
 
-function checkCollision(direction){
-	var x = Math.round(player.x/48)
-	var y = Math.round(player.y/48)
-	switch (direction){
+function checkCollision(dir){
+	//console.log(currentMap[Math.round(player.y/48)][Math.round(player.x/48)][1])
+	
+	switch(dir){
 		case 'right':
-            if(player.x > 430 &&
-			   collidables.indexOf(worldMap[mapY][mapX+1][y][0][1]) == -1){
-				changeMap()
+			//console.log(worldMap[mapY][mapX+1][Math.round(player.y/48)][Math.round(player.x/48+.7)][1])
+			
+			if(currentMap[Math.round(player.y/48)][Math.round(player.x/48+.7)]){
+				if(collidables.indexOf(currentMap[Math.round(player.y/48)][Math.round(player.x/48+.7)][1]) != -1){return true}
+				else if(player.x > 432 && collidables.indexOf(worldMap[mapY][mapX+1][Math.round(player.y/48)][Math.round(player.x/48+.7)][1]) != -1){changeMap();alert('a')}
 			}
-            if(player.x % 48 < 2){
-				if(currentMap[y][x+1] != undefined){
-		      		if(collidables.indexOf(currentMap[y][x+1][1]) != -1
-					  ){
-						player.currentSpriteX = 0;
-                    	return true
-					}
-				}
-				else{return true}
-            }
 			break;
 		case 'left':
-            if(player.x < 2){changeMap()}
-            if(player.x % 48 < 2){
-				if(currentMap[y][x-1] != undefined){
-			    	if(collidables.indexOf(currentMap[y][x-1][1]) != -1){
-						player.currentSpriteX = 2*player.spriteWidth;
-                    	return true
-					}
-				}
-				else{return true}
-            }
+			if(currentMap[Math.round(player.y/48)][Math.round(player.x/48-.7)]){
+				if(collidables.indexOf(currentMap[Math.round(player.y/48)][Math.round(player.x/48-.7)][1]) != -1){return true}
+			}
 			break;
 		case 'up':
-            if(player.y < 2){changeMap()}
-            if(player.y % 48 < 2){
-                if(currentMap[y-1]){
-			         if(collidables.indexOf(currentMap[y-1][x][1]) != -1){
-                         player.currentSpriteX = 4*player.spriteWidth;
-                         return true}
-                }
-                else{return true}
-            }
+			if(currentMap[Math.round(player.y/48-.7)]){
+				if(collidables.indexOf(currentMap[Math.round(player.y/48-.7)][Math.round(player.x/48)][1]) != -1){return true}
+			}
 			break;
 		case 'down':
-            if(player.y > 430){changeMap()}
-            if(player.y % 48 < 2){
-                if(currentMap[y+1]){
-		      	     if(collidables.indexOf(currentMap[y+1][x][1]) != -1){
-                         player.currentSpriteX = 6*player.spriteWidth;
-                         return true}
-                }
-                else{return true}
-            }
+			if(currentMap[Math.round(player.y/48+.7)]){
+				if(collidables.indexOf(currentMap[Math.round(player.y/48+.7)][Math.round(player.x/48)][1]) != -1){return true}
+			}
 			break;
 	}
+	
 }
+
+function createEnemy(type,x,y){
+	enemies.push([type,x,y])
+}
+
+function drawEnemy(){
+	for (var i=0; i<enemies.length; i++){
+		ctx.fillRect(enemies[i][0],enemies[i][1],48,48)
+	}
+}
+var eangle;
+function animateEnemy(){
+	for (var i=0; i<enemies.length; i++){
+		if (enemies[i][0] - player.x > enemies[i][1] - player.y){enemies[i][0]--}
+		else if (player.x - enemies[i][0] > player.y - enemies[i][1]){enemies[i][0]++}
+		
+	}
+	
+}
+
+
 var mapX = 0
 var mapY = 0
 function changeMap(){
@@ -235,13 +305,15 @@ function game_init(){
 function gameLoop(){
 	tick += 1;
 	animatePlayer()
-	if(tick % 16 == 0){frame ++}
+	animateEnemy()
+	if(tick % 10 == 0){frame ++}
 	ctx.clearRect(0,0,480,480)
 	ctx.fillStyle='#c79a33'
 	ctx.fillRect(0,0,480,480)
 	checkCollision()
 	drawTiles()
 	drawPlayer()
+	drawEnemy()
     
     //drawHud()
 	requestAnimationFrame(gameLoop)

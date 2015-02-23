@@ -1,7 +1,11 @@
 
-window.onload=init()
+//window.onload=init()
+var mainmusic = new Audio();
+mainmusic.src = 'main2.mp3'
+mainmusic.onload=init()
 
 function init(){
+	//mainmusic.play();
 	mainMenu()
 	menuLoop()
 }

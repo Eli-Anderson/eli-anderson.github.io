@@ -15,3 +15,5 @@ loadbutton.src = "images/button.png"
 
 var preCanv = document.getElementById('precanvas')
 var preCanvCtx = preCanv.getContext('2d')
+
+var enemies = []
