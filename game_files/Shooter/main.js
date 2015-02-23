@@ -249,6 +249,14 @@ function drawBullets(){
 	}
 }
 
+function createPowerup(type){
+	switch(type){
+		case 'regen':
+			powerups.push([x,y,type])
+			break;
+	}
+}
+
 function checkCollision(){
 	for (var j=0; j<enemies.length; j++){
 		var ex = enemies[j][0];
