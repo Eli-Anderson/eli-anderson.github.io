@@ -273,10 +273,37 @@ function drawText(){
 	alph *= .95
 	ctx.font = '24px Georgia'
 	ctx.fillStyle='rgba(0,0,0,'+alph+')'
-	if(!tempfired && player.totalkills == 20){alph = 1;tempfired=true;text = 'Shotgun Unlocked'}
-	if(player.totalkills == 21){tempfired=false;}
-	if(!tempfired && player.totalkills == 40){alph = 1;tempfired=true;text = 'Rifle Unlocked'}
-	if(player.totalkills == 21){tempfired=false;}
+	if(!tempfired){
+		switch(player.totalkills){
+			case 20:
+				alph = 1;
+				tempfired = true;
+				text = 'Shotgun Unlocked'
+				break;
+			case 40:
+				alph = 1;
+				tempfired = true;
+				text = 'Rifle Unlocked'
+				break;
+			case 75:
+				alph = 1;
+				tempfired = true;
+				text = 'Sniper Unlocked'
+				break;
+			case 100:
+				alph = 1;
+				tempfired = true;
+				text = 'Cannon Unlocked'
+				break;
+			case 21:
+			case 41:
+			case 76:
+			case 100:
+				tempfired = false;
+				break;
+				
+		}
+	}
 	ctx.fillText(text,265,220)
 }
 
@@ -312,11 +339,11 @@ function keyDown(e){
 	//press 3 for rifle
 	//etc.
 	
-	if(e.keyCode == 49 && player.totalkills >= 0){player.gun = player.weapon_list.pistol;console.log('change')}
-	if(e.keyCode == 50 && player.totalkills >= 20){player.gun = player.weapon_list.shotgun;console.log('change')}
-	if(e.keyCode == 51 && player.totalkills >= 40){player.gun = player.weapon_list.rifle;console.log('change')}
-	if(e.keyCode == 52 && player.totalkills >= 0){player.gun = player.weapon_list.sniper;console.log('change')}
-	if(e.keyCode == 53 && player.totalkills >= 0){player.gun = player.weapon_list.cannon;console.log('change')}
+	if(e.keyCode == 49 && player.totalkills >= 0){player.gun = player.weapon_list.pistol;}
+	if(e.keyCode == 50 && player.totalkills >= 20){player.gun = player.weapon_list.shotgun;}
+	if(e.keyCode == 51 && player.totalkills >= 40){player.gun = player.weapon_list.rifle;}
+	if(e.keyCode == 52 && player.totalkills >= 75){player.gun = player.weapon_list.sniper;}
+	if(e.keyCode == 53 && player.totalkills >= 100){player.gun = player.weapon_list.cannon;}
 	
 	
 	if(e.keyCode == 32){
