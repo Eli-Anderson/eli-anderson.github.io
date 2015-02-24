@@ -5,6 +5,7 @@ var player = {
 	y: 240,
 	r: 25,
 	speed: 3,
+	regenrate: 60,
 	gun: {},
 	hp: 100,
 	chance: 0,
@@ -108,9 +109,9 @@ function animatePlayer(){
 	
 	//if(globaltick % 60 == 0){console.log(player.hp)}
 	if(player.hp <= 0){gameOver()}
-	if(globaltick % 60 == 0){player.hp ++}
+	if(globaltick % player.regenrate == 0){player.hp ++}
 	
-	player.chance = player.kills
+	player.chance = player.kills/2
 	
 	//if(player.totalkills == 20){player.gun = player.weapon_list.shotgun}
 	//if(player.totalkills == 40){player.gun = player.weapon_list.rifle}
@@ -168,7 +169,7 @@ function animateEnemy(){
 			enemies.splice(i,1);
 			player.kills++
 			player.totalkills++
-			var ran = Math.floor(Math.random()*100)
+			var ran = Math.random()*100
 			if(ran <= player.chance){
 				createEnemy(2);
 			}
@@ -248,12 +249,44 @@ function drawBullets(){
 		bullets[i][1] += bullets[i][3]*bullets[i][4];
 	}
 }
-
+var powerups = []
 function createPowerup(type){
-	switch(type){
-		case 'regen':
-			powerups.push([x,y,type])
-			break;
+	var x = Math.floor(Math.random()*705)+5
+	var y = Math.floor(Math.random()*465)+5
+	var alpha = 1
+	var v = 0
+	powerups.push([x,y,type,alpha,v])
+}
+function animatePowerup(){
+	for (var i=0; i<powerups.length; i++){
+		powerups[i][3] = Math.cos(powerups[i][4])
+		powerups[i][4] += .1
+	}
+}
+function drawPowerup(){
+	for (var i=0; i<powerups.length; i++){
+		switch(powerups[i][2]){
+			case 'regen':
+				ctx.fillStyle = 'rgba(255,0,0,'+powerups[i][3]+')'
+				break;
+			case 'nuke':
+				ctx.fillStyle = 'rgba(0,0,255,'+powerups[i][3]+')'
+				break;
+			case 'agility':
+				ctx.fillStyle = 'rgba(0,255,0,'+powerups[i][3]+')'
+		}
+		ctx.beginPath();
+		ctx.arc(powerups[i][0],powerups[i][1],5,0,2*Math.PI)
+		ctx.closePath();
+		ctx.fill();
+	}
+}
+
+function spawnPowerup(){
+	if(globaltick % 1200 == 0){
+		var types = ['regen','nuke','agility']
+		var ran = types[Math.floor(Math.random()*types.length)]
+		createPowerup(ran)
 	}
 }
 
@@ -272,6 +305,29 @@ function checkCollision(){
 		}
 		var dist2 = Math.sqrt((player.y-ey)*(player.y-ey)+(player.x-ex)*(player.x-ex))
 		if(dist2 < player.r + enemies[j][4]){player.hp--}
+	}
+	for (var t=0; t<powerups.length; t++){
+		var px = powerups[t][0]
+		var py = powerups[t][1]
+		var dist3 = Math.sqrt((player.y-py)*(player.y-py)+(player.x-px)*(player.x-px))
+		if(dist3 < player.r + 5){
+			switch(powerups[t][2]){
+				case 'regen':
+					player.regenrate = 10;
+					setTimeout(function(){player.regenrate=60},10000)
+					break;
+				case 'nuke':
+					player.kills += enemies.length
+					player.totalkills += enemies.length
+					enemies = []
+					setTimeout(function(){createEnemy(1)},3000)
+					break;
+				case 'agility':
+					player.speed *= 2;
+					setTimeout(function(){player.speed/=2},7000)
+			}
+			powerups.splice(t,1)
+		}
 	}
 }
 alph = 0
@@ -345,10 +401,7 @@ function keyDown(e){
 	//console.log(e.keyCode)
 	if(e.keyCode == 76){player.hp = 999999; player.totalkills = 999}
 	
-	//press 1 to pistol
-	//press 2 for shotgun
-	//press 3 for rifle
-	//etc.
+	
 	
 	if(e.keyCode == 49 && player.totalkills >= 0){player.gun = player.weapon_list.pistol;}
 	if(e.keyCode == 50 && player.totalkills >= 20){player.gun = player.weapon_list.shotgun;}
@@ -383,11 +436,14 @@ function loop(){
 	ctx.stroke();
 	animatePlayer()
 	animateEnemy()
+	animatePowerup()
 	checkCollision()
 	drawBullets()
 	drawText()
 	drawPlayer()
+	drawPowerup()
 	drawEnemy()
+	spawnPowerup()
 	if(player.shooting){shoot()}
 	
 	requestAnimationFrame(loop)
