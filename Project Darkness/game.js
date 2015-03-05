@@ -4,6 +4,8 @@ var fore_canvas = document.getElementById('forecanvas');
 var f_ctx = fore_canvas.getContext('2d');
 var hud_canvas = document.getElementById('hud');
 var hud = hud_canvas.getContext('2d');
+var buffer_canvas = document.getElementById('buffer');
+var buffer = buffer_canvas.getContext('2d');
 
 var rightKey,leftKey,upKey,downKey;
 var entities = [];
@@ -46,6 +48,12 @@ Player.prototype.animate = function(){
 		else if(upKey && !testCollision()){this.vely = -this.speed}
 		else{this.vely = 0}
 
+	if(debug_vars.noclip){
+		if(rightKey){this.x += this.speed}
+		if(leftKey){this.x += -this.speed}
+		if(downKey){this.y += this.speed}
+		if(upKey){this.y += -this.speed}
+	}
 	this.x += this.velx;
 	this.y += this.vely;
 
@@ -94,12 +102,22 @@ Enemy.prototype.animate = function (){
 	    if((this.x+1 > entities[i].x && this.x+1 < entities[i].x + entities[i].w && Math.abs((entities[i].y + entities[i].h) -this.y) <= 2) ||
 	       (this.x+this.w-1 > entities[i].x && this.x+this.w-1 < entities[i].x + entities[i].w && Math.abs((entities[i].y + entities[i].h) -this.y) <= 2)
 	    ){
-	        this.y = (entities[i].y + entities[i].h);
+	        this.y = (entities[i].y + entities[i].h)+1;
 	    }
-	    if((this.x+1 > entities[i].x && this.x+1 < entities[i].x + entities[i].w && Math.abs((entities[i].y + entities[i].h) -this.y) <= 2) ||
-	       (this.x+this.w-1 > entities[i].x && this.x+this.w-1 < entities[i].x + entities[i].w && Math.abs((entities[i].y + entities[i].h) -this.y) <= 2)
+	    if((this.x+1 > entities[i].x && this.x+1 < entities[i].x + entities[i].w && Math.abs((entities[i].y) - (this.y + this.h)) <= 2) ||
+	       (this.x+this.w-1 > entities[i].x && this.x+this.w-1 < entities[i].x + entities[i].w && Math.abs((entities[i].y) - (this.y + this.h)) <= 2)
 	    ){
-	        this.y = (entities[i].y + entities[i].h);
+	        this.y = (entities[i].y - this.h)-1;
+	    }
+	    if((this.y+1 > entities[i].y && this.y+1 < entities[i].y + entities[i].h && Math.abs((entities[i].x) - (this.x + this.w)) <= 2) ||
+	       (this.y+this.h-1 > entities[i].y && this.y+this.h-1 < entities[i].y + entities[i].h && Math.abs((entities[i].x) - (this.x + this.w)) <= 2)
+	    ){
+	        this.x = (entities[i].x - this.w)-1;
+	    }
+	    if((this.y+1 > entities[i].y && this.y+1 < entities[i].y + entities[i].h && Math.abs((entities[i].x + entities[i].w) -this.x) <= 2) ||
+	       (this.y+this.h-1 > entities[i].y && this.y+this.h-1 < entities[i].y + entities[i].h && Math.abs((entities[i].x + entities[i].w) -this.x) <= 2)
+	    ){
+	        this.x = (entities[i].x + entities[i].w)+1;
 	    }
 	}
 
@@ -177,6 +195,11 @@ function testCollision(){
 	}
 	
 }
+var tiles = new Image();
+tiles.src = 'tiles.png'
+function drawBuffer(){
+	
+}
 //
 //
 //
@@ -228,20 +251,23 @@ function animateEnemies(){
 		enemies[i].animate();
 	}
 }
-function loop(){
+function clearCanvases(){
 	ctx.clearRect(0,0,1200,600);
 	f_ctx.clearRect(0,0,1200,600);
 	hud.clearRect(0,0,1200,600);
-	f_ctx.fillStyle='rgba(0,0,0,.99)';
+}
+function loop(){
+	clearCanvases()
+	f_ctx.fillStyle='rgba(0,0,0,.9)';
 	f_ctx.fillRect(0,0,1200,600);
 	player1.animate();
 	animateEnemies();
 	testCollision();
 	drawEntities();
+	player1.draw();
 	flashlight.draw()
 	drawLightSources();
 	drawEnemies();
-	player1.draw();
 	debug();
 	requestAnimationFrame(loop);
 }
@@ -262,8 +288,8 @@ document.addEventListener('keyup',keyUp);
 function keyDown(e){
 	//console.log(e.keyCode)
 	if(e.keyCode == 76){
-		if(!debug_trigger){debug_trigger = true}
-		else{debug_trigger = false;}
+		if(!debug_vars.trigger){debug_vars.trigger = true}
+		else{debug_vars.trigger = false;}
 	}
 
 	if(e.keyCode == 65){leftKey = true}
@@ -278,12 +304,16 @@ function keyUp(e){
 	else if(e.keyCode == 83){downKey = false}
 }
 var debug_trigger = false;
-
+var debug_vars = {
+	trigger: false,
+	noclip: false,
+}
 function debug(){
-	if(!debug_trigger){
+	if(!debug_vars.trigger){
 	    f_ctx.fillStyle = 'white';
 		f_ctx.font = '20px Georgia';
 		f_ctx.fillText(player1.velx, 500,500);
+		debug_vars.noclip = true;
 		
 	}
 	else{
