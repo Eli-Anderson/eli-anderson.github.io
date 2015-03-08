@@ -2,14 +2,20 @@
 
 <body>
 <canvas id='canvas' width=900 height=450 style='border:1px solid black'></canvas>
-<canvas id='canvas2' width=300 height=450 style='border:1px solid black'></canvas>
+<canvas id='canvas2' width=256 height=450 style='border:1px solid black'></canvas>
 <div>
-	Tile Width: <input id='t_width' type='text'>
+	Tile Width: <input id='t_width' type='text' value='32'>
 	<br>
-	Tileset: <input id='file' type='file' accept='image/*'>
+	Tileset: place 'tiles.png' file in same folder<!-- <input id='file' type='file' accept='image/*' value='tiles.png'> -->
+	Map height: <input id='m_height' type='text' value='10'>
+	Map width: <input id='m_width' type='text' value='10'>
+	<br>
+	<button id='getmap' onclick=getMap()>Convert to map</button>
+	<br>
+	<button id='set' onclick=getFile()>Set</button>
 </div>
+<input id='p_map' type='text'>
+<p id='log'></p>
+<script src='main.js'></script>
 </body>
-<head>
-	<script src='main.js'></script>
-</head>
 </html>
