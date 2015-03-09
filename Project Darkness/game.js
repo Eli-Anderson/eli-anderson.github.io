@@ -12,18 +12,7 @@ var entities = [];
 var lights = [];
 var enemies = [];
 
-var map = [
-    [1,0,0,0,0,18,0,0,0,1,],
-    [0,0,18,0,0,0,0,0,0,0,],
-    [0,0,0,1,0,1,0,0,0,0,],
-    [1,0,0,0,0,0,0,18,0,0,],
-    [0,0,0,1,0,18,0,0,0,0,],
-    [0,0,0,0,0,0,0,0,0,0,],
-    [1,1,1,0,0,0,18,0,0,0,],
-    [0,0,0,18,0,0,0,0,0,0,],
-    [0,0,18,0,0,0,0,1,0,0,],
-    [0,0,0,0,0,0,0,0,0,0,],
-]
+
 
 f_ctx.globalCompositeOperation = 'xor';
 //
@@ -52,7 +41,10 @@ Player.prototype.animate = function(){
 	hud.arc(mouse.x,mouse.y,2,0,2*Math.PI);
 	hud.closePath();
 	hud.fill();
-
+	if(this.x + x_translation > 1200-camera.edge){moveCamera(-2,0);this.x-=this.speed}
+	if(this.x + x_translation < camera.edge){moveCamera(2,0);this.x+=this.speed}
+	if(this.y + y_translation > 600-camera.edge){moveCamera(0,-2);this.y-=this.speed}
+	if(this.y + y_translation < camera.edge){moveCamera(0,2);this.y+=this.speed}
 	flashlight.setPosition(this.x+this.w/2,this.y+this.h/2);
 		if(rightKey && !testCollision()){this.velx = this.speed}
 		else if(leftKey && !testCollision()){this.velx = -this.speed}
@@ -213,6 +205,9 @@ tiles.src = 'tiles.png';
 function drawBuffer(){
 	for(var y=0; y<map.length; y++){
 	    for(var x=0; x<map[y].length; x++){
+	    	if(map[y][x] != 0){
+	    		new Entity(32*x,32*y,32,32)
+	    	}
 	        buffer.drawImage(tiles,map[y][x]*32,0,32,32,32*x,32*y,32,32);
 	    }
 	}
@@ -227,11 +222,11 @@ function drawMap(){
 //
 //
 function init(){
-	box1 = new Entity(300,300,50,50);
 	player1 = new Player(250,250,25,25);
 	flashlight = new LightSource(200,200,125);
 	lights.splice(0,1);
 	flashlight.setPosition(player1.x,player1.y);
+	lamp = new LightSource(300,300,200)
 	enemy1 = new Enemy(300,500,25,25,'mouse');
 	enemy2 = new Enemy(350,500,25,25,'rat');
 	enemy2.aggroRange = 500
@@ -249,6 +244,17 @@ function init(){
         };
 	loop();
 	setTimeout(drawBuffer,500);
+}
+var x_translation = 0;
+var y_translation = 0;
+var camera = {
+	edge: 250,
+}
+function moveCamera(x2,y2){
+	x_translation += x2;
+	y_translation += y2;
+	ctx.translate(x2,y2);
+	f_ctx.translate(x2,y2);
 }
 
 function drawEntities(){
@@ -272,19 +278,19 @@ function animateEnemies(){
 	}
 }
 function clearCanvases(){
-	ctx.clearRect(0,0,1200,600);
-	f_ctx.clearRect(0,0,1200,600);
+	ctx.clearRect(-x_translation,-y_translation,1200,600);
+	f_ctx.clearRect(-x_translation,-y_translation,1200,600);
 	hud.clearRect(0,0,1200,600);
 }
 function loop(){
 	clearCanvases()
 	drawMap()
 	f_ctx.fillStyle='rgba(0,0,0,.9)';
-	f_ctx.fillRect(0,0,1200,600);
+	f_ctx.fillRect(-x_translation,-y_translation,1200,600);
 	player1.animate();
 	animateEnemies();
 	testCollision();
-	drawEntities();
+	//drawEntities();
 	player1.draw();
 	flashlight.draw()
 	drawLightSources();
@@ -298,9 +304,9 @@ var mouse = {
 	angle: 0,
 };
 document.addEventListener('mousemove',function(e){
-	mouse.x = e.clientX-10;
-	mouse.y = e.clientY-10;
-	mouse.angle = Math.atan2(mouse.y-flashlight.y,mouse.x-flashlight.x);
+	mouse.x = e.clientX - 10;
+	mouse.y = e.clientY - 10;
+	mouse.angle = Math.atan2(mouse.y-flashlight.y-y_translation,mouse.x-flashlight.x-x_translation);
 });
 
 document.addEventListener('keydown',keyDown);
