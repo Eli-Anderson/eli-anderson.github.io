@@ -6,13 +6,13 @@ var selected = 0;
 var tiles = new Image();
 tiles.src = 'tiles.png'
 var pointer = new Image();
-pointer.src = 'http://static.micheljansen.org/uploads/mac-osx-arrow-cursor.png'
+pointer.src = 'pointer.png'
 var width = 32;
 var map = []
 var source;
 function init(){
-	getFile()
-	setInterval(function(){getWidth()},100)
+	setTimeout(getFile,200)
+	setInterval(function(){getWidth},300)
 }
 function getWidth(){
     if(Number(document.getElementById('t_width').value) > 0){
@@ -40,8 +40,8 @@ function drawSidebar(){
 	    }
     }
     else if(width > 0){
-        for(var i=0; i<tiles.width/width; i++){
-	    	side.drawImage(tiles,i*width,0,width,width,i*width,0,width,width)
+        for(var k=0; k<tiles.width/width; k++){
+	    	side.drawImage(tiles,k*width,0,width,width,k*width,0,width,width)
 	    }
     }
     else{width = 32; drawSidebar()}
@@ -116,34 +116,37 @@ function getMap(){
         for(var y=0; y<map[x].length; y++){
             text += map[x][y]+',';
         }
-        text += '], \n'
+        text += '],\n'
     }
     document.getElementById('p_map').value = text
 }
 
 x5 = 0;
 y5 = 0;
-function handleClickMain(e){
-	mouse.down = true;
+var start = false;
+function handleClickMain(){
+    
 	var x = mouse.x
 	var y = mouse.y
 	var x2 = Math.abs(x % width);
 	var y2 = Math.abs(y % width);
 	var x3 = x-x2;
 	var y3 = y-y2;
-	if(selected != 'drag'){
-		if(map[(y3)/width] !== undefined){
-	 	   if(map[(y3)/width][(x3)/width] !== undefined){
-	 	   		//log('2,')
-	 	   		main.drawImage(tiles,selected*width,0,width,width,x3,y3,width,width);
-	        	if(selected === 0){
-	        	    main.clearRect(x3-x5,y3-y5,width,width)
-	        	}
-	        	map[(y3)/width][(x3)/width] = selected;
-	    	}
-		}
-	}
-	start_coords = [x3,y3];
+	if(mouse.down){
+    	if(selected != 'drag'){
+    		if(map[(y3)/width] !== undefined){
+    	 	   if(map[(y3)/width][(x3)/width] !== undefined){
+    	 	   		//log('2,')
+    	 	   		main.drawImage(tiles,selected*width,0,width,width,x3,y3,width,width);
+    	        	if(selected === 0){
+    	        	    main.clearRect(x3-x5,y3-y5,width,width)
+    	        	}
+    	        	map[(y3)/width][(x3)/width] = selected;
+    	    	}
+    		}
+    	}
+    }
+	if(mouse.down && start === false){start_coords = [x3,y3];start = true;}
 }
 function handleDrag(){
 	if(mouse.down){
@@ -185,7 +188,7 @@ function handleClickSide(e){
 	drawSidebar()
 }
 
-canvas.addEventListener('mousedown',handleClickMain)
+canvas.addEventListener('mousedown',function(){mouse.down = true;handleClickMain()})
 canvas.addEventListener('mousemove',handleMove)
 canvas.addEventListener('mouseup',handleClickUpMain)
 canvas2.addEventListener('click',handleClickSide)
@@ -199,11 +202,13 @@ var mouse = {
 function handleMove(e){
 	mouse.x = e.clientX - 10 - x5;
 	mouse.y = e.clientY - 10 - y5;
+	handleClickMain()
 	handleDrag()
 }
 
 function handleClickUpMain(){
 	mouse.down = false;
+	start = false;
 }
 
 window.onload = init();
