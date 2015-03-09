@@ -12,6 +12,19 @@ var entities = [];
 var lights = [];
 var enemies = [];
 
+var map = [
+    [1,0,0,0,0,18,0,0,0,1,],
+    [0,0,18,0,0,0,0,0,0,0,],
+    [0,0,0,1,0,1,0,0,0,0,],
+    [1,0,0,0,0,0,0,18,0,0,],
+    [0,0,0,1,0,18,0,0,0,0,],
+    [0,0,0,0,0,0,0,0,0,0,],
+    [1,1,1,0,0,0,18,0,0,0,],
+    [0,0,0,18,0,0,0,0,0,0,],
+    [0,0,18,0,0,0,0,1,0,0,],
+    [0,0,0,0,0,0,0,0,0,0,],
+]
+
 f_ctx.globalCompositeOperation = 'xor';
 //
 //
@@ -186,19 +199,26 @@ function testCollision(){
 			player1.x < entities[i].x + entities[i].w &&
 			player1.y + player1.h >= entities[i].y &&
 			player1.y <= entities[i].y + entities[i].h){
-			if(player1.velx == -player1.speed){player1.x += player1.speed}
-			if(player1.velx == player1.speed){player1.x -= player1.speed}
-			if(player1.vely == -player1.speed){player1.y += player1.speed}
-			if(player1.vely == player1.speed){player1.y -= player1.speed}
+			if(player1.velx == -player1.speed){player1.x += 2*player1.speed;}
+			if(player1.velx == player1.speed){player1.x -= 2*player1.speed}
+			if(player1.vely == -player1.speed){player1.y += 2*player1.speed}
+			if(player1.vely == player1.speed){player1.y -= 2*player1.speed}
 			return true;
 		}
 	}
 	
 }
 var tiles = new Image();
-tiles.src = 'tiles.png'
+tiles.src = 'tiles.png';
 function drawBuffer(){
-	
+	for(var y=0; y<map.length; y++){
+	    for(var x=0; x<map[y].length; x++){
+	        buffer.drawImage(tiles,map[y][x]*32,0,32,32,32*x,32*y,32,32);
+	    }
+	}
+}
+function drawMap(){
+    ctx.drawImage(buffer_canvas,0,0);
 }
 //
 //
@@ -217,18 +237,18 @@ function init(){
 	enemy2.aggroRange = 500
 
 
-
 	flashlight.draw = function(){
-	for(var r=this.r/2, x=this.r/2, a=1; r<=this.r; r+=x/5,a-=.2){
-		f_ctx.fillStyle='rgba(255,255,255,'+a+')';
-		f_ctx.beginPath();
-		f_ctx.moveTo(this.x,this.y);
-		f_ctx.arc(this.x,this.y,r,mouse.angle-Math.PI/5,mouse.angle+Math.PI/5);
-		f_ctx.closePath();
-		f_ctx.fill();
-	}
-};
+	    for(var r=this.r/2, x=this.r/2, a=1; r<=this.r; r+=x/5,a-=.2){
+	    	f_ctx.fillStyle='rgba(255,255,255,'+a+')';
+	    	f_ctx.beginPath();
+	    	f_ctx.moveTo(this.x,this.y);
+	    	f_ctx.arc(this.x,this.y,r,mouse.angle-Math.PI/5,mouse.angle+Math.PI/5);
+	    	f_ctx.closePath();
+	    	f_ctx.fill();
+	     }
+        };
 	loop();
+	setTimeout(drawBuffer,500);
 }
 
 function drawEntities(){
@@ -258,6 +278,7 @@ function clearCanvases(){
 }
 function loop(){
 	clearCanvases()
+	drawMap()
 	f_ctx.fillStyle='rgba(0,0,0,.9)';
 	f_ctx.fillRect(0,0,1200,600);
 	player1.animate();
