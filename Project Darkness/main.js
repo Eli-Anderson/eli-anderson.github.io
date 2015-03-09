@@ -6,7 +6,7 @@ var selected = 0;
 var tiles = new Image();
 tiles.src = 'tiles.png'
 var pointer = new Image();
-pointer.src = 'pointer.png'
+pointer.src = 'http://upload.wikimedia.org/wikipedia/commons/b/b3/Mouse_pointer_or_cursor.png'
 var width = 32;
 var map = []
 var source;
