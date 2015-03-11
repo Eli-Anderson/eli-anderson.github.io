@@ -1,21 +1,52 @@
 <html>
-
+    <head>
+        <style>
+            canvas {
+                position:absolute;
+                border:1px solid black;
+            }
+            #object {
+                top:8px;
+                left:8px;
+            }
+            #inputs {
+                position:absolute;
+                top:460px;
+            }
+            #attributes {
+                position:absolute;
+                top:460px;
+                left:914px;
+            }
+        </style>
+    </head>
 <body>
-<canvas id='canvas' width=900 height=450 style='border:1px solid black'></canvas>
-<canvas id='canvas2' width=256 height=450 style='border:1px solid black'></canvas>
-<div>
+    <div id=main>
+<canvas id='canvas' width=900 height=450 style='visibility:visible'></canvas>
+<canvas id='object' width=900 height=450 style='visibility:visible'></canvas>
+</div>
+<canvas id='canvas2' width=256 height=450 style='top:8px;left:914px'></canvas>
+<div id='inputs'>
 	Tile Width: <input id='t_width' type='text' value='32'>
 	<br>
 	Tileset: place 'tiles.png' file in same folder<!-- <input id='file' type='file' accept='image/*' value='tiles.png'> -->
 	Map height: <input id='m_height' type='text' value='10'>
 	Map width: <input id='m_width' type='text' value='10'>
 	<br>
-	<button id='getmap' onclick=getMap()>Convert to map</button>
-	<br>
 	<button id='set' onclick=getFile()>Set</button>
-</div>
-<input id='p_map' type='text'>
+	<br>
+	<button id='getmap' onclick=downloadFile()>Convert and download</button>
+	<br>
+	<input id='map_in' type='file'>
 <p id='log'></p>
+</div>
+<div id=attributes>
+    <input id=attr1 onchange=getAttr() type=range min=0 max=300 value=150>Radius<input id=attr1_val type=text style='width:50px'>
+    <br>
+    <input id=attr2 onchange=getAttr() type=range min=0 max=255 value=255>Brightness<input id=attr2_val type=text style='width:50px'>
+    <br>
+    <input id=attr3 onchange=getAttr() type=checkbox>Flicker
+</div>
 <script src='main.js'></script>
 </body>
 </html>
