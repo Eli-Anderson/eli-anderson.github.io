@@ -1,6 +1,7 @@
 <html>
     <head>
         <style>
+            .stop-scrolling {height: 100%;overflow: hidden;}
             canvas {
                 position:absolute;
                 border:1px solid black;
@@ -8,19 +9,20 @@
             #object {
                 top:8px;
                 left:8px;
+                cursor:none;
             }
             #inputs {
                 position:absolute;
                 top:460px;
             }
-            #attributes {
+            #tools {
                 position:absolute;
                 top:460px;
                 left:914px;
             }
         </style>
     </head>
-<body>
+<body id='body'>
     <div id=main>
 <canvas id='canvas' width=900 height=450 style='visibility:visible'></canvas>
 <canvas id='object' width=900 height=450 style='visibility:visible'></canvas>
@@ -33,14 +35,15 @@
 	Map height: <input id='m_height' type='text' value='10'>
 	Map width: <input id='m_width' type='text' value='10'>
 	<br>
-	<button id='set' onclick=getFile()>Set</button>
+	Tileset: <input id='t_upload' type='file'>
+	<br>
+	<button id='set' onclick=reload()>Refresh</button>
 	<br>
 	<button id='getmap' onclick=downloadFile()>Convert and download</button>
-	<br>
-	<input id='map_in' type='file'>
+	Upload map: <input id='map_in' type='file'>
 <p id='log'></p>
 </div>
-<div id=attributes>
+<div id=tools>
     <input id=attr1 onchange=getAttr() type=range min=0 max=300 value=150>Radius<input id=attr1_val type=text style='width:50px'>
     <br>
     <input id=attr2 onchange=getAttr() type=range min=0 max=255 value=255>Brightness<input id=attr2_val type=text style='width:50px'>
