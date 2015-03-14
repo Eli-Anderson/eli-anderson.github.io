@@ -11,13 +11,10 @@ var rightKey,leftKey,upKey,downKey;
 var entities = [];
 var lights = [];
 var enemies = [];
-
-
-
 f_ctx.globalCompositeOperation = 'xor';
 //
 //
-//
+var floors = [0,1,2]
 //
 //
 function Player(x,y,w,h){
@@ -25,7 +22,7 @@ function Player(x,y,w,h){
 	this.y = y;
 	this.w = w;
 	this.h = h;
-	this.speed = 2;
+	this.speed = 5;
 	this.velx = 0;
 	this.vely = 0;
 }
@@ -41,17 +38,39 @@ Player.prototype.animate = function(){
 	hud.arc(mouse.x,mouse.y,2,0,2*Math.PI);
 	hud.closePath();
 	hud.fill();
-	if(this.x + x_translation > 1200-camera.edge){moveCamera(-2,0);this.x-=this.speed}
-	if(this.x + x_translation < camera.edge){moveCamera(2,0);this.x+=this.speed}
-	if(this.y + y_translation > 600-camera.edge){moveCamera(0,-2);this.y-=this.speed}
-	if(this.y + y_translation < camera.edge){moveCamera(0,2);this.y+=this.speed}
+	if(this.x + x_translation > 1200-camera.edge){moveCamera(-1*this.speed,0);this.velx-=this.speed}
+	if(this.x + x_translation < camera.edge){moveCamera(1*this.speed,0);this.velx+=this.speed}
+	if(this.y + y_translation > 600-camera.edge){moveCamera(0,-1*this.speed);this.vely-=this.speed}
+	if(this.y + y_translation < camera.edge){moveCamera(0,1*this.speed);this.vely+=this.speed}
 	flashlight.setPosition(this.x+this.w/2,this.y+this.h/2);
-		if(rightKey && !testCollision()){this.velx = this.speed}
-		else if(leftKey && !testCollision()){this.velx = -this.speed}
+		if(rightKey){this.velx = this.speed}
+		else if(leftKey){this.velx = -this.speed}
 		else{this.velx = 0}
-		if(downKey && !testCollision()){this.vely = this.speed}
-		else if(upKey && !testCollision()){this.vely = -this.speed}
+		if(downKey){this.vely = this.speed}
+		else if(upKey){this.vely = -this.speed}
 		else{this.vely = 0}
+	for(var i=0; i<entities.length; i++){
+	    if((player1.x+1 > entities[i].x && player1.x+1 < entities[i].x + entities[i].w && Math.abs((entities[i].y + entities[i].h) -player1.y) <= 3) ||
+	       (player1.x+player1.w-1 > entities[i].x && player1.x+player1.w-1 < entities[i].x + entities[i].w && Math.abs((entities[i].y + entities[i].h) -player1.y) <= 3)
+	    ){
+	        player1.y = (entities[i].y + entities[i].h)+2;
+	    }
+	    if((player1.x+1 > entities[i].x && player1.x+1 < entities[i].x + entities[i].w && Math.abs((entities[i].y) - (player1.y + player1.h)) <= 3) ||
+	       (player1.x+player1.w-1 > entities[i].x && player1.x+player1.w-1 < entities[i].x + entities[i].w && Math.abs((entities[i].y) - (player1.y + player1.h)) <= 3)
+	    ){
+	        player1.y = (entities[i].y - player1.h)-2;
+	    }
+	    if((player1.y+1 > entities[i].y && player1.y+1 < entities[i].y + entities[i].h && Math.abs((entities[i].x) - (player1.x + player1.w)) <= 3) ||
+	       (player1.y+player1.h-1 > entities[i].y && player1.y+player1.h-1 < entities[i].y + entities[i].h && Math.abs((entities[i].x) - (player1.x + player1.w)) <= 3)
+	    ){
+	        player1.x = (entities[i].x - player1.w)-2;
+	    }
+	    if((player1.y+1 > entities[i].y && player1.y+1 < entities[i].y + entities[i].h && Math.abs((entities[i].x + entities[i].w) -player1.x) <= 3) ||
+	       (player1.y+player1.h-1 > entities[i].y && player1.y+player1.h-1 < entities[i].y + entities[i].h && Math.abs((entities[i].x + entities[i].w) -player1.x) <= 3)
+	    ){
+	        player1.x = (entities[i].x + entities[i].w)+2;
+	    }
+	}
 
 	if(debug_vars.noclip){
 		if(rightKey){this.x += this.speed}
@@ -61,9 +80,6 @@ Player.prototype.animate = function(){
 	}
 	this.x += this.velx;
 	this.y += this.vely;
-
-	//this.velx *= .85;
-	//this.vely *= .85;
 
 };
 //
@@ -100,7 +116,7 @@ Enemy.prototype.animate = function (){
         }
         else if(this.type === 'mouse'){
             this.x -= dirx*this.speed;
-            this.y -= dirx*this.speed;
+            this.y -= diry*this.speed;
         }
 	}
 	for(var i=0; i<entities.length; i++){
@@ -184,6 +200,32 @@ LightSource.prototype.draw = function(){
 //
 function testCollision(){
 	for(var i=0; i<entities.length; i++){
+	    if((player1.x+1 > entities[i].x && player1.x+1 < entities[i].x + entities[i].w && Math.abs((entities[i].y + entities[i].h) -player1.y) <= 2) ||
+	       (player1.x+player1.w-1 > entities[i].x && player1.x+player1.w-1 < entities[i].x + entities[i].w && Math.abs((entities[i].y + entities[i].h) -player1.y) <= 2)
+	    ){
+	        player1.y = (entities[i].y + entities[i].h)+1;
+	    }
+	    if((player1.x+1 > entities[i].x && player1.x+1 < entities[i].x + entities[i].w && Math.abs((entities[i].y) - (player1.y + player1.h)) <= 2) ||
+	       (player1.x+player1.w-1 > entities[i].x && player1.x+player1.w-1 < entities[i].x + entities[i].w && Math.abs((entities[i].y) - (player1.y + player1.h)) <= 2)
+	    ){
+	        player1.y = (entities[i].y - player1.h)-1;
+	    }
+	    if((player1.y+1 > entities[i].y && player1.y+1 < entities[i].y + entities[i].h && Math.abs((entities[i].x) - (player1.x + player1.w)) <= 2) ||
+	       (player1.y+player1.h-1 > entities[i].y && player1.y+player1.h-1 < entities[i].y + entities[i].h && Math.abs((entities[i].x) - (player1.x + player1.w)) <= 2)
+	    ){
+	        player1.x = (entities[i].x - player1.w)-1;
+	    }
+	    if((player1.y+1 > entities[i].y && player1.y+1 < entities[i].y + entities[i].h && Math.abs((entities[i].x + entities[i].w) -player1.x) <= 2) ||
+	       (player1.y+player1.h-1 > entities[i].y && player1.y+player1.h-1 < entities[i].y + entities[i].h && Math.abs((entities[i].x + entities[i].w) -player1.x) <= 2)
+	    ){
+	        player1.x = (entities[i].x + entities[i].w)+1;
+	    }
+	}
+	
+	
+}
+function backuptestCollision(){
+	for(var i=0; i<entities.length; i++){
 		
 
 		if((player1.x + player1.w + player1.velx >= entities[i].x || player1.y + player1.h + player1.vely >= entities[i].y) &&
@@ -205,15 +247,33 @@ tiles.src = 'tiles.png';
 function drawBuffer(){
 	for(var y=0; y<map.length; y++){
 	    for(var x=0; x<map[y].length; x++){
-	    	if(map[y][x] != 0){
-	    		new Entity(32*x,32*y,32,32)
+	    	if(floors.indexOf(map[y][x]) == -1){
+	    		new Entity(32*x,32*y,32,32);
 	    	}
 	        buffer.drawImage(tiles,map[y][x]*32,0,32,32,32*x,32*y,32,32);
 	    }
 	}
+	for(var p=0; p<objects.length; p++){
+	        if(objects[p][0] == 91){
+	            var lr = objects[p][1];
+	            var lx = objects[p][4]*32;
+	            var ly = objects[p][5]*32;
+	            new LightSource(lx,ly,lr)
+	        }
+	}
 }
 function drawMap(){
     ctx.drawImage(buffer_canvas,0,0);
+}
+function drawLightTile(){
+    f_ctx.fillStyle='rgba(255,255,255,.1)'
+	for(var y=0; y<map.length; y++){
+	    for(var x=0; x<map[y].length; x++){
+	    	if(map[y][x] !== 0){
+	    		f_ctx.fillRect(32*x,32*y,32,32)
+	    	}
+	    }
+	}
 }
 //
 //
@@ -226,7 +286,6 @@ function init(){
 	flashlight = new LightSource(200,200,125);
 	lights.splice(0,1);
 	flashlight.setPosition(player1.x,player1.y);
-	lamp = new LightSource(300,300,200)
 	enemy1 = new Enemy(300,500,25,25,'mouse');
 	enemy2 = new Enemy(350,500,25,25,'rat');
 	enemy2.aggroRange = 500
@@ -285,9 +344,11 @@ function clearCanvases(){
 function loop(){
 	clearCanvases()
 	drawMap()
-	f_ctx.fillStyle='rgba(0,0,0,.9)';
+	f_ctx.fillStyle='rgba(0,0,0,1)';
 	f_ctx.fillRect(-x_translation,-y_translation,1200,600);
+	//drawLightTile()
 	player1.animate();
+	//testCollision()
 	animateEnemies();
 	testCollision();
 	//drawEntities();
@@ -335,19 +396,24 @@ var debug_vars = {
 	trigger: false,
 	noclip: false,
 }
+
+function log(text){
+    document.getElementById('log').innerHTML += (text+',')
+}
+
 function debug(){
 	if(!debug_vars.trigger){
-	    f_ctx.fillStyle = 'white';
-		f_ctx.font = '20px Georgia';
-		f_ctx.fillText(player1.velx, 500,500);
-		debug_vars.noclip = true;
+	    //f_ctx.fillStyle = 'white';
+		//f_ctx.font = '20px Georgia';
+		//f_ctx.fillText("DEBUG", 500,500);
+		//debug_vars.noclip = true;
 		
 	}
 	else{
-		f_ctx.clearRect(0,0,1200,600);
+		f_ctx.clearRect(-x_translation,-y_translation,1200,600);
 		f_ctx.fillStyle = 'black';
 		f_ctx.font = '20px Georgia';
-		f_ctx.fillText(player1.velx, 500,500);
+		f_ctx.fillText("DEBUG", 500,500);
 	}
 }
 
