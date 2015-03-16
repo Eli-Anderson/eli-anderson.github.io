@@ -138,11 +138,13 @@ Enemy.prototype.animate = function (){
 
     ax *= .9;
     ay *= .9;
+    console.log(velx)
+    console.log(ax)
 	var hyp = 50
 	if(hyp <= this.aggroRange){
         if(this.type === 'rat'){
-	        this.x += velx;
-	        this.y += vely;
+	        //this.x += velx;
+	        //this.y += vely;
         }
         else if(this.type === 'mouse'){
             this.x -= dirx*this.speed;
