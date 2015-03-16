@@ -126,6 +126,8 @@ Enemy.prototype.animate = function (){
     var y = Math.round(this.y + (this.h/2) - ((this.y + this.h/2) % 32))/32;
     var ax = d_field[y][x][0]
     var ay = d_field[y][x][1]
+    var velx;
+    var vely;
     var velx += ax;
     var vely += ay;
     console.log(d_field[y][x])
@@ -140,8 +142,8 @@ Enemy.prototype.animate = function (){
 	var hyp = 50
 	if(hyp <= this.aggroRange){
         if(this.type === 'rat'){
-	        this.x += ax;
-	        this.y += ay;
+	        this.x += velx;
+	        this.y += vely;
         }
         else if(this.type === 'mouse'){
             this.x -= dirx*this.speed;
