@@ -131,6 +131,10 @@ Enemy.prototype.animate = function (){
 	    velx += temp[x][0];
 	    vely += temp[x][1];
 	}
+	else{
+		velx += 1;
+		vely += 1;
+	}
 
     velx *= .9;
     vely *= .9;
