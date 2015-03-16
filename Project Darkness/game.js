@@ -119,7 +119,7 @@ function Enemy(x,y,w,h,type){
 	this.type = type;
 	this.speed = 4;
 	this.visible = false;
-	this.aggroRange = 100;
+	this.aggroRange = 250;
 	this.attackRange = 5;
 }
 Enemy.prototype.draw = function (){
@@ -321,7 +321,6 @@ function init(){
 	lights.splice(0,1);
 	flashlight.setPosition(player1.x,player1.y);
 	setTimeout(function(){enemy1 = new Enemy(32*1,32*11,24,24,'rat')},2000)
-	setTimeout(function(){enemy1.aggroRange=1000},2000)
 
 	flashlight.draw = function(){
 	    for(var r=this.r/2, x=this.r/2, a=1; r<=this.r; r+=x/5,a-=.2){
