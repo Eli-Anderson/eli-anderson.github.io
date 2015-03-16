@@ -525,7 +525,7 @@ function setDirectionField(i,j){
 	else if(right==Infinity){
 		dx = left - center;
 	}
-	else if(right==Infinity && left=Infinity){
+	else if(right==Infinity && left==Infinity){
 		dx = 0;
 	}
 	else{
