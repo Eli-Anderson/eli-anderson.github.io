@@ -523,7 +523,10 @@ function setDirectionField(i,j){
 		dx = center - right;
 	}
 	else if(right==Infinity){
-		dx = left - center
+		dx = left - center;
+	}
+	else if(right==Infinity && left=Infinity){
+		dx = 0;
 	}
 	else{
 		dx = left - right;
@@ -533,7 +536,10 @@ function setDirectionField(i,j){
 		dy = center - bottom;
 	}
 	else if(bottom==Infinity){
-		dy = top - center
+		dy = top - center;
+	}
+	else if(bottom==Infinity && top==Infinity){
+		dy = 0;
 	}
 	else{
 		dy = top - bottom;
