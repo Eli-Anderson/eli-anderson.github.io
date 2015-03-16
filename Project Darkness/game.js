@@ -14,7 +14,25 @@ var enemies = [];
 f_ctx.globalCompositeOperation = 'xor';
 //
 //
-var floors = [0,1,2]
+var floors = [0,1]
+//
+//
+function preload(){
+	count = 0;
+	tiles = new Image();
+	tiles.onload=handleLoad();
+	tiles.src = 'tiles.png'
+}
+function handleLoad(){
+	count++
+	if(count == 1){
+		init()
+	}
+}
+//
+//
+//
+//
 //
 //
 function Player(x,y,w,h){
@@ -104,15 +122,26 @@ Enemy.prototype.draw = function (){
 	ctx.fillRect(this.x,this.y,this.w,this.h);
 };
 Enemy.prototype.animate = function (){
-    var dirx = player1.x - this.x;
-	var diry = player1.y - this.y;
-	var hyp = Math.sqrt((dirx*dirx)+(diry*diry));
-	dirx /= hyp;
-	diry /= hyp;
+	var x = Math.round(this.x + (this.w/2) - ((this.x + this.w/2) % 32))/32;
+    var y = Math.round(this.y + (this.h/2) - ((this.y + this.h/2) % 32))/32;
+    var velx;
+    var vely;
+    try{
+    	console.log(d_field[y][x])
+	    velx += d_field[y][x][0];
+	    vely += d_field[y][x][1];
+	}
+	catch(err){
+		console.log(err.message)
+	}
+
+    velx *= .9;
+    vely *= .9;
+	var hyp = 50
 	if(hyp <= this.aggroRange){
         if(this.type === 'rat'){
-	        this.x += dirx*this.speed;
-	        this.y += diry*this.speed;
+	        //this.x += velx*this.speed;
+	        //this.y += vely*this.speed;
         }
         else if(this.type === 'mouse'){
             this.x -= dirx*this.speed;
@@ -120,25 +149,25 @@ Enemy.prototype.animate = function (){
         }
 	}
 	for(var i=0; i<entities.length; i++){
-	    if((this.x+1 > entities[i].x && this.x+1 < entities[i].x + entities[i].w && Math.abs((entities[i].y + entities[i].h) -this.y) <= 2) ||
-	       (this.x+this.w-1 > entities[i].x && this.x+this.w-1 < entities[i].x + entities[i].w && Math.abs((entities[i].y + entities[i].h) -this.y) <= 2)
+	    if((this.x+1 > entities[i].x && this.x+1 < entities[i].x + entities[i].w && Math.abs((entities[i].y + entities[i].h) -this.y) <= 3) ||
+	       (this.x+this.w-1 > entities[i].x && this.x+this.w-1 < entities[i].x + entities[i].w && Math.abs((entities[i].y + entities[i].h) -this.y) <= 3)
 	    ){
-	        this.y = (entities[i].y + entities[i].h)+1;
+	        this.y = (entities[i].y + entities[i].h)+2;
 	    }
-	    if((this.x+1 > entities[i].x && this.x+1 < entities[i].x + entities[i].w && Math.abs((entities[i].y) - (this.y + this.h)) <= 2) ||
-	       (this.x+this.w-1 > entities[i].x && this.x+this.w-1 < entities[i].x + entities[i].w && Math.abs((entities[i].y) - (this.y + this.h)) <= 2)
+	    if((this.x+1 > entities[i].x && this.x+1 < entities[i].x + entities[i].w && Math.abs((entities[i].y) - (this.y + this.h)) <= 3) ||
+	       (this.x+this.w-1 > entities[i].x && this.x+this.w-1 < entities[i].x + entities[i].w && Math.abs((entities[i].y) - (this.y + this.h)) <= 3)
 	    ){
-	        this.y = (entities[i].y - this.h)-1;
+	        this.y = (entities[i].y - this.h)-2;
 	    }
-	    if((this.y+1 > entities[i].y && this.y+1 < entities[i].y + entities[i].h && Math.abs((entities[i].x) - (this.x + this.w)) <= 2) ||
-	       (this.y+this.h-1 > entities[i].y && this.y+this.h-1 < entities[i].y + entities[i].h && Math.abs((entities[i].x) - (this.x + this.w)) <= 2)
+	    if((this.y+1 > entities[i].y && this.y+1 < entities[i].y + entities[i].h && Math.abs((entities[i].x) - (this.x + this.w)) <= 3) ||
+	       (this.y+this.h-1 > entities[i].y && this.y+this.h-1 < entities[i].y + entities[i].h && Math.abs((entities[i].x) - (this.x + this.w)) <= 3)
 	    ){
-	        this.x = (entities[i].x - this.w)-1;
+	        this.x = (entities[i].x - this.w)-2;
 	    }
-	    if((this.y+1 > entities[i].y && this.y+1 < entities[i].y + entities[i].h && Math.abs((entities[i].x + entities[i].w) -this.x) <= 2) ||
-	       (this.y+this.h-1 > entities[i].y && this.y+this.h-1 < entities[i].y + entities[i].h && Math.abs((entities[i].x + entities[i].w) -this.x) <= 2)
+	    if((this.y+1 > entities[i].y && this.y+1 < entities[i].y + entities[i].h && Math.abs((entities[i].x + entities[i].w) -this.x) <= 3) ||
+	       (this.y+this.h-1 > entities[i].y && this.y+this.h-1 < entities[i].y + entities[i].h && Math.abs((entities[i].x + entities[i].w) -this.x) <= 3)
 	    ){
-	        this.x = (entities[i].x + entities[i].w)+1;
+	        this.x = (entities[i].x + entities[i].w)+2;
 	    }
 	}
 
@@ -242,8 +271,6 @@ function backuptestCollision(){
 	}
 	
 }
-var tiles = new Image();
-tiles.src = 'tiles.png';
 function drawBuffer(){
 	for(var y=0; y<map.length; y++){
 	    for(var x=0; x<map[y].length; x++){
@@ -282,14 +309,13 @@ function drawLightTile(){
 //
 //
 function init(){
-	player1 = new Player(250,250,25,25);
+	createVectorFieldBase()
+	player1 = new Player(32,32,24,24);
 	flashlight = new LightSource(200,200,125);
 	lights.splice(0,1);
 	flashlight.setPosition(player1.x,player1.y);
-	enemy1 = new Enemy(300,500,25,25,'mouse');
-	enemy2 = new Enemy(350,500,25,25,'rat');
-	enemy2.aggroRange = 500
-
+	setTimeout(function(){enemy1 = new Enemy(32*9,32*9,24,24,'rat')},2000)
+	setTimeout(function(){enemy1.aggroRange=1000},2000)
 
 	flashlight.draw = function(){
 	    for(var r=this.r/2, x=this.r/2, a=1; r<=this.r; r+=x/5,a-=.2){
@@ -301,8 +327,8 @@ function init(){
 	    	f_ctx.fill();
 	     }
         };
-	loop();
-	setTimeout(drawBuffer,500);
+    setTimeout(drawBuffer,10)
+	setTimeout(loop,10)
 }
 var x_translation = 0;
 var y_translation = 0;
@@ -344,14 +370,13 @@ function clearCanvases(){
 function loop(){
 	clearCanvases()
 	drawMap()
+    getVectorField()
 	f_ctx.fillStyle='rgba(0,0,0,1)';
 	f_ctx.fillRect(-x_translation,-y_translation,1200,600);
 	//drawLightTile()
 	player1.animate();
-	//testCollision()
 	animateEnemies();
-	testCollision();
-	//drawEntities();
+	//testCollision();
 	player1.draw();
 	flashlight.draw()
 	drawLightSources();
@@ -412,9 +437,159 @@ function debug(){
 	else{
 		f_ctx.clearRect(-x_translation,-y_translation,1200,600);
 		f_ctx.fillStyle = 'black';
-		f_ctx.font = '20px Georgia';
+		f_ctx.font = '16px Georgia';
 		f_ctx.fillText("DEBUG", 500,500);
+
+		for(var i=0; i<v_field.length; i++){
+			for(var j=0; j<v_field.length; j++){
+				if(v_field[i][j] !== Infinity){
+					f_ctx.fillText(d_field[i][j],j*32+16,i*32+16)
+					f_ctx.beginPath();
+					f_ctx.rect(j*32,i*32,32,32)
+					f_ctx.stroke()
+				}
+			}
+		}
 	}
 }
+var v_field = []
+var d_field = []
+function createVectorFieldBase(){
+	for(var y=0; y<map.length; y++){
+		v_field.push([])
+		d_field.push([])
+		for(var x=0; x<map[y].length; x++){
+				v_field[y][x] = Infinity;
+				d_field[y].push([])
+				d_field[y][x].push([0,0])
 
-window.onload=init();
+		}
+	}
+	v_field[0][0] = 0;
+}
+function getVectorField(){
+	var h = v_field.length;
+	var w = v_field[0].length;
+    var x = Math.round(player1.x + (player1.w/2) - ((player1.x + player1.w/2) % 32))/32;
+    var y = Math.round(player1.y + (player1.h/2) - ((player1.y + player1.h/2) % 32))/32;
+    for(var i=0; i<h; i++){
+        for(var j=x; j<w; j++){
+        	if(floors.indexOf(map[i][j])!=-1){
+        		v_field[y][x] = 0;
+        		var dist = getClosestNeighbor(j,i) + 1
+            	v_field[i][j] = dist;
+            	if(i<h-1 && i>0 && j>0 && j<w-1){
+            		setDirectionField(i,j)
+            	}
+            }
+            else{
+            	v_field[i][j] = Infinity;
+            }
+        }
+    }
+    for(var a=0; a<h; a++){
+        for(var b=x; b>=0; b--){
+        	if(floors.indexOf(map[a][b])!=-1){
+        		v_field[y][x] = 0;
+        		var dist2 = getClosestNeighbor(b,a) + 1
+            	v_field[a][b] = dist2;
+            	if(a<h-1 && a>0 && b>0){
+            		setDirectionField(a,b)
+            	}
+            }
+            else{
+            	v_field[a][b] = Infinity;
+            }
+        }
+    }
+}
+function setDirectionField(i,j){
+	var dx,dy;
+	var center = v_field[i][j]
+	var left = v_field[i][j-1]
+	var right = v_field[i][j+1]
+	var top = v_field[i-1][j]
+	var bottom = v_field[i+1][j]
+	if(left==Infinity){
+		dx = center - right;
+	}
+	else if(right==Infinity){
+		dx = left - center
+	}
+	else{
+		dx = left - right;
+	}
+
+	if(top==Infinity){
+		dy = center - bottom;
+	}
+	else if(bottom==Infinity){
+		dy = top - center
+	}
+	else{
+		dy = top - bottom;
+	}
+
+
+	d_field[i][j][0] = dx;
+	d_field[i][j][1] = dy;
+}
+function getClosestNeighbor(x,y){
+	var t,r,b,l;
+	if((v_field[y-1])){
+		t = v_field[y-1][x]
+	}
+	else{t = Infinity}
+	if(!isNaN(v_field[y][x+1])){
+		r = v_field[y][x+1]
+	}
+	else{r = Infinity}
+	if((v_field[y+1])){
+		b = v_field[y+1][x]
+	}
+	else{b = Infinity}
+	if(!isNaN(v_field[y][x-1])){
+		l = v_field[y][x-1]
+	}
+	else{l = Infinity}
+	//console.log(t+','+r+','+b+','+l)
+	return Math.min(t,r,b,l)
+}
+
+window.onload=preload();
+
+
+/*
+function getVectorField(){
+	var h = v_field.length;
+	var w = v_field[0].length;
+    var x = Math.round(player1.x + (player1.w/2) - ((player1.x + player1.w/2) % 32))/32;
+    var y = Math.round(player1.y + (player1.h/2) - ((player1.y + player1.h/2) % 32))/32;
+    for(var i=0; i<h; i++){
+        for(var j=x; j<w; j++){
+        	if(floors.indexOf(map[i][j])!=-1){
+        		v_field[y][x] = 0;
+        		var dist = getClosestNeighbor(j,i) + 1
+            	v_field[i][j] = dist;
+            }
+            else{
+            	v_field[i][j] = Infinity;
+            }
+        }
+    }
+    for(var a=0; a<h; a++){
+        for(var b=x; b>=0; b--){
+        	if(floors.indexOf(map[a][b])!=-1){
+        		v_field[y][x] = 0;
+        		var dist2 = getClosestNeighbor(b,a) + 1
+
+            	v_field[a][b] = dist2;
+            }
+            else{
+            	v_field[a][b] = Infinity;
+            }
+        }
+    }
+
+}
+*/
