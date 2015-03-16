@@ -124,8 +124,10 @@ Enemy.prototype.draw = function (){
 Enemy.prototype.animate = function (){
 	var x = Math.round(this.x + (this.w/2) - ((this.x + this.w/2) % 32))/32;
     var y = Math.round(this.y + (this.h/2) - ((this.y + this.h/2) % 32))/32;
-    var velx;
-    var vely;
+    var ax = d_field[y][x][0]
+    var ay = d_field[y][x][1]
+    var velx += ax;
+    var vely += ay;
     console.log(d_field[y][x])
     console.log(x)
     if(!isNaN(y)){
@@ -133,13 +135,13 @@ Enemy.prototype.animate = function (){
     	//vely += d_field[y][x][1];
     }
 
-    velx *= .9;
-    vely *= .9;
+    ax *= .9;
+    ay *= .9;
 	var hyp = 50
 	if(hyp <= this.aggroRange){
         if(this.type === 'rat'){
-	        this.x += d_field[y][x][0];
-	        this.y += d_field[y][x][1];
+	        this.x += ax;
+	        this.y += ay;
         }
         else if(this.type === 'mouse'){
             this.x -= dirx*this.speed;
