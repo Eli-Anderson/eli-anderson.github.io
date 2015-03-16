@@ -117,7 +117,7 @@ function Enemy(x,y,w,h,type){
 	this.ax = 0;
 	this.ay = 0;
 	this.type = type;
-	this.speed = 2;
+	this.speed = 4;
 	this.visible = false;
 	this.aggroRange = 100;
 	this.attackRange = 5;
