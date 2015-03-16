@@ -446,7 +446,7 @@ function debug(){
 	else{
 		f_ctx.clearRect(-x_translation,-y_translation,1200,600);
 		f_ctx.fillStyle = 'black';
-		f_ctx.font = '16px Georgia';
+		f_ctx.font = '11px Georgia';
 		f_ctx.fillText("DEBUG", 500,500);
 
 		for(var i=0; i<v_field.length; i++){
