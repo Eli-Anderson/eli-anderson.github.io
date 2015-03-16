@@ -233,50 +233,7 @@ LightSource.prototype.draw = function(){
 //
 //
 //
-function testCollision(){
-	for(var i=0; i<entities.length; i++){
-	    if((player1.x+1 > entities[i].x && player1.x+1 < entities[i].x + entities[i].w && Math.abs((entities[i].y + entities[i].h) -player1.y) <= 2) ||
-	       (player1.x+player1.w-1 > entities[i].x && player1.x+player1.w-1 < entities[i].x + entities[i].w && Math.abs((entities[i].y + entities[i].h) -player1.y) <= 2)
-	    ){
-	        player1.y = (entities[i].y + entities[i].h)+1;
-	    }
-	    if((player1.x+1 > entities[i].x && player1.x+1 < entities[i].x + entities[i].w && Math.abs((entities[i].y) - (player1.y + player1.h)) <= 2) ||
-	       (player1.x+player1.w-1 > entities[i].x && player1.x+player1.w-1 < entities[i].x + entities[i].w && Math.abs((entities[i].y) - (player1.y + player1.h)) <= 2)
-	    ){
-	        player1.y = (entities[i].y - player1.h)-1;
-	    }
-	    if((player1.y+1 > entities[i].y && player1.y+1 < entities[i].y + entities[i].h && Math.abs((entities[i].x) - (player1.x + player1.w)) <= 2) ||
-	       (player1.y+player1.h-1 > entities[i].y && player1.y+player1.h-1 < entities[i].y + entities[i].h && Math.abs((entities[i].x) - (player1.x + player1.w)) <= 2)
-	    ){
-	        player1.x = (entities[i].x - player1.w)-1;
-	    }
-	    if((player1.y+1 > entities[i].y && player1.y+1 < entities[i].y + entities[i].h && Math.abs((entities[i].x + entities[i].w) -player1.x) <= 2) ||
-	       (player1.y+player1.h-1 > entities[i].y && player1.y+player1.h-1 < entities[i].y + entities[i].h && Math.abs((entities[i].x + entities[i].w) -player1.x) <= 2)
-	    ){
-	        player1.x = (entities[i].x + entities[i].w)+1;
-	    }
-	}
-	
-	
-}
-function backuptestCollision(){
-	for(var i=0; i<entities.length; i++){
-		
 
-		if((player1.x + player1.w + player1.velx >= entities[i].x || player1.y + player1.h + player1.vely >= entities[i].y) &&
-			player1.x + player1.w >= entities[i].x &&
-			player1.x < entities[i].x + entities[i].w &&
-			player1.y + player1.h >= entities[i].y &&
-			player1.y <= entities[i].y + entities[i].h){
-			if(player1.velx == -player1.speed){player1.x += 2*player1.speed;}
-			if(player1.velx == player1.speed){player1.x -= 2*player1.speed}
-			if(player1.vely == -player1.speed){player1.y += 2*player1.speed}
-			if(player1.vely == player1.speed){player1.y -= 2*player1.speed}
-			return true;
-		}
-	}
-	
-}
 function drawBuffer(){
 	for(var y=0; y<map.length; y++){
 	    for(var x=0; x<map[y].length; x++){
@@ -287,12 +244,19 @@ function drawBuffer(){
 	    }
 	}
 	for(var p=0; p<objects.length; p++){
-	        if(objects[p][0] == 91){
-	            var lr = objects[p][1];
-	            var lx = objects[p][4]*32;
-	            var ly = objects[p][5]*32;
-	            new LightSource(lx,ly,lr)
-	        }
+		var a1 = objects[p][1];
+		var a2 = objects[p][2];
+		var a3 = objects[p][3];
+		var a4 = objects[p][4];
+		var a5 = objects[p][5];
+		switch(objects[p][0]){
+	    	case 91:
+	            new LightSource(a4*32,a5*32,a1);
+	            break;
+	        case 101:
+	        	new Enemy(a1,a2,a3,a4,a5);
+	        	break;
+		}	           
 	}
 }
 function drawMap(){
