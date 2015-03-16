@@ -311,7 +311,7 @@ function init(){
 	flashlight = new LightSource(200,200,125);
 	lights.splice(0,1);
 	flashlight.setPosition(player1.x,player1.y);
-	setTimeout(function(){enemy1 = new Enemy(32*9,32*8,24,24,'rat')},2000)
+	setTimeout(function(){enemy1 = new Enemy(32*30,32*30,24,24,'rat')},2000)
 	setTimeout(function(){enemy1.aggroRange=1000},2000)
 
 	flashlight.draw = function(){
