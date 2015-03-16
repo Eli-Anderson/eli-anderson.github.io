@@ -127,7 +127,7 @@ Enemy.prototype.animate = function (){
     var velx;
     var vely;
     try{
-    	console.log(d_field[y][x])
+    	//console.log(d_field[y][x])
 	    velx += d_field[y][x][0];
 	    vely += d_field[y][x][1];
 	}
