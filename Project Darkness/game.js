@@ -126,8 +126,10 @@ Enemy.prototype.animate = function (){
     var y = Math.round(this.y + (this.h/2) - ((this.y + this.h/2) % 32))/32;
     var velx;
     var vely;
-    velx += d_field[y][x][0];
-    vely += d_field[y][x][1];
+    if(!isNaN(y)){
+    	velx += d_field[y][x][0];
+    	vely += d_field[y][x][1];
+    }
 
     velx *= .9;
     vely *= .9;
