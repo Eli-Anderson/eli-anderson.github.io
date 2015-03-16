@@ -128,8 +128,8 @@ Enemy.prototype.animate = function (){
     var ay = d_field[y][x][1]
     var velx;
     var vely;
-    var velx += ax;
-    var vely += ay;
+    velx += ax;
+    vely += ay;
     console.log(d_field[y][x])
     console.log(x)
     if(!isNaN(y)){
