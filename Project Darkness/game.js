@@ -137,10 +137,10 @@ Enemy.prototype.animate = function (){
     	this.ay *= -1;
     }
     if(this.velx <= this.speed){
-    	this.velx += this.ax;
+    	//this.velx += this.ax;
     }
     if(this.vely <= this.speed){
-    	this.vely += this.ay;
+    	//this.vely += this.ay;
     }
 
     this.velx *= .9;
