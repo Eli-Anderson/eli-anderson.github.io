@@ -126,15 +126,8 @@ Enemy.prototype.animate = function (){
     var y = Math.round(this.y + (this.h/2) - ((this.y + this.h/2) % 32))/32;
     var velx;
     var vely;
-	var temp = d_field[y]
-	if(temp){
-	    velx += temp[x][0];
-	    vely += temp[x][1];
-	}
-	else{
-		velx += 1;
-		vely += 1;
-	}
+    velx += temp[x][0];
+    vely += temp[x][1];
 
     velx *= .9;
     vely *= .9;
