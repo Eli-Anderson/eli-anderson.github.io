@@ -126,7 +126,7 @@ Enemy.prototype.draw = function (){
 	ctx.fillRect(this.x,this.y,this.w,this.h);
 };
 Enemy.prototype.animate = function (){
-	var x = Math.round(this.x + (this.w/2) - ((this.x + this.w/2) % 32))/32;
+    var x = Math.round(this.x + (this.w/2) - ((this.x + this.w/2) % 32))/32;
     var y = Math.round(this.y + (this.h/2) - ((this.y + this.h/2) % 32))/32;
     if(d_field[y] !== undefined){
 	this.ax = d_field[y][x][0];
