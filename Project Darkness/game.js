@@ -452,7 +452,7 @@ function debug(){
 		for(var i=0; i<v_field.length; i++){
 			for(var j=0; j<v_field.length; j++){
 				if(v_field[i][j] !== Infinity){
-					f_ctx.fillText(d_field[i][j],j*32,i*32)
+					f_ctx.fillText(d_field[i][j],j*32,i*32 - 8)
 					f_ctx.beginPath();
 					f_ctx.rect(j*32,i*32,32,32)
 					f_ctx.stroke()
