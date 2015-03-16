@@ -126,15 +126,14 @@ Enemy.prototype.draw = function (){
 	ctx.fillRect(this.x,this.y,this.w,this.h);
 };
 Enemy.prototype.animate = function (){
+    var distx = this.x - player1.x;
+    var disty = this.y - player1.y;
+    var hyp = Math.sqrt(distx*distx + disty*disty)
     var x = Math.round(this.x + (this.w/2) - ((this.x + this.w/2) % 32))/32;
     var y = Math.round(this.y + (this.h/2) - ((this.y + this.h/2) % 32))/32;
     if(d_field[y] !== undefined){
 	this.ax = d_field[y][x][0];
     	this.ay = d_field[y][x][1];
-    }
-    else{
-    	//this.velx;
-    	//this.vely;
     }
     if(Math.abs(this.velx) <= this.speed){
     	this.velx += this.ax;
@@ -145,8 +144,6 @@ Enemy.prototype.animate = function (){
 
     this.velx *= .9;
     this.vely *= .9;
-    console.log(this.velx)
-	var hyp = 50
 	if(hyp <= this.aggroRange){
         if(this.type === 'rat'){
 	        this.x += this.velx;
