@@ -112,6 +112,10 @@ function Enemy(x,y,w,h,type){
 	this.y = y;
 	this.w = w;
 	this.h = h;
+	this.velx = 0;
+	this.vely = 0;
+	this.ax = 0;
+	this.ay = 0;
 	this.type = type;
 	this.speed = 2;
 	this.visible = false;
@@ -125,30 +129,24 @@ Enemy.prototype.animate = function (){
 	var x = Math.round(this.x + (this.w/2) - ((this.x + this.w/2) % 32))/32;
     var y = Math.round(this.y + (this.h/2) - ((this.y + this.h/2) % 32))/32;
     console.log(d_field[y][x])
-    var ax = d_field[y][x][0]
-    var ay = d_field[y][x][1]
-    var velx;
-    var vely;
-    velx += ax;
-    vely += ay;
-    if(!isNaN(y)){
-    	//velx += d_field[y][x][0];
-    	//vely += d_field[y][x][1];
-    }
+    this.ax = d_field[y][x][0]
+    this.ay = d_field[y][x][1]
+    this.velx += this.ax;
+    this.vely += this.ay;
 
-    ax *= .9;
-    ay *= .9;
-    console.log(velx)
-    console.log(ax)
+    this.ax *= .9;
+    this.ay *= .9;
+    console.log(this.velx)
+    console.log(this.ax)
 	var hyp = 50
 	if(hyp <= this.aggroRange){
         if(this.type === 'rat'){
-	        //this.x += velx;
-	        //this.y += vely;
+	        this.x += this.velx;
+	        this.y += this.vely;
         }
         else if(this.type === 'mouse'){
-            this.x -= dirx*this.speed;
-            this.y -= diry*this.speed;
+            //this.x -= dirx*this.speed;
+            //this.y -= diry*this.speed;
         }
 	}
 	for(var i=0; i<entities.length; i++){
