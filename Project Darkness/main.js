@@ -109,8 +109,15 @@ function overlayGrid(){
 	        }
 	    }
 	}
-
-	main.fillStyle='gray'
+    for(var j=0; j<map1.length; j++){
+	    for(var k=0; k<map1[j].length; k++){
+	        main.drawImage(tiles,map1[j][k]*width,0,width,width,k*width,j*width,width,width)
+	    }
+	}
+	for(var e=0; e<objects1.length; e++){
+	    main.drawImage(light,objects1[e][4]*width,objects1[e][5]*width,width,width)
+	}
+	main.strokeStyle='gray'
 	//vertical
 	for(var i=0; i<=m_width; i++){
 		main.beginPath();
@@ -126,14 +133,6 @@ function overlayGrid(){
 		main.lineTo(m_width*width,n*width);
 		main.closePath();
 		main.stroke();
-	}
-	for(var j=0; j<map1.length; j++){
-	    for(var k=0; k<map1[j].length; k++){
-	        main.drawImage(tiles,map1[j][k]*width,0,width,width,k*width,j*width,width,width)
-	    }
-	}
-	for(var e=0; e<objects1.length; e++){
-	    main.drawImage(light,objects1[e][4]*width,objects1[e][5]*width,width,width)
 	}
 }
 
@@ -187,9 +186,14 @@ function getAttr(){
     document.getElementById('attr2_val').value = lb;
 }
 var selection_counter = 0;
-var selection_point1 = 0;
-var selection_point2 = 0;
-
+var selection = {
+    x: 0,
+    y: 0,
+    x2: 0,
+    y2: 0,
+    closed: false,
+    started: false,
+}
 function getSelection(){
     var x = mouse.x
 	var y = mouse.y
@@ -198,52 +202,78 @@ function getSelection(){
 	var x3 = x-x2;
 	var y3 = y-y2;
 	var w = Math.round(width*total_scale)
-	x3 = Math.round(x3-x5);
-	y3 = Math.round(y3-y5);
-    if(selection_counter%2 == 0){
-        selection_point1 = {
-            x: Math.round(x3/w),
-            y: Math.round(y3/w),
+	x3 = Math.round(x3);
+	y3 = Math.round(y3);
+    if(map1[(y3)/w] !== undefined){
+        if(map1[(y3)/w][(x3)/w] !== undefined){
+            if(!selection_counter){
+                selection.x = x3/w;
+                selection.y = y3/w;
+                selection.started = true;
+            }
+            else{
+                if(x3/w < selection.x){var cx = 0}
+                else{var cx = 1}
+                if(y3/w < selection.y){var cy = 0}
+                else{var cy = 1}
+                selection.x2 = (x3/w)+cx;
+                selection.y2 = (y3/w)+cy;
+                selection.started = false;
+                selection.closed = true;
+                selection_counter = 0;
+            }
+            selection_counter++
         }
     }
-    else{
-        selection_point2 = {
-            x: Math.round(x3/w),
-            y: Math.round(y3/w),
-        }
-    }
-    drawSelectionBorder()
-    selection_counter++
+    
 }
 function drawSelectionBorder(){
-    var w = selection_point2.x - selection_point1.x;
-    var h = selection_point2.y - selection_point1.y;
-    var w2 = Math.round(width*total_scale)
-    objectlayer.strokeStyle='yellow';
-    objectlayer.lineWidth='3'
-    objectlayer.beginPath()
-    objectlayer.moveTo((selection_point1.x+1*w2),(selection_point1.y*w2));
-    objectlayer.lineTo((selection_point1.x*w2),(selection_point1.y*w2));
-    objectlayer.lineTo((selection_point1.x*w2),(selection_point1.y+1*w2));
-    objectlayer.stroke()
-    objectlayer.beginPath()
-    objectlayer.rect((selection_point1.x*w2),(selection_point1.y*w2),(w*w2),(h*w2))
-    objectlayer.closePath()
-    objectlayer.stroke()
+    objectlayer.lineWidth=total_scale;
+    objectlayer.strokeStyle='red';
+    if(selection.started){
+        objectlayer.beginPath();
+        objectlayer.moveTo((selection.x+.5)*(width*total_scale),(selection.y)*(width*total_scale));
+        objectlayer.lineTo((selection.x-.5)*(width*total_scale),(selection.y)*(width*total_scale));
+        objectlayer.moveTo((selection.x)*(width*total_scale),(selection.y+.5)*(width*total_scale));
+        objectlayer.lineTo((selection.x)*(width*total_scale),(selection.y-.5)*(width*total_scale));
+        objectlayer.stroke();
+    }
+    if(selection.closed){
+        objectlayer.beginPath();
+        objectlayer.moveTo(selection.x*(width*total_scale),selection.y*(width*total_scale));
+        objectlayer.lineTo(selection.x2*(width*total_scale),selection.y*(width*total_scale));
+        objectlayer.lineTo(selection.x2*(width*total_scale),selection.y2*(width*total_scale));
+        objectlayer.lineTo(selection.x*(width*total_scale),selection.y2*(width*total_scale));
+        objectlayer.closePath();
+        objectlayer.stroke();
+    }
 }
 function fillSelection(){
     //set map
-    var w = Math.abs(selection_point2.x - selection_point1.x);
-    var h = Math.abs(selection_point2.y - selection_point1.y);
-    var sy = (selection_point1.y)
-    var sx = (selection_point1.x)
-    for (var y=0; y<h; y++){
-        for (var x=0; x<w; x++){
-            map1[y+sy][x+sx] = selected;
+    if(selection.closed){
+        var w = Math.abs(selection.x2 - selection.x);
+        var h = Math.abs(selection.y2 - selection.y);
+        var x1 = selection.x;
+        var y1 = selection.y;
+        var x2 = selection.x2;
+        var y2 = selection.y2;
+        if(x1 > x2){
+            var temp = x1;
+            x1 = x2;
+            x2 = temp;
         }
+        if(y1 > y2){
+            var temp2 = y1;
+            y1 = y2;
+            y2 = temp2;
+        }
+        for (var y=0; y<h; y++){
+            for (var x=0; x<w; x++){
+                map1[y+y1][x+x1] = selected;
+            }
+        }
+        reload()
     }
-    reload()
-    
 }
 
 
@@ -251,6 +281,7 @@ document.addEventListener('keydown',handleKey)
 function handleKey(e){
     if(e.keyCode==32){
         getSelection()
+        reload();
     }
     if(e.keyCode==189){
         handleZoom('out')
@@ -262,34 +293,37 @@ function handleKey(e){
         log(total_scale+',')
     }
     if(e.keyCode==27){
-	    selection_point1.x = -1;
-        selection_point1.y = -1;
-        selection_point2.x = -1;
-        selection_point2.y = -1;
+	    selection.closed = false;
+        selection.started = false;
         selection_counter = 0;
+        reload();
     }
     if(e.keyCode==37){
         //left
-        x5 -= (width*total_scale);
-        main.translate(-width*total_scale,0);
+        x5 += (width*total_scale);
+        main.translate(width*total_scale,0);
+        objectlayer.translate(width*total_scale,0);
         reload();
     }
     else if(e.keyCode==39){
         //right
-        x5 += (width*total_scale);
-        main.translate(width*total_scale,0);
+        x5 -= (width*total_scale);
+        main.translate(-width*total_scale,0);
+        objectlayer.translate(-width*total_scale,0);
         reload();
     }
     if(e.keyCode==38){
         //up
-        y5 -= (width*total_scale);
-        main.translate(0,-width*total_scale);
+        y5 += (width*total_scale);
+        main.translate(0,width*total_scale);
+        objectlayer.translate(0,width*total_scale);
         reload();
     }
     else if(e.keyCode==40){
         //down
-        y5 += (width*total_scale);
-        main.translate(0,width*total_scale);
+        y5 -= (width*total_scale);
+        main.translate(0,-width*total_scale);
+        objectlayer.translate(0,-width*total_scale);
         reload();
     }
     //log(e.keyCode)
@@ -298,8 +332,8 @@ function handleKey(e){
 x5 = 0;
 y5 = 0;
 var start = false;
+var start_coords = [0,0]
 function handleClickMain(){
-    getStartCoords()
     var lr = document.getElementById('attr1_val').value;
     var lb = document.getElementById('attr2_val').value;
     var lf = document.getElementById('attr3').checked;
@@ -311,12 +345,13 @@ function handleClickMain(){
 	var x3 = x-x2;
 	var y3 = y-y2;
 	var w = Math.round(width*total_scale)
-	x3 = Math.round(x3-x5);
-	y3 = Math.round(y3-y5);
+	x3 = Math.round(x3);
+	y3 = Math.round(y3);
 	if(mouse.down){
     	if(selected != 'drag'){
     		if(map1[(y3)/w] !== undefined){
     	 	   if(map1[(y3)/w][(x3)/w] !== undefined){
+                   getStartCoords(x3,y3)
     	        	if(selected === 0){
     	        	    main.clearRect(x3-x5,y3-y5,width,width)
     	        	    objectlayer.clearRect(x3-x5,y3-y5,width,width)
@@ -340,15 +375,9 @@ function handleClickMain(){
     	reload()
     }
 }
-function getStartCoords(){
+function getStartCoords(x,y){
 	if(mouse.down && start == false){
-	    var x = mouse.x
-		var y = mouse.y
-		var x2 = Math.abs(x % Math.round(width*total_scale));
-	    var y2 = Math.abs(y % Math.round(width*total_scale));
-		var x3 = x-x2;
-		var y3 = y-y2;
-	    start_coords = [x3,y3];
+	    start_coords = [x,y];
 	    start = true;
 	}
 }
@@ -387,8 +416,7 @@ function handleClickSide(e){
 		    if(x > i*width && x <(i+1)*width && y > n*width && y < width+(n*width)){
 		        if(i+ (n*8) < tiles.width/width){
 		    	    selected = i +(n*8);
-		    	    if(selection_point2.x-selection_point1.x != 0 &&
-		    	    selection_point2.y-selection_point1.y != 0){
+		    	    if(selection.closed){
 		    	        fillSelection()
 		    	        
 		    	    }
@@ -438,10 +466,11 @@ function handleMove(e){
 	objectlayer.strokeStyle='black';
 	objectlayer.lineWidth=1;
 	objectlayer.beginPath();
-	objectlayer.moveTo(mouse.clientx-5,mouse.clienty);
-	objectlayer.lineTo(mouse.clientx+5,mouse.clienty);
-	objectlayer.moveTo(mouse.clientx,mouse.clienty-5);
-	objectlayer.lineTo(mouse.clientx,mouse.clienty+5);
+	objectlayer.moveTo(mouse.x-5,mouse.y);
+	objectlayer.lineTo(mouse.x+5,mouse.y);
+	objectlayer.moveTo(mouse.x,mouse.y-5);
+	objectlayer.lineTo(mouse.x,mouse.y+5);
+    objectlayer.closePath();
 	objectlayer.stroke()
 	
 }
