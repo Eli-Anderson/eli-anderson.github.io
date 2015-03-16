@@ -26,7 +26,7 @@ function preload(){
 function handleLoad(){
 	count++
 	if(count == 1){
-		init()
+		setTimeout(init,250)
 	}
 }
 //
