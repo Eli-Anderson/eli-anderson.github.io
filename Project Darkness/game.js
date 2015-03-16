@@ -124,14 +124,13 @@ Enemy.prototype.draw = function (){
 Enemy.prototype.animate = function (){
 	var x = Math.round(this.x + (this.w/2) - ((this.x + this.w/2) % 32))/32;
     var y = Math.round(this.y + (this.h/2) - ((this.y + this.h/2) % 32))/32;
+    console.log(d_field[y][x])
     var ax = d_field[y][x][0]
     var ay = d_field[y][x][1]
     var velx;
     var vely;
     velx += ax;
     vely += ay;
-    console.log(d_field[y][x])
-    console.log(x)
     if(!isNaN(y)){
     	//velx += d_field[y][x][0];
     	//vely += d_field[y][x][1];
