@@ -133,8 +133,8 @@ Enemy.prototype.animate = function (){
     	this.ay = d_field[y][x][1];
     }
     else{
-    	this.ax *= -1;
-    	this.ay *= -1;
+    	this.x -= this.velx;
+    	this.y -= this.vely;
     }
     if(this.velx <= this.speed){
     	//this.velx += this.ax;
@@ -146,7 +146,6 @@ Enemy.prototype.animate = function (){
     this.velx *= .9;
     this.vely *= .9;
     console.log(this.velx)
-    console.log(this.ax)
 	var hyp = 50
 	if(hyp <= this.aggroRange){
         if(this.type === 'rat'){
