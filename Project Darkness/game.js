@@ -128,9 +128,14 @@ Enemy.prototype.draw = function (){
 Enemy.prototype.animate = function (){
 	var x = Math.round(this.x + (this.w/2) - ((this.x + this.w/2) % 32))/32;
     var y = Math.round(this.y + (this.h/2) - ((this.y + this.h/2) % 32))/32;
-    console.log(d_field[y][x])
-    this.ax = d_field[y][x][0]
-    this.ay = d_field[y][x][1]
+    if(d_field[y]){
+	this.ax = d_field[y][x][0];
+    	this.ay = d_field[y][x][1];
+    }
+    else{
+    	this.ax = 0;
+    	this.ay = 0;
+    }
     if(this.velx <= this.speed){
     	this.velx += this.ax;
     }
