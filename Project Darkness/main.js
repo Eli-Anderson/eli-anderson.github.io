@@ -7,6 +7,8 @@ var objectlayer = canvas3.getContext('2d')
 var selected = 'drag';
 var tiles = new Image();
 tiles.src = 'tiles.png'
+var object_sheet = new Image();
+object_sheet.src = 'light.png'
 var pointer = new Image();
 pointer.src = 'http://upload.wikimedia.org/wikipedia/commons/b/b3/Mouse_pointer_or_cursor.png'
 var light = new Image();
@@ -115,7 +117,7 @@ function overlayGrid(){
 	    }
 	}
 	for(var e=0; e<objects1.length; e++){
-	    main.drawImage(light,objects1[e][4]*width,objects1[e][5]*width,width,width)
+	    objectlayer.drawImage(object_sheet,(objects1[e][0]-91)*width,0,width,width,objects1[e][4]*width,objects1[e][5]*width,width,width)
 	}
 	main.strokeStyle='gray'
 	//vertical
@@ -364,7 +366,6 @@ function handleClickMain(){
     	        	        }
     	        	    }
     	        	    objects1.push([selected,lr,lb,lf,x3/w,y3/w])
-    	        	    objectlayer.drawImage(light,x3,y3,width,width)
     	        	}
     	        	else{
     	        	    map1[(y3)/w][(x3)/w] = selected;
