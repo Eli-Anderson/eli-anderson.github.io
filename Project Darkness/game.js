@@ -138,8 +138,8 @@ Enemy.prototype.animate = function (){
     	this.vely += this.ay;
     }
 
-    this.ax *= .9;
-    this.ay *= .9;
+    this.velx *= .9;
+    this.vely *= .9;
     console.log(this.velx)
     console.log(this.ax)
 	var hyp = 50
