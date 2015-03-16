@@ -307,7 +307,7 @@ function drawLightTile(){
 //
 function init(){
 	createVectorFieldBase()
-	player1 = new Player(32,32,24,24);
+	player1 = new Player(32,256,24,24);
 	flashlight = new LightSource(200,200,125);
 	lights.splice(0,1);
 	flashlight.setPosition(player1.x,player1.y);
