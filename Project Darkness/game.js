@@ -133,8 +133,8 @@ Enemy.prototype.animate = function (){
     	this.ay = d_field[y][x][1];
     }
     else{
-    	this.ax = 0;
-    	this.ay = 0;
+    	this.ax *= -1;
+    	this.ay *= -1;
     }
     if(this.velx <= this.speed){
     	this.velx += this.ax;
