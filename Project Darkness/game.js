@@ -220,7 +220,7 @@ LightSource.prototype.setPosition = function(x,y){
 
 LightSource.prototype.draw = function(){
 	if(this.on){
-		f_ctx.shadowBlur=20
+		f_ctx.shadowBlur=100
 		for(var r=this.r/2, x=this.r/2, a=1; r<=this.r; r+=x/5,a-=.2){
 			f_ctx.fillStyle='rgba(255,255,255,'+a+')';
 			f_ctx.beginPath();
