@@ -305,22 +305,14 @@ function init(){
 			var grd = f_ctx.createRadialGradient(this.x,this.y,0,this.x,this.y,this.r);
 			grd.addColorStop(0,'rgba(255,255,255,1)');
 			grd.addColorStop(.25,'rgba(255,255,255,.5)');
-			grd.addColorStop(.5,'rgba(255,255,255,.25)');
-			grd.addColorStop(1,'rgba(255,255,255,.1');
+			grd.addColorStop(.75,'rgba(255,255,255,.25)');
+			grd.addColorStop(1,'rgba(255,255,255,0)');
 			f_ctx.fillStyle=grd;
 			f_ctx.beginPath();
 			f_ctx.moveTo(this.x,this.y)
 			f_ctx.arc(this.x,this.y,this.r,mouse.angle-Math.PI/5,mouse.angle+Math.PI/5);
 			f_ctx.closePath();
 			f_ctx.fill();
-			/*
-	    	f_ctx.fillStyle='rgba(255,255,255,'+a+')';
-	    	f_ctx.beginPath();
-	    	f_ctx.moveTo(this.x,this.y);
-	    	f_ctx.arc(this.x,this.y,r,mouse.angle-Math.PI/5,mouse.angle+Math.PI/5);
-	    	f_ctx.closePath();
-	    	f_ctx.fill();
-			*/
 	     }
         };
     setTimeout(drawBuffer,10)
@@ -372,15 +364,14 @@ function loop(){
 	drawMap()
     getVectorField()
 	overlayShadow()
-	//drawLightTile()
 	player1.animate();
 	animateEnemies();
-	//testCollision();
 	player1.draw();
 	flashlight.draw()
 	drawLightSources();
 	drawEnemies();
 	debug();
+	testSight()
 	requestAnimationFrame(loop);
 }
 var mouse = {
@@ -560,41 +551,11 @@ function getClosestNeighbor(x,y){
 	//console.log(t+','+r+','+b+','+l)
 	return Math.min(t,r,b,l)
 }
-
-window.onload=preload();
-
-
-/*
-function getVectorField(){
-	var h = v_field.length;
-	var w = v_field[0].length;
-    var x = Math.round(player1.x + (player1.w/2) - ((player1.x + player1.w/2) % 32))/32;
-    var y = Math.round(player1.y + (player1.h/2) - ((player1.y + player1.h/2) % 32))/32;
-    for(var i=0; i<h; i++){
-        for(var j=x; j<w; j++){
-        	if(floors.indexOf(map[i][j])!=-1){
-        		v_field[y][x] = 0;
-        		var dist = getClosestNeighbor(j,i) + 1
-            	v_field[i][j] = dist;
-            }
-            else{
-            	v_field[i][j] = Infinity;
-            }
-        }
-    }
-    for(var a=0; a<h; a++){
-        for(var b=x; b>=0; b--){
-        	if(floors.indexOf(map[a][b])!=-1){
-        		v_field[y][x] = 0;
-        		var dist2 = getClosestNeighbor(b,a) + 1
-
-            	v_field[a][b] = dist2;
-            }
-            else{
-            	v_field[a][b] = Infinity;
-            }
-        }
-    }
-
+function testSight(){
+	f_ctx.beginPath();
+	f_ctx.moveTo(player1.x,player1.y)
+	f_ctx.lineTo(mouse.x,mouse.y)
+	f_ctx.closePath();
+	f_ctx.stroke();
 }
-*/
+window.onload=preload();
