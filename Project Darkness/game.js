@@ -306,7 +306,7 @@ function init(){
 			grd.addColorStop(0,'rgba(255,255,255,1)');
 			grd.addColorStop(.25,'rgba(255,255,255,.5)');
 			grd.addColorStop(.5,'rgba(255,255,255,.25)');
-			grd.addColorStop(1,'rgba(255,255,255,0');
+			grd.addColorStop(1,'rgba(255,255,255,.1');
 			f_ctx.fillStyle=grd;
 			f_ctx.beginPath();
 			f_ctx.moveTo(this.x,this.y)
