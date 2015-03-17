@@ -554,7 +554,7 @@ function getClosestNeighbor(x,y){
 function testSight(){
 	f_ctx.beginPath();
 	f_ctx.moveTo(player1.x,player1.y)
-	f_ctx.lineTo(mouse.x,mouse.y)
+	f_ctx.lineTo(mouse.x-x_translation,mouse.y-y_translation)
 	f_ctx.closePath();
 	f_ctx.stroke();
 }
