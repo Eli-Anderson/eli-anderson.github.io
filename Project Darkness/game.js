@@ -316,6 +316,11 @@ function moveCamera(x2,y2){
 	ctx.translate(x2,y2);
 	f_ctx.translate(x2,y2);
 }
+function overlayShadow(){
+	f_ctx.globalAlpha=1
+	f_ctx.fillStyle='rgba(0,0,0,1)';
+	f_ctx.fillRect(-x_translation,-y_translation,1200,600);
+}
 
 function drawEntities(){
 	for(var i=0; i<entities.length; i++){
@@ -346,8 +351,7 @@ function loop(){
 	clearCanvases()
 	drawMap()
     getVectorField()
-	f_ctx.fillStyle='rgba(0,0,0,1)';
-	f_ctx.fillRect(-x_translation,-y_translation,1200,600);
+	overlayShadow()
 	//drawLightTile()
 	player1.animate();
 	animateEnemies();
