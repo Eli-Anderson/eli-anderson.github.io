@@ -228,6 +228,7 @@ LightSource.prototype.draw = function(){
 			f_ctx.closePath();
 			f_ctx.fill();
 		}*/
+		f_ctx.globalAlpha=.5
 		f_ctx.drawImage(light,this.x,this.y);
 		
 	}
