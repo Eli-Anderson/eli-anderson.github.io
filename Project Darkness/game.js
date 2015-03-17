@@ -22,10 +22,13 @@ function preload(){
 	tiles = new Image();
 	tiles.onload=handleLoad();
 	tiles.src = 'tiles.png'
+	light = new Image();
+	light.onload=handleLoad();
+	light.src = 'http://stemkoski.github.io/Three.js/images/glow.png'
 }
 function handleLoad(){
 	count++
-	if(count == 1){
+	if(count == 2){
 		setTimeout(init,250)
 	}
 }
@@ -217,14 +220,15 @@ LightSource.prototype.setPosition = function(x,y){
 
 LightSource.prototype.draw = function(){
 	if(this.on){
-		for(var r=this.r/2, x=this.r/2, a=1; r<=this.r; r+=x/5,a-=.2){
+		/*for(var r=this.r/2, x=this.r/2, a=1; r<=this.r; r+=x/5,a-=.2){
 			f_ctx.fillStyle='rgba(255,255,255,'+a+')';
 			f_ctx.beginPath();
 			f_ctx.moveTo(this.x,this.y);
 			f_ctx.arc(this.x,this.y,r,0,2*Math.PI);
 			f_ctx.closePath();
 			f_ctx.fill();
-		}
+		}*/
+		f_ctx.drawImage(light,this.x,this.y);
 		
 	}
 };
@@ -284,6 +288,7 @@ function init(){
 	flashlight = new LightSource(200,200,125);
 	lights.splice(0,1);
 	flashlight.setPosition(player1.x,player1.y);
+	light1 = new Light(200,200,100)
 	setTimeout(function(){enemy1 = new Enemy(32*1,32*11,24,24,'rat')},2000)
 
 	flashlight.draw = function(){
