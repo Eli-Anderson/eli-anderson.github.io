@@ -11,7 +11,7 @@ var rightKey,leftKey,upKey,downKey;
 var entities = [];
 var lights = [];
 var enemies = [];
-f_ctx.globalCompositeOperation = 'lighter';
+f_ctx.globalCompositeOperation = 'xor';
 //
 //
 var floors = [0,1]
@@ -220,16 +220,15 @@ LightSource.prototype.setPosition = function(x,y){
 
 LightSource.prototype.draw = function(){
 	if(this.on){
-		/*for(var r=this.r/2, x=this.r/2, a=1; r<=this.r; r+=x/5,a-=.2){
+		f_ctx.shadowBlur=20
+		for(var r=this.r/2, x=this.r/2, a=1; r<=this.r; r+=x/5,a-=.2){
 			f_ctx.fillStyle='rgba(255,255,255,'+a+')';
 			f_ctx.beginPath();
 			f_ctx.moveTo(this.x,this.y);
 			f_ctx.arc(this.x,this.y,r,0,2*Math.PI);
 			f_ctx.closePath();
 			f_ctx.fill();
-		}*/
-		f_ctx.globalAlpha=.5
-		f_ctx.drawImage(light,this.x,this.y);
+		}
 		
 	}
 };
