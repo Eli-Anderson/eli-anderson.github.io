@@ -22,13 +22,10 @@ function preload(){
 	tiles = new Image();
 	tiles.onload=handleLoad();
 	tiles.src = 'tiles.png'
-	light = new Image();
-	light.onload=handleLoad();
-	light.src = 'http://stemkoski.github.io/Three.js/images/glow.png'
 }
 function handleLoad(){
 	count++
-	if(count == 2){
+	if(count == 1){
 		setTimeout(init,250)
 	}
 }
@@ -220,7 +217,16 @@ LightSource.prototype.setPosition = function(x,y){
 
 LightSource.prototype.draw = function(){
 	if(this.on){
-		f_ctx.shadowBlur=100
+		var grd = f_ctx.createRadialGradient(this.x,this.y,0,this.x,this.y,this.r);
+		grd.addColorStop(0,'rgba(255,255,255,1)');
+		grd.addColorStop(1,'rgba(255,255,255,0)');
+		f_ctx.fillStyle=grd;
+		f_ctx.beginPath();
+		f_ctx.arc(this.x,this.y,this.r,0,2*Math.PI);
+		f_ctx.closePath();
+		f_ctx.fill();
+		
+		/*
 		for(var r=this.r/2, x=this.r/2, a=1; r<=this.r; r+=x/5,a-=.2){
 			f_ctx.fillStyle='rgba(255,255,255,'+a+')';
 			f_ctx.beginPath();
@@ -229,6 +235,7 @@ LightSource.prototype.draw = function(){
 			f_ctx.closePath();
 			f_ctx.fill();
 		}
+		*/
 		
 	}
 };
@@ -293,12 +300,24 @@ function init(){
 
 	flashlight.draw = function(){
 	    for(var r=this.r/2, x=this.r/2, a=1; r<=this.r; r+=x/5,a-=.2){
+			var grd = f_ctx.createRadialGradient(this.x,this.y,0,this.x,this.y,this.r);
+			grd.addColorStop(0,'rgba(255,255,255,1)');
+			grd.addColorStop(1,'rgba(255,255,255,0)');
+			f_ctx.fillStyle=grd;
+			f_ctx.beginPath();
+			f_ctx.moveTo(this.x,this.y)
+			//f_ctx.lineTo(this.x)
+			f_ctx.arc(this.x,this.y,this.r,mouse.angle-Math.PI/5,mouse.angle+Math.PI/5);
+			f_ctx.closePath();
+			f_ctx.fill();
+			/*
 	    	f_ctx.fillStyle='rgba(255,255,255,'+a+')';
 	    	f_ctx.beginPath();
 	    	f_ctx.moveTo(this.x,this.y);
 	    	f_ctx.arc(this.x,this.y,r,mouse.angle-Math.PI/5,mouse.angle+Math.PI/5);
 	    	f_ctx.closePath();
 	    	f_ctx.fill();
+			*/
 	     }
         };
     setTimeout(drawBuffer,10)
@@ -316,7 +335,6 @@ function moveCamera(x2,y2){
 	f_ctx.translate(x2,y2);
 }
 function overlayShadow(){
-	f_ctx.globalAlpha=1
 	f_ctx.fillStyle='rgba(0,0,0,1)';
 	f_ctx.fillRect(-x_translation,-y_translation,1200,600);
 }
