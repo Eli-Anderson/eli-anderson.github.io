@@ -219,6 +219,8 @@ LightSource.prototype.draw = function(){
 	if(this.on){
 		var grd = f_ctx.createRadialGradient(this.x,this.y,0,this.x,this.y,this.r);
 		grd.addColorStop(0,'rgba(255,255,255,1)');
+		grd.addColorStop(.25,'rgba(255,255,255,.5)');
+		grd.addColorStop(.75,'rgba(255,255,255,.25)');
 		grd.addColorStop(1,'rgba(255,255,255,0)');
 		f_ctx.fillStyle=grd;
 		f_ctx.beginPath();
