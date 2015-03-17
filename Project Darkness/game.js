@@ -68,23 +68,23 @@ Player.prototype.animate = function(){
 		else if(upKey){this.vely = -this.speed}
 		else{this.vely = 0}
 	for(var i=0; i<entities.length; i++){
-	    if((player1.x+1 > entities[i].x && player1.x+1 < entities[i].x + entities[i].w && Math.abs((entities[i].y + entities[i].h) -player1.y) <= 3) ||
-	       (player1.x+player1.w-1 > entities[i].x && player1.x+player1.w-1 < entities[i].x + entities[i].w && Math.abs((entities[i].y + entities[i].h) -player1.y) <= 3)
+	    if((player1.x > entities[i].x && player1.x < entities[i].x + entities[i].w && Math.abs((entities[i].y + entities[i].h) -player1.y) <= 3) ||
+	       (player1.x+player1.w > entities[i].x && player1.x+player1.w < entities[i].x + entities[i].w && Math.abs((entities[i].y + entities[i].h) -player1.y) <= 3)
 	    ){
 	        player1.y = (entities[i].y + entities[i].h)+2;
 	    }
-	    if((player1.x+1 > entities[i].x && player1.x+1 < entities[i].x + entities[i].w && Math.abs((entities[i].y) - (player1.y + player1.h)) <= 3) ||
-	       (player1.x+player1.w-1 > entities[i].x && player1.x+player1.w-1 < entities[i].x + entities[i].w && Math.abs((entities[i].y) - (player1.y + player1.h)) <= 3)
+	    if((player1.x > entities[i].x && player1.x < entities[i].x + entities[i].w && Math.abs((entities[i].y) - (player1.y + player1.h)) <= 3) ||
+	       (player1.x+player1.w > entities[i].x && player1.x+player1.w < entities[i].x + entities[i].w && Math.abs((entities[i].y) - (player1.y + player1.h)) <= 3)
 	    ){
 	        player1.y = (entities[i].y - player1.h)-2;
 	    }
-	    if((player1.y+1 > entities[i].y && player1.y+1 < entities[i].y + entities[i].h && Math.abs((entities[i].x) - (player1.x + player1.w)) <= 3) ||
-	       (player1.y+player1.h-1 > entities[i].y && player1.y+player1.h-1 < entities[i].y + entities[i].h && Math.abs((entities[i].x) - (player1.x + player1.w)) <= 3)
+	    if((player1.y > entities[i].y && player1.y < entities[i].y + entities[i].h && Math.abs((entities[i].x) - (player1.x + player1.w)) <= 3) ||
+	       (player1.y+player1.h > entities[i].y && player1.y+player1.h < entities[i].y + entities[i].h && Math.abs((entities[i].x) - (player1.x + player1.w)) <= 3)
 	    ){
 	        player1.x = (entities[i].x - player1.w)-2;
 	    }
-	    if((player1.y+1 > entities[i].y && player1.y+1 < entities[i].y + entities[i].h && Math.abs((entities[i].x + entities[i].w) -player1.x) <= 3) ||
-	       (player1.y+player1.h-1 > entities[i].y && player1.y+player1.h-1 < entities[i].y + entities[i].h && Math.abs((entities[i].x + entities[i].w) -player1.x) <= 3)
+	    if((player1.y > entities[i].y && player1.y < entities[i].y + entities[i].h && Math.abs((entities[i].x + entities[i].w) -player1.x) <= 3) ||
+	       (player1.y+player1.h > entities[i].y && player1.y+player1.h < entities[i].y + entities[i].h && Math.abs((entities[i].x + entities[i].w) -player1.x) <= 3)
 	    ){
 	        player1.x = (entities[i].x + entities[i].w)+2;
 	    }
@@ -155,23 +155,23 @@ Enemy.prototype.animate = function (){
         }
 	}
 	for(var i=0; i<entities.length; i++){
-	    if((this.x+1 > entities[i].x && this.x+1 < entities[i].x + entities[i].w && Math.abs((entities[i].y + entities[i].h) -this.y) <= 3) ||
-	       (this.x+this.w-1 > entities[i].x && this.x+this.w-1 < entities[i].x + entities[i].w && Math.abs((entities[i].y + entities[i].h) -this.y) <= 3)
+	    if((this.x > entities[i].x && this.x < entities[i].x + entities[i].w && Math.abs((entities[i].y + entities[i].h) -this.y) <= 3) ||
+	       (this.x+this.w > entities[i].x && this.x+this.w < entities[i].x + entities[i].w && Math.abs((entities[i].y + entities[i].h) -this.y) <= 3)
 	    ){
 	        this.y = (entities[i].y + entities[i].h)+2;
 	    }
-	    if((this.x+1 > entities[i].x && this.x+1 < entities[i].x + entities[i].w && Math.abs((entities[i].y) - (this.y + this.h)) <= 3) ||
-	       (this.x+this.w-1 > entities[i].x && this.x+this.w-1 < entities[i].x + entities[i].w && Math.abs((entities[i].y) - (this.y + this.h)) <= 3)
+	    if((this.x > entities[i].x && this.x < entities[i].x + entities[i].w && Math.abs((entities[i].y) - (this.y + this.h)) <= 3) ||
+	       (this.x+this.w > entities[i].x && this.x+this.w < entities[i].x + entities[i].w && Math.abs((entities[i].y) - (this.y + this.h)) <= 3)
 	    ){
 	        this.y = (entities[i].y - this.h)-2;
 	    }
-	    if((this.y+1 > entities[i].y && this.y+1 < entities[i].y + entities[i].h && Math.abs((entities[i].x) - (this.x + this.w)) <= 3) ||
-	       (this.y+this.h-1 > entities[i].y && this.y+this.h-1 < entities[i].y + entities[i].h && Math.abs((entities[i].x) - (this.x + this.w)) <= 3)
+	    if((this.y > entities[i].y && this.y < entities[i].y + entities[i].h && Math.abs((entities[i].x) - (this.x + this.w)) <= 3) ||
+	       (this.y+this.h > entities[i].y && this.y+this.h < entities[i].y + entities[i].h && Math.abs((entities[i].x) - (this.x + this.w)) <= 3)
 	    ){
 	        this.x = (entities[i].x - this.w)-2;
 	    }
-	    if((this.y+1 > entities[i].y && this.y+1 < entities[i].y + entities[i].h && Math.abs((entities[i].x + entities[i].w) -this.x) <= 3) ||
-	       (this.y+this.h-1 > entities[i].y && this.y+this.h-1 < entities[i].y + entities[i].h && Math.abs((entities[i].x + entities[i].w) -this.x) <= 3)
+	    if((this.y > entities[i].y && this.y < entities[i].y + entities[i].h && Math.abs((entities[i].x + entities[i].w) -this.x) <= 3) ||
+	       (this.y+this.h > entities[i].y && this.y+this.h < entities[i].y + entities[i].h && Math.abs((entities[i].x + entities[i].w) -this.x) <= 3)
 	    ){
 	        this.x = (entities[i].x + entities[i].w)+2;
 	    }
