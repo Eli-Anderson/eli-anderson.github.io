@@ -11,7 +11,7 @@ var rightKey,leftKey,upKey,downKey;
 var entities = [];
 var lights = [];
 var enemies = [];
-f_ctx.globalCompositeOperation = 'xor';
+f_ctx.globalCompositeOperation = 'lighter';
 //
 //
 var floors = [0,1]
