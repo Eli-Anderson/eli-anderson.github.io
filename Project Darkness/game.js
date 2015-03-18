@@ -121,8 +121,9 @@ function Enemy(x,y,w,h,type){
 	this.type = type;
 	this.speed = 4;
 	this.visible = false;
-	this.aggroRange = 250;
-	this.attackRange = 5;
+	this.aggroRange = 1000;
+	this.attackRange = 150;
+	this.fired = false;
 	this.rateOfFire = 500;
 }
 Enemy.prototype.draw = function (){
@@ -144,14 +145,15 @@ Enemy.prototype.animate = function (){
     if(Math.abs(this.vely) <= this.speed){
     	this.vely += this.ay;
     }
-
     this.velx *= .9;
     this.vely *= .9;
 	if(hyp <= this.aggroRange){
         if(this.type === 'rat'){
 	        this.x += this.velx;
 	        this.y += this.vely;
-			setTimeout(this.attack(player1),this.rateOfFire)
+	        if(!this.fired && hyp <= this.attackRange){
+	            this.attack(player1);
+	        }
         }
         else if(this.type === 'mouse'){
             //this.x -= dirx*this.speed;
@@ -193,6 +195,9 @@ Enemy.prototype.attack = function(target){
 	dy/=dist;
 	if(dist > this.aggroRange){return}
 	new Bullet(x,y,dx,dy,6);
+	this.fired = true;
+	var self = this;
+	setTimeout(function(){self.fired = false},this.rateOfFire)
 	
 }
 //
@@ -303,7 +308,7 @@ function drawBuffer(){
 	        case 101:
 	        	new Enemy(a1,a2,a3,a4,a5);
 	        	break;
-		}	           
+		}
 	}
 }
 function drawMap(){
@@ -458,7 +463,7 @@ var debug_vars = {
 }
 
 function log(text){
-    document.getElementById('log').innerHTML += (text+',')
+    f_ctx.fillText(text,200-x_translation,200-y_translation);
 }
 
 function debug(){
@@ -485,6 +490,7 @@ function debug(){
 				}
 			}
 		}
+		testRaycast()
 	}
 }
 var v_field = []
@@ -596,3 +602,22 @@ function getClosestNeighbor(x,y){
 	return Math.min(t,r,b,l)
 }
 window.onload=preload();
+
+
+function testRaycast(){
+    var sx = player1.x + player1.w/2;
+    var xy = player1.y + player1.h/2;
+    var ex = mouse.x-x_translation;
+    var ey = mouse.y-y_translation;
+    
+    var scx = sx - (sx%32);
+    var scy = sy - (sy%32);
+    var ecx = ex - (ex%32);
+    var ecy = ey - (ey%32);
+    
+    var result = ''
+    for(i=0; i<scx-ecx; i++){
+        result += entities[i];
+    }
+    log(result)
+}
