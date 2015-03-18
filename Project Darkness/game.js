@@ -9,6 +9,7 @@ var buffer = buffer_canvas.getContext('2d');
 
 var rightKey,leftKey,upKey,downKey;
 var entities = [];
+var entitity_vertices = [];
 var lights = [];
 var enemies = [];
 f_ctx.globalCompositeOperation = 'xor';
@@ -190,6 +191,7 @@ function Entity(x,y,w,h){
 	this.y = y;
 	this.w = w;
 	this.h = h;
+	entitity_vertices.push([[this.x,this.y],[this.x,this.y+this.h],[this.x+this.w,this.y+this.h],[this.x+this.w,this.y]])
 }
 
 Entity.prototype.draw = function(){
@@ -371,7 +373,6 @@ function loop(){
 	drawLightSources();
 	drawEnemies();
 	debug();
-	testSight()
 	requestAnimationFrame(loop);
 }
 var mouse = {
@@ -548,14 +549,6 @@ function getClosestNeighbor(x,y){
 		l = v_field[y][x-1]
 	}
 	else{l = Infinity}
-	//console.log(t+','+r+','+b+','+l)
 	return Math.min(t,r,b,l)
-}
-function testSight(){
-	f_ctx.beginPath();
-	f_ctx.moveTo(player1.x,player1.y)
-	f_ctx.lineTo(mouse.x-x_translation,mouse.y-y_translation)
-	f_ctx.closePath();
-	f_ctx.stroke();
 }
 window.onload=preload();
