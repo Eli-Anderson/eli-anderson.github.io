@@ -12,6 +12,7 @@ var entities = [];
 var entitity_vertices = [];
 var lights = [];
 var enemies = [];
+var bullets = [];
 f_ctx.globalCompositeOperation = 'xor';
 //
 //
@@ -122,6 +123,7 @@ function Enemy(x,y,w,h,type){
 	this.visible = false;
 	this.aggroRange = 250;
 	this.attackRange = 5;
+	this.rateOfFire = 500;
 }
 Enemy.prototype.draw = function (){
 	ctx.fillRect(this.x,this.y,this.w,this.h);
@@ -149,6 +151,7 @@ Enemy.prototype.animate = function (){
         if(this.type === 'rat'){
 	        this.x += this.velx;
 	        this.y += this.vely;
+			setTimeout(this.attack(player1),this.rateOfFire)
         }
         else if(this.type === 'mouse'){
             //this.x -= dirx*this.speed;
@@ -177,11 +180,40 @@ Enemy.prototype.animate = function (){
 	        this.x = (entities[i].x + entities[i].w)+2;
 	    }
 	}
-
 };
+Enemy.prototype.attack = function(target){
+	var x = this.x;
+	var y = this.y;
+	var x2 = target.x;
+	var y2 = target.y;
+	var dx = x2-x;
+	var dy = y2-y;
+	var dist = Math.sqrt(dx*dx + dy*dy);
+	dx/=dist;
+	dy/=dist;
+	if(dist > this.aggroRange){return}
+	new Bullet(x,y,dx,dy,6);
+	
+}
 //
 //
 //
+function Bullet(x,y,dx,dy,spd){
+	bullets.push(this)
+	this.x = x;
+	this.y = y;
+	this.dx = dx;
+	this.dy = dy;
+	this.speed = spd
+}
+Bullet.prototype.animate = function(){
+	this.x += this.dx*this.speed;
+	this.y += this.dy*this.speed;
+}
+Bullet.prototype.draw = function(){
+	ctx.fillStyle='yellow';
+	ctx.fillRect(this.x,this.y,2,2);
+}
 //
 //
 //
@@ -356,6 +388,16 @@ function animateEnemies(){
 		enemies[i].animate();
 	}
 }
+function drawBullets(){
+	for(var i=0; i<bullets.length; i++){
+		bullets[i].draw();
+	}
+}
+function animateBullets(){
+	for(var i=0; i<bullets.length; i++){
+		bullets[i].animate();
+	}
+}
 function clearCanvases(){
 	ctx.clearRect(-x_translation,-y_translation,1200,600);
 	f_ctx.clearRect(-x_translation,-y_translation,1200,600);
@@ -368,8 +410,10 @@ function loop(){
 	overlayShadow()
 	player1.animate();
 	animateEnemies();
+	animateBullets();
 	player1.draw();
 	flashlight.draw()
+	drawBullets();
 	drawLightSources();
 	drawEnemies();
 	debug();
