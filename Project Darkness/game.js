@@ -665,9 +665,9 @@ function castRays(x,y,r){
 
 				}
 			}
-		}}
+		}
 	fun()
-    
+    }
 	f_ctx.moveTo(sx,sy);
 	for(var e=0; e<points.length; e++){
 		f_ctx.lineTo(points[e][0],points[e][1]);
