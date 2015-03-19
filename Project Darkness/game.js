@@ -674,7 +674,7 @@ function castRays(x,y,r){
 		f_ctx.lineTo(points[e][0],points[e][1]);
 	}
 	f_ctx.stroke();
-	log(points)
+	log(String(points))
 	
 }
 
