@@ -618,7 +618,7 @@ function castRays(x,y,r){
     var sx = x;
     var sy = y;
     var ex = (mouse.x-x_translation);
-	var ey = (mouse.y-y_translation);
+    var ey = (mouse.y-y_translation);
     for(var n=-Math.PI/4; n<Math.PI/4; n+=Math.PI/24){
 	    ex = r*Math.cos(n) + sx;
 	    ey = r*Math.sin(n) + sy;
@@ -642,7 +642,6 @@ function castRays(x,y,r){
 				for(var t=0; t<entities.length; t++){
 					x = Math.round(i*dx_dt + sx);
 					y = Math.round(i*dy_dt + sy);
-					//f_ctx.lineTo(x,y);
 					var ent = entities[t]
 					if(x % 32 == 0 &&
 						(x == ent.x || x == ent.x+ent.w)&&
@@ -666,9 +665,9 @@ function castRays(x,y,r){
 
 				}
 			}
-		}
+		}}
 	fun()
-    }
+    
 	f_ctx.moveTo(sx,sy);
 	for(var e=0; e<points.length; e++){
 		f_ctx.lineTo(points[e][0],points[e][1]);
