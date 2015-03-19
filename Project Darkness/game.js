@@ -614,6 +614,7 @@ window.onload=preload();
 
 
 function castRays(x,y,r){
+	f_ctx.beginPath();
     var sx = x;
     var sy = y;
     var ex = (mouse.x-x_translation);
