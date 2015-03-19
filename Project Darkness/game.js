@@ -13,6 +13,7 @@ var entitity_vertices = [];
 var lights = [];
 var enemies = [];
 var bullets = [];
+var rays = [];
 f_ctx.globalCompositeOperation = 'xor';
 //
 //
@@ -121,7 +122,7 @@ function Enemy(x,y,w,h,type){
 	this.type = type;
 	this.speed = 4;
 	this.visible = false;
-	this.aggroRange = 1000;
+	this.aggroRange = 200;
 	this.attackRange = 150;
 	this.fired = false;
 	this.rateOfFire = 500;
@@ -253,10 +254,10 @@ LightSource.prototype.setPosition = function(x,y){
 	this.x = x;
 	this.y = y;
 };
-
+var grd;
 LightSource.prototype.draw = function(){
 	if(this.on){
-		var grd = f_ctx.createRadialGradient(this.x,this.y,0,this.x,this.y,this.r);
+		grd = f_ctx.createRadialGradient(this.x,this.y,0,this.x,this.y,this.r);
 		grd.addColorStop(0,'rgba(255,255,255,1)');
 		grd.addColorStop(.25,'rgba(255,255,255,.5)');
 		grd.addColorStop(.75,'rgba(255,255,255,.25)');
@@ -340,6 +341,7 @@ function init(){
 	setTimeout(function(){enemy1 = new Enemy(32*1,32*11,24,24,'rat')},2000)
 
 	flashlight.draw = function(){
+		/*
 	    for(var r=this.r/2, x=this.r/2, a=1; r<=this.r; r+=x/5,a-=.2){
 			var grd = f_ctx.createRadialGradient(this.x,this.y,0,this.x,this.y,this.r);
 			grd.addColorStop(0,'rgba(255,255,255,1)');
@@ -352,7 +354,9 @@ function init(){
 			f_ctx.arc(this.x,this.y,this.r,mouse.angle-Math.PI/5,mouse.angle+Math.PI/5);
 			f_ctx.closePath();
 			f_ctx.fill();
-	     }
+	    	};
+	    	*/
+	    	castRays(this.x,this.y,this.r)
         };
     setTimeout(drawBuffer,10)
 	setTimeout(loop,10)
@@ -403,6 +407,7 @@ function animateBullets(){
 		bullets[i].animate();
 	}
 }
+
 function clearCanvases(){
 	ctx.clearRect(-x_translation,-y_translation,1200,600);
 	f_ctx.clearRect(-x_translation,-y_translation,1200,600);
@@ -413,14 +418,15 @@ function loop(){
 	drawMap()
     getVectorField()
 	overlayShadow()
+	flashlight.draw()
 	player1.animate();
 	animateEnemies();
 	animateBullets();
 	player1.draw();
-	flashlight.draw()
 	drawBullets();
 	drawLightSources();
 	drawEnemies();
+	//castRays()
 	debug();
 	requestAnimationFrame(loop);
 }
@@ -490,7 +496,7 @@ function debug(){
 				}
 			}
 		}
-		testRaycast()
+		
 	}
 }
 var v_field = []
@@ -604,20 +610,73 @@ function getClosestNeighbor(x,y){
 window.onload=preload();
 
 
-function testRaycast(){
-    var sx = player1.x + player1.w/2;
-    var xy = player1.y + player1.h/2;
-    var ex = mouse.x-x_translation;
-    var ey = mouse.y-y_translation;
-    
-    var scx = sx - (sx%32);
-    var scy = sy - (sy%32);
-    var ecx = ex - (ex%32);
-    var ecy = ey - (ey%32);
-    
-    var result = ''
-    for(i=0; i<scx-ecx; i++){
-        result += entities[i];
-    }
-    log(result)
+
+
+
+function castRays(x,y,r){
+    var sx = x;
+    var sy = y;
+    var ex = (mouse.x-x_translation);
+	var ey = (mouse.y-y_translation);
+    for(var n=-Math.PI/4; n<Math.PI/4; n+=Math.PI/24){
+	    ex = r*Math.cos(n) + sx;
+	    ey = r*Math.sin(n) + sy;
+	    
+	    var dx = ex-sx;
+	    var dy = ey-sy;
+	    var hyp = Math.sqrt(dx*dx + dy*dy);
+	    var dx_dt = dx/hyp;
+	    var dy_dt = dy/hyp;
+	    var slope = dy/dx;
+
+	    var scx = (sx - (sx%32))/32;
+	    var scy = (sy - (sy%32))/32;
+	    var ecx = (ex - (ex%32))/32;
+	    var ecy = (ey - (ey%32))/32;
+	    var x = 0;
+	    var y = 0;
+	    var points = []
+	    var fun = function(){
+			for(var i=0; i<=hyp; i++){
+				for(var t=0; t<entities.length; t++){
+					x = Math.round(i*dx_dt + sx);
+					y = Math.round(i*dy_dt + sy);
+					//f_ctx.lineTo(x,y);
+					var ent = entities[t]
+					if(x % 32 == 0 &&
+						(x == ent.x || x == ent.x+ent.w)&&
+						y >= ent.y &&
+						y <= ent.y+ent.h
+					){
+						points.push([x,y])
+						return;
+					}
+					if(y % 32 == 0 &&
+						(y == ent.y || y == ent.y+ent.h) &&
+						x >= ent.x &&
+						x <= ent.x+ent.w
+					){
+						points.push([x,y])
+						return;
+					}
+					if(x == r || y == r){
+						points.push([x,y])
+					}
+
+				}
+			}
+		}
+	fun()
+
+	f_ctx.moveTo(sx,sy);
+	for(var e=0; e<points.length; e++){
+		f_ctx.lineTo(points[e][0],points[e][1]);
+		if(points[e+1]){
+			f_ctx.lineTo(points[e+1][0],points[e+1][1])
+		}
+		//f_ctx.fill();
+	}
+	//f_ctx.stroke();
+	}
 }
+
