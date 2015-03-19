@@ -619,7 +619,7 @@ function castRays(x,y,r){
     var sy = y;
     var ex = (mouse.x-x_translation);
     var ey = (mouse.y-y_translation);
-    for(var n=-Math.PI/4; n<Math.PI/4; n+=Math.PI/24){
+    for(var n=Math.PI/4; n<Math.PI/4; n+=Math.PI/24){
 	    ex = r*Math.cos(n) + sx;
 	    ey = r*Math.sin(n) + sy;
 	    
