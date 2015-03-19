@@ -671,10 +671,8 @@ function castRays(x,y,r){
 	f_ctx.moveTo(sx,sy);
 	for(var e=0; e<points.length; e++){
 		f_ctx.lineTo(points[e][0],points[e][1]);
-		if(points[e+1]){
-			f_ctx.lineTo(points[e+1][0],points[e+1][1])
-		}
 	}
+	f_ctx.closePath();
 	f_ctx.fill();
 	//f_ctx.stroke();
 	
