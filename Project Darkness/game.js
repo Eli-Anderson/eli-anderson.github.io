@@ -619,6 +619,7 @@ function castRays(x,y,r){
     var sy = y;
     var ex = (mouse.x-x_translation);
     var ey = (mouse.y-y_translation);
+    var points = []
     for(var n=Math.PI/4; n<Math.PI/4; n+=Math.PI/24){
 	    ex = r*Math.cos(n) + sx;
 	    ey = r*Math.sin(n) + sy;
@@ -636,7 +637,7 @@ function castRays(x,y,r){
 	    var ecy = (ey - (ey%32))/32;
 	    var x = 0;
 	    var y = 0;
-	    var points = []
+	    
 	    var fun = function(){
 			for(var i=0; i<=hyp; i++){
 				for(var t=0; t<entities.length; t++){
