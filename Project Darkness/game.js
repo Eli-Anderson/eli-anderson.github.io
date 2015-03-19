@@ -674,7 +674,7 @@ function castRays(x,y,r){
 		if(points[e+1]){
 			f_ctx.lineTo(points[e+1][0],points[e+1][1])
 		}
-		//f_ctx.fill();
+		f_ctx.fill();
 	}
 	//f_ctx.stroke();
 	}
