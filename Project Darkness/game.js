@@ -586,8 +586,8 @@ function castRays(x,y,r,so,eo){
     var points = []
     var endpoints = []
     endpoints.push([r*Math.cos(so),r*Math.sin(so)],[r*Math.cos(eo),r*Math.sin(eo)])
-    for(var a=0; a<vertices.length; a++){
-    	var vert = {x: verticies[a][0],y: verticies[a][1]};
+    for(var a=0; a<entity_vertices.length; a++){
+    	var vert = {x: entity_verticies[a][0],y: entity_verticies[a][1]};
     	var angle = Math.atan2(vert.y-sy,vert.x-sx)
     	if(angle <= eo && angle >= so){
     		endpoints.push([vert.x,vert.y]);
