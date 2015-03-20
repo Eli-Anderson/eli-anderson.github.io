@@ -5,7 +5,7 @@ var f_ctx = fore_canvas.getContext('2d');
 var hud_canvas = document.getElementById('hud');
 var hud = hud_canvas.getContext('2d');
 var buffer_canvas = document.getElementById('buffer');
-var buffer1 = buffer_canvas.getContext('2d');
+var buffer = buffer_canvas.getContext('2d');
 
 var rightKey,leftKey,upKey,downKey;
 var entities = [];
