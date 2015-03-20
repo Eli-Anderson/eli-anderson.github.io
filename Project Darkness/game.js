@@ -1,15 +1,11 @@
 var canvas = document.getElementById('canvas');
-WebGL2D.enable(canvas);
-var ctx = canvas.getContext('webgl-2d');
+var ctx = canvas.getContext('2d');
 var fore_canvas = document.getElementById('forecanvas');
-WebGL2D.enable(fore_canvas);
-var f_ctx = fore_canvas.getContext('webgl-2d');
+var f_ctx = fore_canvas.getContext('2d');
 var hud_canvas = document.getElementById('hud');
-WebGL2D.enable(hud_canvas);
-var hud = hud_canvas.getContext('webgl-2d');
+var hud = hud_canvas.getContext('2d');
 var buffer_canvas = document.getElementById('buffer');
-WebGL2D.enable(buffer_canvas);
-var buffer1 = buffer_canvas.getContext('webgl-2d');
+var buffer1 = buffer_canvas.getContext('2d');
 
 var rightKey,leftKey,upKey,downKey;
 var entities = [];
@@ -261,29 +257,6 @@ LightSource.prototype.setPosition = function(x,y){
 LightSource.prototype.draw = function(){
 	if(this.on){
 		castRays(this.x,this.y,this.r,0,Math.PI*2)
-		/*
-		var grd = f_ctx.createRadialGradient(this.x,this.y,0,this.x,this.y,this.r);
-		grd.addColorStop(0,'rgba(255,255,255,1)');
-		grd.addColorStop(.25,'rgba(255,255,255,.5)');
-		grd.addColorStop(.75,'rgba(255,255,255,.25)');
-		grd.addColorStop(1,'rgba(255,255,255,0)');
-		f_ctx.fillStyle=grd;
-		f_ctx.beginPath();
-		f_ctx.arc(this.x,this.y,this.r,0,2*Math.PI);
-		f_ctx.closePath();
-		f_ctx.fill();
-		
-		
-		for(var r=this.r/2, x=this.r/2, a=1; r<=this.r; r+=x/5,a-=.2){
-			f_ctx.fillStyle='rgba(255,255,255,'+a+')';
-			f_ctx.beginPath();
-			f_ctx.moveTo(this.x,this.y);
-			f_ctx.arc(this.x,this.y,r,0,2*Math.PI);
-			f_ctx.closePath();
-			f_ctx.fill();
-		}
-		*/
-		
 	}
 };
 //
@@ -346,23 +319,8 @@ function init(){
 	setTimeout(function(){enemy1 = new Enemy(32*1,32*11,24,24,'rat')},2000)
 
 	flashlight.draw = function(){
-		/*
-	    for(var r=this.r/2, x=this.r/2, a=1; r<=this.r; r+=x/5,a-=.2){
-			var grd = f_ctx.createRadialGradient(this.x,this.y,0,this.x,this.y,this.r);
-			grd.addColorStop(0,'rgba(255,255,255,1)');
-			grd.addColorStop(.25,'rgba(255,255,255,.5)');
-			grd.addColorStop(.75,'rgba(255,255,255,.25)');
-			grd.addColorStop(1,'rgba(255,255,255,0)');
-			f_ctx.fillStyle=grd;
-			f_ctx.beginPath();
-			f_ctx.moveTo(this.x,this.y)
-			f_ctx.arc(this.x,this.y,this.r,mouse.angle-Math.PI/5,mouse.angle+Math.PI/5);
-			f_ctx.closePath();
-			f_ctx.fill();
-	    	};
-	    	*/
-	    	castRays(this.x,this.y,this.r,mouse.angle-Math.PI/4,mouse.angle+Math.PI/4)
-        };
+	    castRays(this.x,this.y,this.r,mouse.angle-Math.PI/4,mouse.angle+Math.PI/4)
+    };
     setTimeout(drawBuffer,10)
 	setTimeout(loop,10)
 }
@@ -421,7 +379,6 @@ function clearCanvases(){
 var frame = 0;
 function loop(){
 	frame++
-	if(frame%2==0){
 	clearCanvases()
 	drawMap()
     getVectorField()
@@ -435,7 +392,6 @@ function loop(){
 	drawLightSources();
 	drawEnemies();
 	debug();
-	}
 	requestAnimationFrame(loop);
 }
 var mouse = {
@@ -625,7 +581,8 @@ function castRays(x,y,r,so,eo){
 	f_ctx.beginPath();
     var sx = x;
     var sy = y;
-	var ex,ey;
+	var ex=0;
+	var ey=0;
     var points = []
     for(var n=so; n<=eo; n+=Math.PI/96){
 	    ex = r*Math.cos(n) + sx;
@@ -641,7 +598,7 @@ function castRays(x,y,r,so,eo){
 	    var y = 0;
 	    var fun = function(){
 			for(var i=0; i<=hyp; i++){
-				for(var t=0; t<entities.length; t++){
+				for(var t=0; t<entities.length; t+=2){
 					x = Math.round(i*dx_dt + sx);
 					y = Math.round(i*dy_dt + sy);
 					var ent = entities[t]
@@ -675,6 +632,7 @@ function castRays(x,y,r,so,eo){
 	for(var e=0; e<points.length; e++){
 		f_ctx.lineTo(points[e][0],points[e][1]);
 	}
+	log(points)
 	var grd = f_ctx.createRadialGradient(sx,sy,0,sx,sy,r);
 	grd.addColorStop(0,'rgba(255,255,255,1)');
 	grd.addColorStop(.25,'rgba(255,255,255,.5)');
