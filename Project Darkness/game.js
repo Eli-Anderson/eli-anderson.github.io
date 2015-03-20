@@ -632,7 +632,6 @@ function castRays(x,y,r,so,eo){
 	for(var e=0; e<points.length; e++){
 		f_ctx.lineTo(points[e][0],points[e][1]);
 	}
-	log(points)
 	var grd = f_ctx.createRadialGradient(sx,sy,0,sx,sy,r);
 	grd.addColorStop(0,'rgba(255,255,255,1)');
 	grd.addColorStop(.25,'rgba(255,255,255,.5)');
