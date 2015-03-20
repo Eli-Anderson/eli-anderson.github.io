@@ -229,7 +229,7 @@ function Entity(x,y,w,h){
 	this.y = y;
 	this.w = w;
 	this.h = h;
-	entitity_vertices.push([[this.x,this.y],[this.x,this.y+this.h],[this.x+this.w,this.y+this.h],[this.x+this.w,this.y]])
+	entity_vertices.push([[this.x,this.y],[this.x,this.y+this.h],[this.x+this.w,this.y+this.h],[this.x+this.w,this.y]])
 }
 
 Entity.prototype.draw = function(){
