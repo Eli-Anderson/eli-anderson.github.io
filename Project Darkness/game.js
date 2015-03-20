@@ -1,11 +1,15 @@
 var canvas = document.getElementById('canvas');
-var ctx = canvas.getContext('2d');
+WebGL2D.enable(canvas);
+var ctx = canvas.getContext('webgl-2d');
 var fore_canvas = document.getElementById('forecanvas');
-var f_ctx = fore_canvas.getContext('2d');
+WebGL2D.enable(fore_canvas);
+var f_ctx = fore_canvas.getContext('webgl-2d');
 var hud_canvas = document.getElementById('hud');
-var hud = hud_canvas.getContext('2d');
+WebGL2D.enable(hud_canvas);
+var hud = hud_canvas.getContext('webgl-2d');
 var buffer_canvas = document.getElementById('buffer');
-var buffer = buffer_canvas.getContext('2d');
+WebGL2D.enable(buffer_canvas);
+var buffer1 = buffer_canvas.getContext('webgl-2d');
 
 var rightKey,leftKey,upKey,downKey;
 var entities = [];
@@ -254,10 +258,11 @@ LightSource.prototype.setPosition = function(x,y){
 	this.x = x;
 	this.y = y;
 };
-var grd;
 LightSource.prototype.draw = function(){
 	if(this.on){
-		grd = f_ctx.createRadialGradient(this.x,this.y,0,this.x,this.y,this.r);
+		castRays(this.x,this.y,this.r,0,Math.PI*2)
+		/*
+		var grd = f_ctx.createRadialGradient(this.x,this.y,0,this.x,this.y,this.r);
 		grd.addColorStop(0,'rgba(255,255,255,1)');
 		grd.addColorStop(.25,'rgba(255,255,255,.5)');
 		grd.addColorStop(.75,'rgba(255,255,255,.25)');
@@ -268,7 +273,7 @@ LightSource.prototype.draw = function(){
 		f_ctx.closePath();
 		f_ctx.fill();
 		
-		/*
+		
 		for(var r=this.r/2, x=this.r/2, a=1; r<=this.r; r+=x/5,a-=.2){
 			f_ctx.fillStyle='rgba(255,255,255,'+a+')';
 			f_ctx.beginPath();
@@ -356,7 +361,7 @@ function init(){
 			f_ctx.fill();
 	    	};
 	    	*/
-	    	castRays(this.x,this.y,this.r)
+	    	castRays(this.x,this.y,this.r,mouse.angle-Math.PI/4,mouse.angle+Math.PI/4)
         };
     setTimeout(drawBuffer,10)
 	setTimeout(loop,10)
@@ -413,7 +418,10 @@ function clearCanvases(){
 	f_ctx.clearRect(-x_translation,-y_translation,1200,600);
 	hud.clearRect(0,0,1200,600);
 }
+var frame = 0;
 function loop(){
+	frame++
+	if(frame%2==0){
 	clearCanvases()
 	drawMap()
     getVectorField()
@@ -426,8 +434,8 @@ function loop(){
 	drawBullets();
 	drawLightSources();
 	drawEnemies();
-	//castRays()
 	debug();
+	}
 	requestAnimationFrame(loop);
 }
 var mouse = {
@@ -613,14 +621,13 @@ window.onload=preload();
 
 
 
-function castRays(x,y,r){
+function castRays(x,y,r,so,eo){
 	f_ctx.beginPath();
     var sx = x;
     var sy = y;
-    var ex = (mouse.x-x_translation);
-    var ey = (mouse.y-y_translation);
+	var ex,ey;
     var points = []
-    for(var n=Math.PI/4; n<Math.PI/4; n+=Math.PI/24){
+    for(var n=so; n<=eo; n+=Math.PI/96){
 	    ex = r*Math.cos(n) + sx;
 	    ey = r*Math.sin(n) + sy;
 	    
@@ -630,14 +637,8 @@ function castRays(x,y,r){
 	    var dx_dt = dx/hyp;
 	    var dy_dt = dy/hyp;
 	    var slope = dy/dx;
-
-	    var scx = (sx - (sx%32))/32;
-	    var scy = (sy - (sy%32))/32;
-	    var ecx = (ex - (ex%32))/32;
-	    var ecy = (ey - (ey%32))/32;
 	    var x = 0;
 	    var y = 0;
-	    
 	    var fun = function(){
 			for(var i=0; i<=hyp; i++){
 				for(var t=0; t<entities.length; t++){
@@ -660,21 +661,26 @@ function castRays(x,y,r){
 						points.push([x,y])
 						return;
 					}
-					if(x == r || y == r){
+					if(x == sx+r || y == sy+r){
 						points.push([x,y])
+						return
 					}
-
 				}
 			}
 		}
-	fun()
+		fun()
     }
+	
 	f_ctx.moveTo(sx,sy);
 	for(var e=0; e<points.length; e++){
 		f_ctx.lineTo(points[e][0],points[e][1]);
 	}
-	f_ctx.stroke();
-	log(String(points))
-	
+	var grd = f_ctx.createRadialGradient(sx,sy,0,sx,sy,r);
+	grd.addColorStop(0,'rgba(255,255,255,1)');
+	grd.addColorStop(.25,'rgba(255,255,255,.5)');
+	grd.addColorStop(.75,'rgba(255,255,255,.25)');
+	grd.addColorStop(1,'rgba(255,255,255,0)');
+	f_ctx.fillStyle=grd
+	f_ctx.fill();
 }
 
