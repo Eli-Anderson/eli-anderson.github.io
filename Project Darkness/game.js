@@ -9,7 +9,7 @@ var buffer = buffer_canvas.getContext('2d');
 
 var rightKey,leftKey,upKey,downKey;
 var entities = [];
-var entitity_vertices = [];
+var entity_vertices = [];
 var lights = [];
 var enemies = [];
 var bullets = [];
