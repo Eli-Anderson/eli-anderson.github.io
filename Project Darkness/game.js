@@ -431,9 +431,9 @@ var debug_vars = {
 	trigger: false,
 	noclip: false,
 }
-
+var d_log = document.getElementById('log')
 function log(text){
-    f_ctx.fillText(text,200-x_translation,200-y_translation);
+    d_log.innerHTML = text;
 }
 
 function debug(){
@@ -596,8 +596,9 @@ function castRays(x,y,r,so,eo){
     		endpoints.push([vert.x,vert.y]);
     	}
     }
+    log(endpoints)
     for(var n=0; n<endpoints.length; n++){
-    	//console.log(endpoints[n])
+    	//log(endpoints[n])
 	    ex = endpoints[n][0];
 	    ey = endpoints[n][1];
 	    
