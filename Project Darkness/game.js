@@ -433,7 +433,7 @@ var debug_vars = {
 }
 var d_log = document.getElementById('log')
 function log(text){
-    d_log.innerHTML = text;
+    //d_log.innerHTML = text;
 }
 
 function debug(){
