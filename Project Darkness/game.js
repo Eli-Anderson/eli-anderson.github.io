@@ -593,7 +593,7 @@ function castRays(x,y,r,so,eo){
     		endpoints.push([vert.x,vert.y]);
     	}
     }
-    for(var n=0; n<=endpoints.length; n++){
+    for(var n=0; n<endpoints.length; n++){
 	    ex = endpoints[n].x;
 	    ey = endpoints[n].y;
 	    
