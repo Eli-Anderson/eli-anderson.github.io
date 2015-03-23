@@ -230,18 +230,11 @@ function Entity(x,y,w,h){
 	this.y = y;
 	this.w = w;
 	this.h = h;
-	if(entity_vertices.indexOf([this.x,this.y])==-1){
-		entity_vertices.push([this.x,this.y])
-	}
-	if(entity_vertices.indexOf([this.x,this.y+this.h])==-1){
-		entity_vertices.push([this.x,this.y+this.h])
-	}
-	if(entity_vertices.indexOf([this.x+this.w,this.y+this.h])==-1){
-		entity_vertices.push([this.x+this.w,this.y+this.h])
-	}
-	if(entity_vertices.indexOf([this.x+this.w,this.y])==-1){
-		entity_vertices.push([this.x+this.w,this.y])
-	}
+	entity_vertices.push([this.x,this.y])
+	entity_vertices.push([this.x,this.y+this.h])
+	entity_vertices.push([this.x+this.w,this.y+this.h])
+	entity_vertices.push([this.x+this.w,this.y])
+	
 	entity_lines.push([this.x,this.y,this.x+this.w,this.y],[this.x+this.w,this.y,this.x+this.w,this.y+this.h],[this.x,this.y+this.h,this.x+this.w,this.y+this.h],[this.x,this.y,this.x,+this.y+this.h])
 
 }
@@ -288,6 +281,18 @@ function drawBuffer(){
 	    		new Entity(x1,y1,32,32);
 	    	}
 	        buffer.drawImage(tiles,map[y][x]*32,0,32,32,x1,y1,32,32);
+			//if(entity_vertices.indexOf([x1,y1])==-1){
+			//	entity_vertices.push([x1,y1])
+			//}
+			//if(entity_vertices.indexOf([x1,y1+32])==-1){
+			//	entity_vertices.push([x1,y1+32])
+			//}
+			//if(entity_vertices.indexOf([x1+32,y1+32])==-1){
+			//	entity_vertices.push([x1+32,y1+32])
+			//}
+			//if(entity_vertices.indexOf([x1+32,y1])==-1){
+			//	entity_vertices.push([x1+32,y1])
+			//}
 	    }
 	}
 	for(var p=0; p<objects.length; p++){
@@ -591,15 +596,18 @@ function castRays(x,y,r,so,eo){
     		endpoints.push([r*Math.cos(angle-.0000001)+sx,r*Math.sin(angle-.0000001)+sy,angle-.0000001]);
     	}
     }
+	
     endpoints.push([Math.round(r*Math.cos(eo)+sx),Math.round(r*Math.sin(eo)+sy),eo])
+	
 
     endpoints.sort(function(a,b){return a[2]-b[2]})
+	
     for(var n=0; n<endpoints.length; n++){
 	    ex = endpoints[n][0];
 	    ey = endpoints[n][1];
 	    //
-	    hud.fillStyle='red'
-	    hud.fillRect(ex+x_translation,ey+y_translation,2,2)
+	    //hud.fillStyle='red'
+	    //hud.fillRect(ex+x_translation,ey+y_translation,2,2)
 	    //
 	    var res1 = [0,0]
 	    var res2 = [Infinity,Infinity]
@@ -612,11 +620,14 @@ function castRays(x,y,r,so,eo){
 	    	var res2_dx = res2[0]-sx;
 	    	var res2_dy = res2[1]-sy;
 	    	var hyp2 = Math.sqrt((res2_dx*res2_dx) + (res2_dy*res2_dy))
-	    	if(res1[1] < res2[1]){
+	    	if(hyp1 < hyp2){
 	    		result = res1;
+				res2 = res1;
 	    	}
-	    	//else{}
-	    	res2 = res1;
+	    	else{
+				result = result;
+			}
+	    	
 	
 	    }
 	    points.push([result[0],result[1]])
@@ -625,15 +636,15 @@ function castRays(x,y,r,so,eo){
 	f_ctx.moveTo(sx,sy);
 	for(var e=0; e<points.length; e++){
 		f_ctx.lineTo(points[e][0],points[e][1]);
-		hud.fillStyle='white'
-		hud.fillRect(points[e][0]+x_translation,points[e][1]+y_translation,2,2)
+		//hud.fillStyle='white'
+		//hud.fillRect(points[e][0]+x_translation,points[e][1]+y_translation,2,2)
 	}
 	var grd = f_ctx.createRadialGradient(sx,sy,0,sx,sy,r);
 	grd.addColorStop(0,'rgba(255,255,255,1)');
 	grd.addColorStop(.25,'rgba(255,255,255,.5)');
 	grd.addColorStop(.75,'rgba(255,255,255,.25)');
 	grd.addColorStop(1,'rgba(255,255,255,0)');
-	f_ctx.fillStyle='rgba(255,255,255,1)'
+	f_ctx.fillStyle=grd
 	f_ctx.fill();
 }
 
@@ -659,9 +670,12 @@ function getLineIntersection(p0_x, p0_y, p1_x, p1_y, p2_x, p2_y, p3_x, p3_y){
 function init(){
 	createVectorFieldBase()
 	player1 = new Player(32,32,24,24);
-	flashlight = new LightSource(200,200,125);
+	flashlight = new LightSource(200,200,225);
 	lights.splice(0,1);
-	//new LightSource(200,200,200)
+	new LightSource(200,200,200)
+	//new LightSource(500,200,200)
+	//new LightSource(200,500,200)
+	//new LightSource(500,500,200)
 	flashlight.setPosition(player1.x,player1.y);
 	setTimeout(function(){enemy1 = new Enemy(32*1,32*11,24,24,'rat')},2000)
 
@@ -670,7 +684,7 @@ function init(){
     };
     setTimeout(drawBuffer,10)
 	setTimeout(loop,10)
-	
+	entity_vertices.push([0,0],[map[0].length*32,0],[map[0].length*32,map.length*32],[0,map.length*32])
 }
 function loop(){
 	frame++
