@@ -281,18 +281,9 @@ function drawBuffer(){
 	    		new Entity(x1,y1,32,32);
 	    	}
 	        buffer.drawImage(tiles,map[y][x]*32,0,32,32,x1,y1,32,32);
-			//if(entity_vertices.indexOf([x1,y1])==-1){
-			//	entity_vertices.push([x1,y1])
-			//}
-			//if(entity_vertices.indexOf([x1,y1+32])==-1){
-			//	entity_vertices.push([x1,y1+32])
-			//}
-			//if(entity_vertices.indexOf([x1+32,y1+32])==-1){
-			//	entity_vertices.push([x1+32,y1+32])
-			//}
-			//if(entity_vertices.indexOf([x1+32,y1])==-1){
-			//	entity_vertices.push([x1+32,y1])
-			//}
+	        if(y%4 == 0 && x%4 ==0){
+			entity_vertices.push([y*32,x*32])
+	        }
 	    }
 	}
 	for(var p=0; p<objects.length; p++){
