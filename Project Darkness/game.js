@@ -281,7 +281,7 @@ function drawBuffer(){
 	    		new Entity(x1,y1,32,32);
 	    	}
 	        buffer.drawImage(tiles,map[y][x]*32,0,32,32,x1,y1,32,32);
-	        if(y%4 == 0 && x%4 ==0){
+	        if(y%10 == 0 && x%10 ==0){
 			entity_vertices.push([y*32,x*32])
 	        }
 	    }
