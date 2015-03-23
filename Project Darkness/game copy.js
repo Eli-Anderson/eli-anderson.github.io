@@ -10,7 +10,6 @@ var buffer = buffer_canvas.getContext('2d');
 var rightKey,leftKey,upKey,downKey;
 var entities = [];
 var entity_vertices = [];
-var entity_lines = [];
 var lights = [];
 var enemies = [];
 var bullets = [];
@@ -242,7 +241,6 @@ function Entity(x,y,w,h){
 	if(entity_vertices.indexOf([this.x+this.w,this.y])==-1){
 		entity_vertices.push([this.x+this.w,this.y])
 	}
-	entity_lines.push([this.x,this.y,this.x+this.w,this.y],[this.x+this.w,this.y,this.x+this.w,this.y+this.h],[this.x,this.y+this.h,this.x+this.w,this.y+this.h],[this.x,this.y,this.x,+this.y+this.h])
 
 }
 
@@ -288,6 +286,18 @@ function drawBuffer(){
 	    		new Entity(x1,y1,32,32);
 	    	}
 	        buffer.drawImage(tiles,map[y][x]*32,0,32,32,x1,y1,32,32);
+	        //if(entity_vertices.indexOf([x1,y1])==-1){
+			//	entity_vertices.push([x1,y1])
+			//}
+			//if(entity_vertices.indexOf([x1,y1+32])==-1){
+			//	entity_vertices.push([x1,y1+32])
+			//}
+			//if(entity_vertices.indexOf([x1+32,y1+32])==-1){
+			//	entity_vertices.push([x1+32,y1+32])
+			//}
+			//if(entity_vertices.indexOf([x1+32,y1])==-1){
+			//	entity_vertices.push([x1+32,y1])
+			//}
 	    }
 	}
 	for(var p=0; p<objects.length; p++){
@@ -568,9 +578,9 @@ function castRays(x,y,r,so,eo){
     var sy = y;
 	var ex=0;
 	var ey=0;
-    points = []
-    endpoints = []
-    endpoints.push([Math.round(r*Math.cos(so)+sx),Math.round(r*Math.sin(so)+sy),so])
+    var points = []
+    var endpoints = []
+    endpoints.push([Math.round(r*Math.cos(so)+sx),Math.round(r*Math.sin(so)+sy)])
     //hud.strokeStyle='green'
     //hud.beginPath();
     //hud.moveTo(sx+x_translation,sy+y_translation)
@@ -579,19 +589,18 @@ function castRays(x,y,r,so,eo){
     for(var a=0; a<entity_vertices.length; a++){
     	var vert = {x: Math.round(entity_vertices[a][0]),y: Math.round(entity_vertices[a][1])};
     	var angle = Math.atan2(vert.y-sy,vert.x-sx);
-
     	//if(vert.x == 64 && vert.y == 64){log(angle*180/Math.PI)}
     	//if(a==0 && frame % 30 == 0){console.log(2*Math.PI+(so*180/Math.PI),2*Math.PI+(eo*180/Math.PI))}
 
     	var vert_hyp = Math.sqrt((sx-vert.x)*(sx-vert.x)+(sy-vert.y)*(sy-vert.y))
-    	if(angle <= eo && angle >= so && vert_hyp < 1.5*r
+    	if(angle <= eo && angle >= so// && vert_hyp < 1.5*r
     		){
     		endpoints.push([vert.x,vert.y,angle]);
     		endpoints.push([r*Math.cos(angle+.0000001)+sx,r*Math.sin(angle+.0000001)+sy,angle+.0000001]);
     		endpoints.push([r*Math.cos(angle-.0000001)+sx,r*Math.sin(angle-.0000001)+sy,angle-.0000001]);
     	}
     }
-    endpoints.push([Math.round(r*Math.cos(eo)+sx),Math.round(r*Math.sin(eo)+sy),eo])
+    endpoints.push([Math.round(r*Math.cos(eo)+sx),Math.round(r*Math.sin(eo)+sy)])
 
     endpoints.sort(function(a,b){return a[2]-b[2]})
     for(var n=0; n<endpoints.length; n++){
@@ -601,67 +610,78 @@ function castRays(x,y,r,so,eo){
 	    hud.fillStyle='red'
 	    hud.fillRect(ex+x_translation,ey+y_translation,2,2)
 	    //
-	    var res1 = [0,0]
-	    var res2 = [Infinity,Infinity]
-	    var result = [0,0]
-	    for(var i=0; i<entity_lines.length; i++){
-	    	res1 = getLineIntersection(sx,sy,ex,ey,entity_lines[i][0],entity_lines[i][1],entity_lines[i][2],entity_lines[i][3])
-	    	var res1_dx = res1[0]-sx;
-	    	var res1_dy = res1[1]-sy;
-	    	var hyp1 = Math.sqrt((res1_dx*res1_dx) + (res1_dy*res1_dy))
-	    	var res2_dx = res2[0]-sx;
-	    	var res2_dy = res2[1]-sy;
-	    	var hyp2 = Math.sqrt((res2_dx*res2_dx) + (res2_dy*res2_dy))
-	    	if(res1[1] < res2[1]){
-	    		result = res1;
-	    	}
-	    	//else{}
-	    	res2 = res1;
-	
-	    }
-	    points.push([result[0],result[1]])
+	    var dx = ex-sx;
+	    var dy = ey-sy;
+	    var hyp = Math.sqrt(dx*dx + dy*dy);
+	    var dx_dt = dx/hyp;
+	    var dy_dt = dy/hyp;
+	    var slope = dy/dx;
+	    var x = 0;
+	    var y = 0;
+	    var fun = function(){
+	    	//NEED TO CHANGE THIS TO FIT
+	    	
+	    	//
+	    	//
+	    	//
+	    	//
+	    	//
+	    	//
+			for(var i=0; i<=hyp; i++){
+				for(var t=0; t<entities.length; t++){
+					x = Math.round(i*dx_dt + sx);
+					y = Math.round(i*dy_dt + sy);
+					var ent = entities[t]
+					if(x % 32 == 0 &&
+						(x == ent.x || x == ent.x+ent.w)&&
+						y >= ent.y &&
+						y <= ent.y+ent.h
+					){
+						points.push([x,y])
+						return;
+					}
+					if(y % 32 == 0 &&
+						(y == ent.y || y == ent.y+ent.h) &&
+						x >= ent.x &&
+						x <= ent.x+ent.w
+					){
+						points.push([x,y])
+						return;
+					}
+					if(i==r-1){
+						points.push([x,y])
+						return
+					}
+				}
+			}
+		}
+		fun()
     }
 	
 	f_ctx.moveTo(sx,sy);
 	for(var e=0; e<points.length; e++){
 		f_ctx.lineTo(points[e][0],points[e][1]);
-		hud.fillStyle='white'
-		hud.fillRect(points[e][0]+x_translation,points[e][1]+y_translation,2,2)
+		//hud.fillStyle='white'
+		//hud.fillRect(points[e][0]+x_translation,points[e][1]+y_translation,2,2)
 	}
 	var grd = f_ctx.createRadialGradient(sx,sy,0,sx,sy,r);
 	grd.addColorStop(0,'rgba(255,255,255,1)');
 	grd.addColorStop(.25,'rgba(255,255,255,.5)');
 	grd.addColorStop(.75,'rgba(255,255,255,.25)');
 	grd.addColorStop(1,'rgba(255,255,255,0)');
-	f_ctx.fillStyle='rgba(255,255,255,1)'
+	f_ctx.fillStyle=grd
 	f_ctx.fill();
 }
 
-function getLineIntersection(p0_x, p0_y, p1_x, p1_y, p2_x, p2_y, p3_x, p3_y){
-	var s1_x, s1_y, s2_x, s2_y;
-	s1_x = p1_x - p0_x;
-	s1_y = p1_y - p0_y;
-	s2_x = p3_x - p2_x;
-	s2_y = p3_y - p2_y;
-	var s, t;
-	s = (-s1_y * (p0_x - p2_x) + s1_x * (p0_y - p2_y)) / (-s2_x * s1_y + s1_x * s2_y);
-	t = ( s2_x * (p0_y - p2_y) - s2_y * (p0_x - p2_x)) / (-s2_x * s1_y + s1_x * s2_y);
-	if (s >= 0 && s <= 1 && t >= 0 && t <= 1){
-		// Collision detected
-		var intX = p0_x + (t * s1_x);
-		var intY = p0_y + (t * s1_y);
-		return [intX, intY];
-	}
-	return [p1_x,p1_y];
-	// No collision
-}
+
+
 
 function init(){
 	createVectorFieldBase()
 	player1 = new Player(32,32,24,24);
 	flashlight = new LightSource(200,200,125);
 	lights.splice(0,1);
-	//new LightSource(200,200,200)
+	new LightSource(200,200,200)
 	flashlight.setPosition(player1.x,player1.y);
 	setTimeout(function(){enemy1 = new Enemy(32*1,32*11,24,24,'rat')},2000)
 
@@ -670,7 +690,7 @@ function init(){
     };
     setTimeout(drawBuffer,10)
 	setTimeout(loop,10)
-	
+	entity_vertices.push([0,0],[0,1024],[1024,0],[1024,1024])
 }
 function loop(){
 	frame++
