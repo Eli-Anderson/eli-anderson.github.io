@@ -249,11 +249,12 @@ Entity.prototype.draw = function(){
 //
 //
 //
-function LightSource(x,y,r){
+function LightSource(x,y,r,rgb){
 	lights.push(this);
 	this.x = x;
 	this.y = y;
 	this.r = r;
+	this.rgb = rgb;
 	this.on = true;
 }
 
@@ -263,7 +264,7 @@ LightSource.prototype.setPosition = function(x,y){
 };
 LightSource.prototype.draw = function(){
 	if(this.on){
-		castRays(this.x,this.y,this.r,-Math.PI,Math.PI)
+		castRays(this.x,this.y,this.r,-Math.PI,Math.PI,this.rgb)
 	}
 };
 //
@@ -558,7 +559,7 @@ window.onload=preload();
 
 
 
-function castRays(x,y,r,so,eo){
+function castRays(x,y,r,so,eo,rgb){
 	f_ctx.beginPath();
     var sx = x;
     var sy = y;
@@ -588,10 +589,10 @@ function castRays(x,y,r,so,eo){
     	}
     }
 	
-    endpoints.push([Math.round(r*Math.cos(eo)+sx),Math.round(r*Math.sin(eo)+sy),eo])
+    endpoints.push([Math.round(r*Math.cos(eo)+sx),Math.round(r*Math.sin(eo)+sy),eo]);
 	
 
-    endpoints.sort(function(a,b){return a[2]-b[2]})
+    endpoints.sort(function(a,b){return a[2]-b[2]});
 	
     for(var n=0; n<endpoints.length; n++){
 	    ex = endpoints[n][0];
@@ -600,17 +601,17 @@ function castRays(x,y,r,so,eo){
 	    //hud.fillStyle='red'
 	    //hud.fillRect(ex+x_translation,ey+y_translation,2,2)
 	    //
-	    var res1 = [0,0]
-	    var res2 = [Infinity,Infinity]
-	    var result = [0,0]
+	    var res1 = [0,0];
+	    var res2 = [Infinity,Infinity];
+	    var result = [0,0];
 	    for(var i=0; i<entity_lines.length; i++){
-	    	res1 = getLineIntersection(sx,sy,ex,ey,entity_lines[i][0],entity_lines[i][1],entity_lines[i][2],entity_lines[i][3])
+	    	res1 = getLineIntersection(sx,sy,ex,ey,entity_lines[i][0],entity_lines[i][1],entity_lines[i][2],entity_lines[i][3]);
 	    	var res1_dx = res1[0]-sx;
 	    	var res1_dy = res1[1]-sy;
-	    	var hyp1 = Math.sqrt((res1_dx*res1_dx) + (res1_dy*res1_dy))
+	    	var hyp1 = Math.sqrt((res1_dx*res1_dx) + (res1_dy*res1_dy));
 	    	var res2_dx = res2[0]-sx;
 	    	var res2_dy = res2[1]-sy;
-	    	var hyp2 = Math.sqrt((res2_dx*res2_dx) + (res2_dy*res2_dy))
+	    	var hyp2 = Math.sqrt((res2_dx*res2_dx) + (res2_dy*res2_dy));
 	    	if(hyp1 < hyp2){
 	    		result = res1;
 				res2 = res1;
@@ -631,10 +632,13 @@ function castRays(x,y,r,so,eo){
 		//hud.fillRect(points[e][0]+x_translation,points[e][1]+y_translation,2,2)
 	}
 	var grd = f_ctx.createRadialGradient(sx,sy,0,sx,sy,r);
-	grd.addColorStop(0,'rgba(255,255,255,1)');
-	grd.addColorStop(.25,'rgba(255,255,255,.5)');
-	grd.addColorStop(.75,'rgba(255,255,255,.25)');
-	grd.addColorStop(1,'rgba(255,255,255,0)');
+	var r = rgb[0];
+	var g = rgb[1];
+	var b = rgb[2];
+	grd.addColorStop(0,'rgba('+r+','+g+','+b+',1)');
+	grd.addColorStop(.25,'rgba('+r+','+g+','+b+',.5)');
+	grd.addColorStop(.75,'rgba('+r+','+g+','+b+',.25)');
+	grd.addColorStop(1,'rgba('+r+','+g+','+b+',0)');
 	f_ctx.fillStyle=grd
 	f_ctx.fill();
 }
@@ -661,9 +665,9 @@ function getLineIntersection(p0_x, p0_y, p1_x, p1_y, p2_x, p2_y, p3_x, p3_y){
 function init(){
 	createVectorFieldBase()
 	player1 = new Player(32,32,24,24);
-	flashlight = new LightSource(200,200,225);
+	flashlight = new LightSource(200,200,225,[255,255,255]);
 	lights.splice(0,1);
-	new LightSource(200,200,200)
+	new LightSource(200,200,200,[255,0,0])
 	//new LightSource(500,200,200)
 	//new LightSource(200,500,200)
 	//new LightSource(500,500,200)
@@ -671,7 +675,7 @@ function init(){
 	setTimeout(function(){enemy1 = new Enemy(32*1,32*11,24,24,'rat')},2000)
 
 	flashlight.draw = function(){
-	    castRays(this.x,this.y,this.r,mouse.angle-Math.PI/4,mouse.angle+Math.PI/4)
+	    castRays(this.x,this.y,this.r,mouse.angle-Math.PI/4,mouse.angle+Math.PI/4,this.rgb)
     };
     setTimeout(drawBuffer,10)
 	setTimeout(loop,10)
