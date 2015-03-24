@@ -270,6 +270,7 @@ function Entity(x,y,w,h){
 	else{entity_vertices.splice(dn,1)}
 	//
 	//
+	log(entity_lines[n])
 	for(var n=0; n<entity_lines.length; n++){
 		if(entity_lines[n]!=undefined){
 		if(entity_lines[n][0]==this.x && entity_vertices[n][1]==this.y && entity_vertices[n][2]==this.x+this.w && entity_vertices[n][3]==this.y){
