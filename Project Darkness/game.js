@@ -271,7 +271,7 @@ function Entity(x,y,w,h){
 	//
 	//
 	for(var n=0; n<entity_lines.length-1; n++){
-		
+		if(entity_lines[n]!==undefined){
 		if(entity_lines[n][0]==this.x && entity_vertices[n][1]==this.y && entity_vertices[n][2]==this.x+this.w && entity_vertices[n][3]==this.y){
 			e = true;
 			ai = n;
@@ -287,6 +287,7 @@ function Entity(x,y,w,h){
 		if(entity_lines[n][0]==this.x && entity_vertices[n][1]==this.y && entity_vertices[n][2]==this.x && entity_vertices[n][3]==this.y+this.h){
 			h = true;
 			di = n;
+		}
 		}
 		
 	}
