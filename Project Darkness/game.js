@@ -11,6 +11,7 @@ var rightKey,leftKey,upKey,downKey;
 var entities = [];
 var entity_vertices = [];
 var entity_lines = [];
+var verticyMap = [];
 var lights = [];
 var enemies = [];
 var bullets = [];
@@ -223,22 +224,71 @@ Bullet.prototype.draw = function(){
 }
 //
 //
-//
+
 function Entity(x,y,w,h){
 	entities.push(this);
 	this.x = x;
 	this.y = y;
 	this.w = w;
 	this.h = h;
-	entity_vertices.push([this.x,this.y])
-	entity_vertices.push([this.x,this.y+this.h])
-	entity_vertices.push([this.x+this.w,this.y+this.h])
-	entity_vertices.push([this.x+this.w,this.y])
-	
-	entity_lines.push([this.x,this.y,this.x+this.w,this.y],[this.x+this.w,this.y,this.x+this.w,this.y+this.h],[this.x,this.y+this.h,this.x+this.w,this.y+this.h],[this.x,this.y,this.x,+this.y+this.h])
+	var a = false;
+	var b = false;
+	var c = false;
+	var d = false;
+	var e = false;
+	var f = false;
+	var g = false;
+	var h = false;
+	var an,bn,cn,dn;
+	var ai,bi,ci,di;
+	for(var i=0; i<entity_vertices.length; i++){
+		
+		if(entity_vertices[i][0]==this.x && entity_vertices[i][1]==this.y){
+			a = true;
+			an = i;
+		}
+		else if(entity_vertices[i][0]==this.x && entity_vertices[i][1]==this.y+this.h){
+			b = true;
+			bn = i;
+		}
+		else if(entity_vertices[i][0]==this.x+this.w && entity_vertices[i][1]==this.y+this.h){
+			c = true;
+			cn = i;
+		}
+		else if(entity_vertices[i][0]==this.x+this.w && entity_vertices[i][1]==this.y){
+			d = true;
+			dn = i;
+		}
+	}
+	if(!a){entity_vertices.push([this.x,this.y]);}
+	else{entity_vertices.splice(an,1)}
+	if(!b){entity_vertices.push([this.x,this.y+this.h]);}
+	else{entity_vertices.splice(bn,1)}
+	if(!c){entity_vertices.push([this.x+this.w,this.y+this.h]);}
+	else{entity_vertices.splice(cn,1)}
+	if(!d){entity_vertices.push([this.x+this.w,this.y]);}
+	else{entity_vertices.splice(dn,1)}
+	//
+	//
+	for(var n=0; n<entity_lines.length; n++){
+		
+		if(entity_lines[n][0]==this.x && entity_vertices[n][1]==this.y && entity_vertices[n][2]==this.y+this.w && entity_vertices[n][3]==this.y){
+			e = true;
+			ai = n;
+		}
+		
+	}
+	if(!e){entity_lines.push([this.x,this.y,this.x+this.w,this.y]);}
+	else{entity_lines.splice(an,1)}
+	if(!f){entity_vertices.push([this.x,this.y+this.h]);}
+	else{entity_vertices.splice(bn,1)}
+	if(!g){entity_vertices.push([this.x+this.w,this.y+this.h]);}
+	else{entity_vertices.splice(cn,1)}
+	if(!h){entity_vertices.push([this.x+this.w,this.y]);}
+	else{entity_vertices.splice(dn,1)}
+	entity_lines.push([this.x,this.y,this.x+this.w,this.y],[this.x+this.w,this.y,this.x+this.w,this.y+this.h],[this.x,this.y+this.h,this.x+this.w,this.y+this.h],[this.x,this.y,this.x,+this.y+this.h]);
 
 }
-
 Entity.prototype.draw = function(){
 	ctx.fillStyle='red';
 	ctx.fillRect(this.x,this.y,this.w,this.h);
@@ -282,8 +332,8 @@ function drawBuffer(){
 	    		new Entity(x1,y1,32,32);
 	    	}
 	        buffer.drawImage(tiles,map[y][x]*32,0,32,32,x1,y1,32,32);
-	        if(y%4 == 0 && x%4 ==0){
-			entity_vertices.push([y*32,x*32])
+	        if(y%4 == 0 && x%4 == 0){
+				entity_vertices.push([x*32,y*32])
 	        }
 	    }
 	}
@@ -305,6 +355,15 @@ function drawBuffer(){
 }
 function drawMap(){
     ctx.drawImage(buffer_canvas,0,0);
+}
+function createVerticyCounterMap(w,h){
+	verticyMap = []
+	for(var y=0; y<h; y++){
+		verticyMap.push([])
+		for(var x=0; x<w; x++){
+			verticyMap[y].push([0])
+		}
+	}
 }
 function drawLightTile(){
     f_ctx.fillStyle='rgba(255,255,255,.1)'
@@ -598,8 +657,8 @@ function castRays(x,y,r,so,eo,rgb){
 	    ex = endpoints[n][0];
 	    ey = endpoints[n][1];
 	    //
-	    //hud.fillStyle='red'
-	    //hud.fillRect(ex+x_translation,ey+y_translation,2,2)
+	    hud.fillStyle='red'
+	    hud.fillRect(ex+x_translation,ey+y_translation,2,2)
 	    //
 	    var res1 = [0,0];
 	    var res2 = [Infinity,Infinity];
@@ -668,7 +727,8 @@ function init(){
 	flashlight = new LightSource(200,200,225,[255,255,255]);
 	lights.splice(0,1);
 	new LightSource(200,200,200,[255,0,0])
-	//new LightSource(500,200,200)
+	new LightSource(400,400,200,[255,0,0])
+	new LightSource(200,500,200,[255,0,0])
 	//new LightSource(200,500,200)
 	//new LightSource(500,500,200)
 	flashlight.setPosition(player1.x,player1.y);
@@ -684,6 +744,7 @@ function init(){
 function loop(){
 	frame++
 	clearCanvases()
+	createVerticyCounterMap(map[0].length,map.length)
 	drawMap()
     getVectorField()
 	overlayShadow()
