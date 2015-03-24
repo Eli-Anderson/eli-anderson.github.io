@@ -10,7 +10,7 @@ var buffer = buffer_canvas.getContext('2d');
 var rightKey,leftKey,upKey,downKey;
 var entities = [];
 var entity_vertices = [];
-var entity_lines = [];
+var entity_lines = [[Infinity,Infinity,Infinity,Infinity]];
 var verticyMap = [];
 var lights = [];
 var enemies = [];
