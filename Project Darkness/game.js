@@ -272,21 +272,32 @@ function Entity(x,y,w,h){
 	//
 	for(var n=0; n<entity_lines.length; n++){
 		
-		if(entity_lines[n][0]==this.x && entity_vertices[n][1]==this.y && entity_vertices[n][2]==this.y+this.w && entity_vertices[n][3]==this.y){
+		if(entity_lines[n][0]==this.x && entity_vertices[n][1]==this.y && entity_vertices[n][2]==this.x+this.w && entity_vertices[n][3]==this.y){
 			e = true;
 			ai = n;
+		}
+		if(entity_lines[n][0]==this.x+this.w && entity_vertices[n][1]==this.y && entity_vertices[n][2]==this.x+this.w && entity_vertices[n][3]==this.y+this.h){
+			f = true;
+			bi = n;
+		}
+		if(entity_lines[n][0]==this.x && entity_vertices[n][1]==this.y+this.h && entity_vertices[n][2]==this.x+this.w && entity_vertices[n][3]==this.y+this.h){
+			g = true;
+			ci = n;
+		}
+		if(entity_lines[n][0]==this.x && entity_vertices[n][1]==this.y && entity_vertices[n][2]==this.x && entity_vertices[n][3]==this.y+this.h){
+			h = true;
+			di = n;
 		}
 		
 	}
 	if(!e){entity_lines.push([this.x,this.y,this.x+this.w,this.y]);}
-	else{entity_lines.splice(an,1)}
-	if(!f){entity_vertices.push([this.x,this.y+this.h]);}
-	else{entity_vertices.splice(bn,1)}
-	if(!g){entity_vertices.push([this.x+this.w,this.y+this.h]);}
-	else{entity_vertices.splice(cn,1)}
-	if(!h){entity_vertices.push([this.x+this.w,this.y]);}
-	else{entity_vertices.splice(dn,1)}
-	entity_lines.push([this.x,this.y,this.x+this.w,this.y],[this.x+this.w,this.y,this.x+this.w,this.y+this.h],[this.x,this.y+this.h,this.x+this.w,this.y+this.h],[this.x,this.y,this.x,+this.y+this.h]);
+	else{entity_lines.splice(ai,1)}
+	if(!f){entity_lines.push([this.x+this.w,this.y,this.x+this.w,this.y+this.h]);}
+	else{entity_lines.splice(bi,1)}
+	if(!g){entity_lines.push([this.x,this.y+this.h,this.x+this.w,this.y+this.h]);}
+	else{entity_lines.splice(ci,1)}
+	if(!h){entity_lines.push([this.x,this.y,this.x,this.y+this.h]);}
+	else{entity_lines.splice(di,1)}
 
 }
 Entity.prototype.draw = function(){
