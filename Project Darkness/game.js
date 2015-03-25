@@ -138,10 +138,15 @@ Enemy.prototype.animate = function (){
     var hyp = Math.sqrt(distx*distx + disty*disty)
     var x = Math.round(this.x + (this.w/2) - ((this.x + this.w/2) % 32))/32;
     var y = Math.round(this.y + (this.h/2) - ((this.y + this.h/2) % 32))/32;
-    if(d_field[y] !== undefined){
-	this.ax = d_field[y][x][0];
+    try{
+		this.ax = d_field[y][x][0];
     	this.ay = d_field[y][x][1];
-    }
+	}
+	catch(error){
+		console.error("Enemy entered unknown territory...");
+		enemies.splice(enemies.indexOf(this),1);
+		console.error("Enemy deleted...")
+	}
     if(Math.abs(this.velx) <= this.speed){
     	this.velx += this.ax;
     }
@@ -270,36 +275,46 @@ function Entity(x,y,w,h){
 	else{entity_vertices.splice(dn,1)}
 	//
 	//
-	log(entity_lines[0])
 	for(var n=0; n<entity_lines.length; n++){
-		if(entity_lines[n]!=undefined){
-		if(entity_lines[n][0]==this.x && entity_vertices[n][1]==this.y && entity_vertices[n][2]==this.x+this.w && entity_vertices[n][3]==this.y){
+		//top
+		if(entity_lines[n][0]==this.x && entity_lines[n][1]==this.y && entity_lines[n][2]==this.x+this.w && entity_lines[n][3]==this.y){
 			e = true;
 			ai = n;
+			entity_lines.splice(n,1)
+			continue;
 		}
-		if(entity_lines[n][0]==this.x+this.w && entity_vertices[n][1]==this.y && entity_vertices[n][2]==this.x+this.w && entity_vertices[n][3]==this.y+this.h){
+		//right
+		else if(entity_lines[n][0]==this.x+this.w && entity_lines[n][1]==this.y && entity_lines[n][2]==this.x+this.w && entity_lines[n][3]==this.y+this.h){
 			f = true;
 			bi = n;
+			entity_lines.splice(n,1)
+			continue;
 		}
-		if(entity_lines[n][0]==this.x && entity_vertices[n][1]==this.y+this.h && entity_vertices[n][2]==this.x+this.w && entity_vertices[n][3]==this.y+this.h){
+		//bottom
+		else if(entity_lines[n][0]==this.x && entity_lines[n][1]==this.y+this.h && entity_lines[n][2]==this.x+this.w && entity_lines[n][3]==this.y+this.h){
 			g = true;
 			ci = n;
+			entity_lines.splice(n,1)
+			continue;
 		}
-		if(entity_lines[n][0]==this.x && entity_vertices[n][1]==this.y && entity_vertices[n][2]==this.x && entity_vertices[n][3]==this.y+this.h){
+		//left
+		else if(entity_lines[n][0]==this.x && entity_lines[n][1]==this.y && entity_lines[n][2]==this.x && entity_lines[n][3]==this.y+this.h){
 			h = true;
 			di = n;
+			entity_lines.splice(n,1)
+			continue;
 		}
-		}
+		
 		
 	}
 	if(!e){entity_lines.push([this.x,this.y,this.x+this.w,this.y]);}
-	else{entity_lines.splice(ai,1)}
+	//else{entity_lines.splice(ai,1)}
 	if(!f){entity_lines.push([this.x+this.w,this.y,this.x+this.w,this.y+this.h]);}
-	else{entity_lines.splice(bi,1)}
+	//else{entity_lines.splice(bi,1)}
 	if(!g){entity_lines.push([this.x,this.y+this.h,this.x+this.w,this.y+this.h]);}
-	else{entity_lines.splice(ci,1)}
+	//else{entity_lines.splice(ci,1)}
 	if(!h){entity_lines.push([this.x,this.y,this.x,this.y+this.h]);}
-	else{entity_lines.splice(di,1)}
+	//else{entity_lines.splice(di,1)}
 
 }
 Entity.prototype.draw = function(){
@@ -319,6 +334,7 @@ function LightSource(x,y,r,rgb){
 	this.r = r;
 	this.rgb = rgb;
 	this.on = true;
+	this.refreshRate = 100;
 }
 
 LightSource.prototype.setPosition = function(x,y){
@@ -327,7 +343,7 @@ LightSource.prototype.setPosition = function(x,y){
 };
 LightSource.prototype.draw = function(){
 	if(this.on){
-		castRays(this.x,this.y,this.r,-Math.PI,Math.PI,this.rgb)
+		castRays(this.x,this.y,this.r,-Math.PI,Math.PI,this.rgb,this)
 	}
 };
 //
@@ -345,7 +361,7 @@ function drawBuffer(){
 	    		new Entity(x1,y1,32,32);
 	    	}
 	        buffer.drawImage(tiles,map[y][x]*32,0,32,32,x1,y1,32,32);
-	        if(y%4 == 0 && x%4 == 0){
+	        if(y%2 == 0 && x%2 == 0){
 				entity_vertices.push([x*32,y*32])
 	        }
 	    }
@@ -464,10 +480,22 @@ document.addEventListener('keydown',keyDown);
 document.addEventListener('keyup',keyUp);
 
 function keyDown(e){
-	if(e.keyCode == 76){
-		if(!debug_vars.trigger){debug_vars.trigger = true}
-		else{debug_vars.trigger = false;}
+	//console.log(e.keyCode)
+	switch(e.keyCode){
+		case 74:
+			if(!debug_vars.trigger1){debug_vars.trigger1 = true}
+			else{debug_vars.trigger1 = false;}
+			break;
+		case 75:
+			if(!debug_vars.trigger2){debug_vars.trigger2 = true}
+			else{debug_vars.trigger2 = false;}
+			break;
+		case 76:
+			if(!debug_vars.trigger3){debug_vars.trigger3 = true}
+			else{debug_vars.trigger3 = false;}
+			break;
 	}
+	
 
 	if(e.keyCode == 65){leftKey = true}
 	else if(e.keyCode == 87){upKey = true}
@@ -480,9 +508,11 @@ function keyUp(e){
 	if(e.keyCode == 68){rightKey = false}
 	else if(e.keyCode == 83){downKey = false}
 }
-var debug_trigger = false;
 var debug_vars = {
-	trigger: false,
+	trigger1: false,
+	trigger2: false,
+	trigger3: false,
+	trigger4: false,
 	noclip: false,
 }
 var d_log = document.getElementById('log')
@@ -491,19 +521,11 @@ function log(text){
 }
 
 function debug(){
-	if(!debug_vars.trigger){
-	    //f_ctx.fillStyle = 'white';
-		//f_ctx.font = '20px Georgia';
-		//f_ctx.fillText("DEBUG", 500,500);
-		//debug_vars.noclip = true;
-		
-	}
-	else{
+	if(debug_vars.trigger1){
 		f_ctx.clearRect(-x_translation,-y_translation,1200,600);
 		f_ctx.fillStyle = 'black';
 		f_ctx.font = '11px Georgia';
 		f_ctx.fillText("DEBUG", 500,500);
-
 		for(var i=0; i<v_field.length; i++){
 			for(var j=0; j<v_field.length; j++){
 				if(v_field[i][j] !== Infinity){
@@ -514,7 +536,19 @@ function debug(){
 				}
 			}
 		}
-		
+	}
+	else if(debug_vars.trigger2){
+		hud.beginPath();
+		for(var i=0; i<entity_lines.length; i++){
+			hud.moveTo(entity_lines[i][0]+x_translation,entity_lines[i][1]+y_translation)
+			hud.lineTo(entity_lines[i][2]+x_translation,entity_lines[i][3]+y_translation)
+		}
+		hud.strokeStyle='yellow'
+		hud.stroke();
+		hud.fillStyle='red'
+		for(var n=0; n<entity_vertices.length; n++){
+			hud.fillRect(entity_vertices[n][0]+x_translation,entity_vertices[n][1]+y_translation,3,3)
+		}
 	}
 }
 var v_field = []
@@ -631,87 +665,80 @@ window.onload=preload();
 
 
 
-function castRays(x,y,r,so,eo,rgb){
-	f_ctx.beginPath();
-    var sx = x;
-    var sy = y;
-	var ex=0;
-	var ey=0;
-    points = []
-    endpoints = []
-    endpoints.push([Math.round(r*Math.cos(so)+sx),Math.round(r*Math.sin(so)+sy),so])
-    //hud.strokeStyle='green'
-    //hud.beginPath();
-    //hud.moveTo(sx+x_translation,sy+y_translation)
-    //hud.lineTo(endpoints[0][0]+x_translation,endpoints[0][1]+y_translation)
-    //hud.stroke()
-    for(var a=0; a<entity_vertices.length; a++){
-    	var vert = {x: Math.round(entity_vertices[a][0]),y: Math.round(entity_vertices[a][1])};
-    	var angle = Math.atan2(vert.y-sy,vert.x-sx);
-
-    	//if(vert.x == 64 && vert.y == 64){log(angle*180/Math.PI)}
-    	//if(a==0 && frame % 30 == 0){console.log(2*Math.PI+(so*180/Math.PI),2*Math.PI+(eo*180/Math.PI))}
-
-    	var vert_hyp = Math.sqrt((sx-vert.x)*(sx-vert.x)+(sy-vert.y)*(sy-vert.y))
-    	if(angle <= eo && angle >= so && vert_hyp < 1.5*r
-    		){
-    		endpoints.push([vert.x,vert.y,angle]);
-    		endpoints.push([r*Math.cos(angle+.0000001)+sx,r*Math.sin(angle+.0000001)+sy,angle+.0000001]);
-    		endpoints.push([r*Math.cos(angle-.0000001)+sx,r*Math.sin(angle-.0000001)+sy,angle-.0000001]);
-    	}
-    }
-	
-    endpoints.push([Math.round(r*Math.cos(eo)+sx),Math.round(r*Math.sin(eo)+sy),eo]);
-	
-
-    endpoints.sort(function(a,b){return a[2]-b[2]});
-	
-    for(var n=0; n<endpoints.length; n++){
-	    ex = endpoints[n][0];
-	    ey = endpoints[n][1];
-	    //
-	    hud.fillStyle='red'
-	    hud.fillRect(ex+x_translation,ey+y_translation,2,2)
-	    //
-	    var res1 = [0,0];
-	    var res2 = [Infinity,Infinity];
-	    var result = [0,0];
-	    for(var i=0; i<entity_lines.length; i++){
-	    	res1 = getLineIntersection(sx,sy,ex,ey,entity_lines[i][0],entity_lines[i][1],entity_lines[i][2],entity_lines[i][3]);
-	    	var res1_dx = res1[0]-sx;
-	    	var res1_dy = res1[1]-sy;
-	    	var hyp1 = Math.sqrt((res1_dx*res1_dx) + (res1_dy*res1_dy));
-	    	var res2_dx = res2[0]-sx;
-	    	var res2_dy = res2[1]-sy;
-	    	var hyp2 = Math.sqrt((res2_dx*res2_dx) + (res2_dy*res2_dy));
-	    	if(hyp1 < hyp2){
-	    		result = res1;
-				res2 = res1;
+function castRays(x,y,r,so,eo,rgb,obj){
+	var self = obj;
+	if(!self.points || frame % self.refreshRate == 0){
+		f_ctx.beginPath();
+	    var sx = x;
+	    var sy = y;
+		var ex=0;
+		var ey=0;
+	    points = []
+	    endpoints = []
+	    endpoints.push([Math.round(r*Math.cos(so)+sx),Math.round(r*Math.sin(so)+sy),so])
+	    endpoints.push([Math.round(r*Math.cos(eo)+sx),Math.round(r*Math.sin(eo)+sy),eo]);
+	    for(var a=0; a<entity_vertices.length; a++){
+	    	var vert = {x: Math.round(entity_vertices[a][0]),y: Math.round(entity_vertices[a][1])};
+	    	var angle = Math.atan2(vert.y-sy,vert.x-sx);
+	    	var vert_hyp = Math.sqrt((sx-vert.x)*(sx-vert.x)+(sy-vert.y)*(sy-vert.y))
+	    	if(angle <= eo && angle >= so && vert_hyp < 1.5*r
+	    		){
+	    		endpoints.push([vert.x,vert.y,angle]);
+	    		endpoints.push([r*Math.cos(angle+.0000001)+sx,r*Math.sin(angle+.0000001)+sy,angle+.0000001]);
+	    		endpoints.push([r*Math.cos(angle-.0000001)+sx,r*Math.sin(angle-.0000001)+sy,angle-.0000001]);
 	    	}
-	    	else{
-				result = result;
-			}
-	    	
-	
 	    }
-	    points.push([result[0],result[1]])
-    }
-	
-	f_ctx.moveTo(sx,sy);
-	for(var e=0; e<points.length; e++){
-		f_ctx.lineTo(points[e][0],points[e][1]);
-		//hud.fillStyle='white'
-		//hud.fillRect(points[e][0]+x_translation,points[e][1]+y_translation,2,2)
+	    endpoints.sort(function(a,b){return a[2]-b[2]});
+	    for(var n=0; n<endpoints.length; n++){
+		    ex = endpoints[n][0];
+		    ey = endpoints[n][1];
+		    var res1 = [0,0];
+		    var res2 = [Infinity,Infinity];
+		    var result = [0,0];
+		    for(var i=0; i<entity_lines.length; i++){
+		    	res1 = getLineIntersection(sx,sy,ex,ey,entity_lines[i][0],entity_lines[i][1],entity_lines[i][2],entity_lines[i][3]);
+		    	var res1_dx = res1[0]-sx;
+		    	var res1_dy = res1[1]-sy;
+		    	var hyp1 = Math.sqrt((res1_dx*res1_dx) + (res1_dy*res1_dy));
+		    	var res2_dx = res2[0]-sx;
+		    	var res2_dy = res2[1]-sy;
+		    	var hyp2 = Math.sqrt((res2_dx*res2_dx) + (res2_dy*res2_dy));
+		    	if(hyp1 < hyp2){
+		    		result = res1;
+					res2 = res1;
+		    	}
+		    	else{
+					result = result;
+				}
+		    	
+		
+		    }
+		    points.push([result[0],result[1]])
+	    }
+		self.points = points;
+		f_ctx.moveTo(sx,sy);
+		for(var e=0; e<points.length; e++){
+			f_ctx.lineTo(points[e][0],points[e][1]);
+			//hud.fillStyle='white'
+			//hud.fillRect(points[e][0]+x_translation,points[e][1]+y_translation,2,2)
+		}
 	}
-	var grd = f_ctx.createRadialGradient(sx,sy,0,sx,sy,r);
+	else{
+		f_ctx.beginPath();
+		f_ctx.moveTo(x,y);
+		for(var e=0; e<self.points.length; e++){
+			f_ctx.lineTo(self.points[e][0],self.points[e][1]);
+		}
+	}
+	var grd = f_ctx.createRadialGradient(x,y,0,x,y,r);
 	var r = rgb[0];
 	var g = rgb[1];
 	var b = rgb[2];
 	grd.addColorStop(0,'rgba('+r+','+g+','+b+',1)');
-	grd.addColorStop(.25,'rgba('+r+','+g+','+b+',.5)');
-	grd.addColorStop(.75,'rgba('+r+','+g+','+b+',.25)');
+	grd.addColorStop(.5,'rgba('+r+','+g+','+b+',.25)');
 	grd.addColorStop(1,'rgba('+r+','+g+','+b+',0)');
 	f_ctx.fillStyle=grd
+	f_ctx.fill();
 	f_ctx.fill();
 }
 
@@ -739,16 +766,21 @@ function init(){
 	player1 = new Player(32,32,24,24);
 	flashlight = new LightSource(200,200,225,[255,255,255]);
 	lights.splice(0,1);
-	new LightSource(200,200,200,[255,0,0])
-	new LightSource(400,400,200,[255,0,0])
-	new LightSource(200,500,200,[255,0,0])
+	new LightSource(200,200,128,[220,120,0])
+	new LightSource(200,200,128,[220,120,0])
+	new LightSource(200,200,128,[220,120,0])
+	new LightSource(200,200,128,[220,120,0])
+	new LightSource(200,200,128,[220,120,0])
+	new LightSource(400,400,128,[0,255,0])
+	new LightSource(200,500,128,[0,0,255])
 	//new LightSource(200,500,200)
 	//new LightSource(500,500,200)
 	flashlight.setPosition(player1.x,player1.y);
+	flashlight.refreshRate = 1;
 	setTimeout(function(){enemy1 = new Enemy(32*1,32*11,24,24,'rat')},2000)
 
 	flashlight.draw = function(){
-	    castRays(this.x,this.y,this.r,mouse.angle-Math.PI/4,mouse.angle+Math.PI/4,this.rgb)
+	    castRays(this.x,this.y,this.r,mouse.angle-Math.PI/4,mouse.angle+Math.PI/4,this.rgb,this)
     };
     setTimeout(drawBuffer,10)
 	setTimeout(loop,10)
