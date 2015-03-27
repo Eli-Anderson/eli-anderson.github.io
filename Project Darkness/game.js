@@ -360,7 +360,8 @@ function drawBuffer(){
 	    	if(floors.indexOf(map[y][x]) == -1){
 	    		new Entity(x1,y1,32,32);
 	    	}
-	        buffer.drawImage(tiles,map[y][x]*32,0,32,32,x1,y1,32,32);
+	    	var width = 16;
+	        buffer.drawImage(tiles,(map[y][x]%(tiles.width/width))*width,(map[y][x]-(map[y][x]%(tiles.width/width)))/(tiles.width/width)*width,width,width,x1,y1,32,32);
 	        if(y%2 == 0 && x%2 == 0){
 				entity_vertices.push([x*32,y*32])
 	        }

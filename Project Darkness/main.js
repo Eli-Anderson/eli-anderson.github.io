@@ -6,7 +6,7 @@ var canvas3 = document.getElementById('object')
 var objectlayer = canvas3.getContext('2d')
 var selected = 'drag';
 var tiles = new Image();
-tiles.src = 'tiles.png'
+tiles.src = 'tiles1.png'
 var object_sheet = new Image();
 object_sheet.src = 'light.png'
 var pointer = new Image();
@@ -47,15 +47,16 @@ function getImg(e){
     }
 }
 document.getElementById('t_upload').addEventListener('change',getImg)
+
 function drawSidebar(){
 	side.clearRect(0,0,256,450)
     if(Number(document.getElementById('t_width').value) > 0){
 	    width = Number(document.getElementById('t_width').value);
-	    for(var n=0; n<Math.ceil((tiles.width/width)/8); n++){
-	        for(var i=1; i<=tiles.width/width; i++){
-                side.drawImage(tiles,i*width,0,width,width,(i-(8*n))*width,n*width,width,width)
-	        }
-	    }
+        for(var y=0; y<tiles.height/width; y++){
+            for(var x=0; x<tiles.width/width; x++){
+                side.drawImage(tiles,x*width,y*width,width,width,x*width,y*width,width,width)
+            }
+        }
     }
     else if(width > 0){
         for(var k=0; k<tiles.width/width; k++){
@@ -71,7 +72,14 @@ function drawSidebar(){
     else if(selected == '91'){
     	side.drawImage(light,224,418,32,32)
     }
-    else{side.drawImage(tiles,selected*width,0,width,width,224,418,32,32)}
+    else{
+        side.drawImage(tiles,
+            (selected%(tiles.width/width))*width,
+            (selected-(selected%(tiles.width/width)))/(tiles.width/width)*width,
+            width,width,
+            224,418,32,32);
+        //console.log(selected,(selected%(tiles.width/width)),(selected-(selected%(tiles.width/width)))/(tiles.width/width))
+    }
 }
 
 function reload(){
@@ -113,7 +121,7 @@ function overlayGrid(){
 	}
     for(var j=0; j<map1.length; j++){
 	    for(var k=0; k<map1[j].length; k++){
-	        main.drawImage(tiles,map1[j][k]*width,0,width,width,k*width,j*width,width,width)
+	        main.drawImage(tiles,(map1[j][k]%(tiles.width/width))*width,(map1[j][k]-(map1[j][k]%(tiles.width/width)))/(tiles.width/width)*width,width,width,k*width,j*width,width,width)
 	    }
 	}
 	for(var e=0; e<objects1.length; e++){
@@ -159,7 +167,9 @@ function downloadFile(){
     var pom = document.createElement('a');
     pom.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent('var map='+'['+text+']'+'\nvar objects='+'['+objs+']'));
     pom.setAttribute('download', 'map.js');
+    document.body.appendChild(pom);
     pom.click();
+    document.body.removeChild(pom);
 }
 
 function getMap(e){
@@ -285,10 +295,10 @@ function handleKey(e){
         getSelection()
         reload();
     }
-    if(e.keyCode==189){
+    if(e.keyCode==189 || e.keyCode==173){
         handleZoom('out')
     }
-    else if(e.keyCode==187){
+    else if(e.keyCode==187 || e.keyCode==61){
         handleZoom('in')
     }
     if(e.keyCode==86){
@@ -412,16 +422,15 @@ function handleClickSide(e){
 	if(x > 0 && x < 32 && y > 418-32 && y < 418){
 		selected = 91
 	}
-	for (var n=0; n<Math.ceil((tiles.width/width)/8); n++){
+	for (var n=0; n<(tiles.height/width); n++){
 	    for (var i=0; i<=tiles.width/width; i++){
-		    if(x > i*width && x <(i+1)*width && y > n*width && y < width+(n*width)){
-		        if(i+ (n*8) < tiles.width/width){
-		    	    selected = i +(n*8);
+		    if(x > i*width && x <(i+1)*width && y > n*width && y < (n+1)*width){
+		    	    selected = i +(n*(tiles.width/width));
 		    	    if(selection.closed){
 		    	        fillSelection()
 		    	        
 		    	    }
-		        }
+		        
 		    }
 	    }
 	}
