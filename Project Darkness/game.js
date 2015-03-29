@@ -26,7 +26,7 @@ function preload(){
 	count = 0;
 	tiles = new Image();
 	tiles.onload=handleLoad();
-	tiles.src = 'tiles.png'
+	tiles.src = 'tiles1.png'
 }
 function handleLoad(){
 	count++
@@ -113,6 +113,7 @@ Player.prototype.animate = function(){
 //
 function Enemy(x,y,w,h,type){
 	enemies.push(this);
+	this.spawnedCoords = {x:x,y:y}
 	this.x = x;
 	this.y = y;
 	this.w = w;
@@ -144,8 +145,15 @@ Enemy.prototype.animate = function (){
 	}
 	catch(error){
 		console.error("Enemy entered unknown territory...");
-		enemies.splice(enemies.indexOf(this),1);
-		console.error("Enemy deleted...")
+		//enemies.splice(enemies.indexOf(this),1);
+		//console.error("Enemy deleted...")
+		this.x = this.spawnedCoords.x;
+		this.y - this.spawnedCoords.y;
+		this.ax=0;
+		this.ay=0;
+		this.velx=0;
+		this.vely=0;
+		console.error("Enemy reset...");
 	}
     if(Math.abs(this.velx) <= this.speed){
     	this.velx += this.ax;
@@ -714,12 +722,14 @@ function castRays(x,y,r,so,eo,rgb,obj){
 		    	
 		
 		    }
-		    points.push([result[0],result[1]])
+		    points.push([result[0],result[1],endpoints[n][2]])
 	    }
 		self.points = points;
 		f_ctx.moveTo(sx,sy);
 		for(var e=0; e<points.length; e++){
-			f_ctx.lineTo(points[e][0],points[e][1]);
+		var xx = points[e][0]// + 8*Math.cos(points[e][2]);
+		var yy = points[e][1]// + 8*Math.sin(points[e][2]);
+			f_ctx.lineTo(xx,yy);
 			//hud.fillStyle='white'
 			//hud.fillRect(points[e][0]+x_translation,points[e][1]+y_translation,2,2)
 		}
@@ -741,6 +751,7 @@ function castRays(x,y,r,so,eo,rgb,obj){
 	f_ctx.fillStyle=grd
 	f_ctx.fill();
 	f_ctx.fill();
+	
 }
 
 function getLineIntersection(p0_x, p0_y, p1_x, p1_y, p2_x, p2_y, p3_x, p3_y){
