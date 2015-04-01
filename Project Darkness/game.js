@@ -712,6 +712,7 @@ function castRays(x,y,r,so,eo,rgb,obj){
 		    var result = [0,0];
 		    for(var i=0; i<entity_lines.length; i++){
 		    	res1 = getLineIntersection(sx,sy,ex,ey,entity_lines[i][0],entity_lines[i][1],entity_lines[i][2],entity_lines[i][3]);
+				//if(res1 == null){break}
 		    	var res1_dx = res1[0]-sx;
 		    	var res1_dy = res1[1]-sy;
 		    	var hyp1 = Math.sqrt((res1_dx*res1_dx) + (res1_dy*res1_dy));
@@ -741,11 +742,11 @@ function castRays(x,y,r,so,eo,rgb,obj){
 		}
 	}
 	else{
-		f_ctx.beginPath();
-		f_ctx.moveTo(x,y);
-		for(var e=0; e<self.points.length; e++){
-			f_ctx.lineTo(self.points[e][0],self.points[e][1]);
-		}
+	//	f_ctx.beginPath();
+	//	f_ctx.moveTo(x,y);
+	//	for(var e=0; e<self.points.length; e++){
+	//		f_ctx.lineTo(self.points[e][0],self.points[e][1]);
+	//	}
 	}
 	var grd = f_ctx.createRadialGradient(x,y,0,x,y,r);
 	var r = rgb[0];
@@ -754,9 +755,9 @@ function castRays(x,y,r,so,eo,rgb,obj){
 	grd.addColorStop(0,'rgba('+r+','+g+','+b+',1)');
 	grd.addColorStop(.5,'rgba('+r+','+g+','+b+',.25)');
 	grd.addColorStop(1,'rgba('+r+','+g+','+b+',0)');
-	f_ctx.fillStyle=grd
-	f_ctx.fill();
-	f_ctx.fill();
+	//f_ctx.fillStyle=grd
+	//f_ctx.fill();
+	//f_ctx.fill();
 	
 }
 
@@ -776,6 +777,7 @@ function getLineIntersection(p0_x, p0_y, p1_x, p1_y, p2_x, p2_y, p3_x, p3_y){
 		return [intX, intY];
 	}
 	return [p1_x,p1_y];
+	//return null
 	// No collision
 }
 
@@ -786,9 +788,12 @@ function draw3D(){
         var y2 = p[1];
         var x1 = player1.x;
         var y1 = player1.y;
-        var z = Math.sqrt((x1-y1)*(x1-y1)+(x2-y2)*(x2-y2))
-        z *= Math.cos(p[2]);
-        hud.fillRect(x2,y2,1,32*277/z)
+        var z = Math.sqrt((x1-y1)*(x1-y1)+(x2-y2)*(x2-y2));
+		var h = 32*450/z;
+        z *= Math.cos(mouse.angle);
+		var x3 = 225+((x2-x1)-(flashlight.r*Math.cos(mouse.angle)));
+        hud.fillRect(x3,h/2,2,h);
+		//hud.drawImage(tiles,x2,y2,1,32*277/z);
     }
 }
 
@@ -811,7 +816,7 @@ function init(){
 	//setTimeout(function(){enemy1 = new Enemy(32*1,32*11,24,24,'rat')},2000)
 
 	flashlight.draw = function(){
-	    castRays(this.x,this.y,this.r,mouse.angle-Math.PI/4,mouse.angle+Math.PI/4,this.rgb,this)
+	    castRays(this.x,this.y,100000,mouse.angle-Math.PI/2,mouse.angle+Math.PI/2,this.rgb,this)
     };
     setTimeout(drawBuffer,10)
 	setTimeout(loop,10)
