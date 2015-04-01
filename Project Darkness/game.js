@@ -26,7 +26,7 @@ function preload(){
 	count = 0;
 	tiles = new Image();
 	tiles.onload=handleLoad();
-	tiles.src = 'tiles1.png'
+	tiles.src = 'tiles.png'
 }
 function handleLoad(){
 	count++
@@ -559,6 +559,9 @@ function debug(){
 			hud.fillRect(entity_vertices[n][0]+x_translation,entity_vertices[n][1]+y_translation,3,3)
 		}
 	}
+	else if(debug_vars.trigger3){
+	    draw3D()
+	}
 }
 var v_field = []
 var d_field = []
@@ -684,19 +687,22 @@ function castRays(x,y,r,so,eo,rgb,obj){
 		var ey=0;
 	    points = []
 	    endpoints = []
-	    endpoints.push([Math.round(r*Math.cos(so)+sx),Math.round(r*Math.sin(so)+sy),so])
-	    endpoints.push([Math.round(r*Math.cos(eo)+sx),Math.round(r*Math.sin(eo)+sy),eo]);
-	    for(var a=0; a<entity_vertices.length; a++){
-	    	var vert = {x: Math.round(entity_vertices[a][0]),y: Math.round(entity_vertices[a][1])};
-	    	var angle = Math.atan2(vert.y-sy,vert.x-sx);
-	    	var vert_hyp = Math.sqrt((sx-vert.x)*(sx-vert.x)+(sy-vert.y)*(sy-vert.y))
-	    	if(angle <= eo && angle >= so && vert_hyp < 1.5*r
-	    		){
-	    		endpoints.push([vert.x,vert.y,angle]);
-	    		endpoints.push([r*Math.cos(angle+.0000001)+sx,r*Math.sin(angle+.0000001)+sy,angle+.0000001]);
-	    		endpoints.push([r*Math.cos(angle-.0000001)+sx,r*Math.sin(angle-.0000001)+sy,angle-.0000001]);
-	    	}
+	    for(var a=so; a<=eo; a+=Math.PI/900){
+	        endpoints.push([Math.round(r*Math.cos(a)+sx),Math.round(r*Math.sin(a)+sy),a])
 	    }
+	    //endpoints.push([Math.round(r*Math.cos(so)+sx),Math.round(r*Math.sin(so)+sy),so])
+	    //endpoints.push([Math.round(r*Math.cos(eo)+sx),Math.round(r*Math.sin(eo)+sy),eo]);
+	    //for(var a=0; a<entity_vertices.length; a++){
+	    //	var vert = {x: Math.round(entity_vertices[a][0]),y: Math.round(entity_vertices[a][1])};
+	    //	var angle = Math.atan2(vert.y-sy,vert.x-sx);
+	    //	var vert_hyp = Math.sqrt((sx-vert.x)*(sx-vert.x)+(sy-vert.y)*(sy-vert.y))
+	    //	if(angle <= eo && angle >= so && vert_hyp < 1.5*r
+	    //		){
+	    //		endpoints.push([vert.x,vert.y,angle]);
+	    //		endpoints.push([r*Math.cos(angle+.0000001)+sx,r*Math.sin(angle+.0000001)+sy,angle+.0000001]);
+	    //		endpoints.push([r*Math.cos(angle-.0000001)+sx,r*Math.sin(angle-.0000001)+sy,angle-.0000001]);
+	    //	}
+	    //}
 	    endpoints.sort(function(a,b){return a[2]-b[2]});
 	    for(var n=0; n<endpoints.length; n++){
 		    ex = endpoints[n][0];
@@ -773,23 +779,36 @@ function getLineIntersection(p0_x, p0_y, p1_x, p1_y, p2_x, p2_y, p3_x, p3_y){
 	// No collision
 }
 
+function draw3D(){
+    for(var i=0; i<flashlight.points.length; i++){
+        var p = flashlight.points[i];
+        var x2 = p[0];
+        var y2 = p[1];
+        var x1 = player1.x;
+        var y1 = player1.y;
+        var z = Math.sqrt((x1-y1)*(x1-y1)+(x2-y2)*(x2-y2))
+        z *= Math.cos(p[2]);
+        hud.fillRect(x2,y2,1,32*277/z)
+    }
+}
+
 function init(){
 	createVectorFieldBase()
 	player1 = new Player(32,32,24,24);
 	flashlight = new LightSource(200,200,225,[255,255,255]);
 	lights.splice(0,1);
-	new LightSource(200,200,128,[220,120,0])
-	new LightSource(200,200,128,[220,120,0])
-	new LightSource(200,200,128,[220,120,0])
-	new LightSource(200,200,128,[220,120,0])
-	new LightSource(200,200,128,[220,120,0])
-	new LightSource(400,400,128,[0,255,0])
-	new LightSource(200,500,128,[0,0,255])
+	//new LightSource(200,200,128,[220,120,0])
+	//new LightSource(200,200,128,[220,120,0])
+	//new LightSource(200,200,128,[220,120,0])
+	//new LightSource(200,200,128,[220,120,0])
+	//new LightSource(200,200,128,[220,120,0])
+	//new LightSource(400,400,128,[0,255,0])
+	//new LightSource(200,500,128,[0,0,255])
 	//new LightSource(200,500,200)
 	//new LightSource(500,500,200)
 	flashlight.setPosition(player1.x,player1.y);
 	flashlight.refreshRate = 1;
-	setTimeout(function(){enemy1 = new Enemy(32*1,32*11,24,24,'rat')},2000)
+	//setTimeout(function(){enemy1 = new Enemy(32*1,32*11,24,24,'rat')},2000)
 
 	flashlight.draw = function(){
 	    castRays(this.x,this.y,this.r,mouse.angle-Math.PI/4,mouse.angle+Math.PI/4,this.rgb,this)
