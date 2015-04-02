@@ -14,7 +14,7 @@ var entity_lines = [[Infinity,Infinity,Infinity,Infinity]];
 var verticyMap = [];
 var lights = [];
 var enemies = [];
-var bullets = [];
+var projectiles = [];
 var rays = [];
 f_ctx.globalCompositeOperation = 'xor';
 //
@@ -26,7 +26,7 @@ function preload(){
 	count = 0;
 	tiles = new Image();
 	tiles.onload=handleLoad();
-	tiles.src = 'tiles1.png'
+	tiles.src = 'tiles.png'
 }
 function handleLoad(){
 	count++
@@ -72,28 +72,7 @@ Player.prototype.animate = function(){
 		if(downKey){this.vely = this.speed}
 		else if(upKey){this.vely = -this.speed}
 		else{this.vely = 0}
-	for(var i=0; i<entities.length; i++){
-	    if((player1.x > entities[i].x && player1.x < entities[i].x + entities[i].w && Math.abs((entities[i].y + entities[i].h) -player1.y) <= 3) ||
-	       (player1.x+player1.w > entities[i].x && player1.x+player1.w < entities[i].x + entities[i].w && Math.abs((entities[i].y + entities[i].h) -player1.y) <= 3)
-	    ){
-	        player1.y = (entities[i].y + entities[i].h)+2;
-	    }
-	    if((player1.x > entities[i].x && player1.x < entities[i].x + entities[i].w && Math.abs((entities[i].y) - (player1.y + player1.h)) <= 3) ||
-	       (player1.x+player1.w > entities[i].x && player1.x+player1.w < entities[i].x + entities[i].w && Math.abs((entities[i].y) - (player1.y + player1.h)) <= 3)
-	    ){
-	        player1.y = (entities[i].y - player1.h)-2;
-	    }
-	    if((player1.y > entities[i].y && player1.y < entities[i].y + entities[i].h && Math.abs((entities[i].x) - (player1.x + player1.w)) <= 3) ||
-	       (player1.y+player1.h > entities[i].y && player1.y+player1.h < entities[i].y + entities[i].h && Math.abs((entities[i].x) - (player1.x + player1.w)) <= 3)
-	    ){
-	        player1.x = (entities[i].x - player1.w)-2;
-	    }
-	    if((player1.y > entities[i].y && player1.y < entities[i].y + entities[i].h && Math.abs((entities[i].x + entities[i].w) -player1.x) <= 3) ||
-	       (player1.y+player1.h > entities[i].y && player1.y+player1.h < entities[i].y + entities[i].h && Math.abs((entities[i].x + entities[i].w) -player1.x) <= 3)
-	    ){
-	        player1.x = (entities[i].x + entities[i].w)+2;
-	    }
-	}
+	
 
 	if(debug_vars.noclip){
 		if(rightKey){this.x += this.speed}
@@ -101,8 +80,11 @@ Player.prototype.animate = function(){
 		if(downKey){this.y += this.speed}
 		if(upKey){this.y += -this.speed}
 	}
-	this.x += this.velx;
-	this.y += this.vely;
+	if(!willCollide(this.x,this.y,this.w,this.h,this.velx,this.vely,entities)){
+		this.x += this.velx;
+		this.y += this.vely;
+	}
+	//else{this.x-=this.velx;this.y-=this.vely}
 
 };
 //
@@ -210,7 +192,7 @@ Enemy.prototype.attack = function(target){
 	dx/=dist;
 	dy/=dist;
 	if(dist > this.aggroRange){return}
-	new Bullet(x,y,dx,dy,6);
+	new Projectile(x,y,dx,dy,6);
 	this.fired = true;
 	var self = this;
 	setTimeout(function(){self.fired = false},this.rateOfFire)
@@ -219,22 +201,47 @@ Enemy.prototype.attack = function(target){
 //
 //
 //
-function Bullet(x,y,dx,dy,spd){
-	bullets.push(this)
+function Projectile(x,y,dx,dy,spd){
+	projectiles.push(this)
 	this.x = x;
 	this.y = y;
 	this.dx = dx;
 	this.dy = dy;
 	this.speed = spd
 }
-Bullet.prototype.animate = function(){
-	this.x += this.dx*this.speed;
-	this.y += this.dy*this.speed;
+Projectile.prototype.animate = function(){
+	if(willCollide(this.x,this.y,this.w,this.h,this.dx*this.speed,this.dy*this.speed,entities)){
+		//projectiles.splice(projectiles.indexOf(this),1)
+		console.log('a')
+	}
+	else{
+		this.x += this.dx*this.speed;
+		this.y += this.dy*this.speed;
+	}
 }
-Bullet.prototype.draw = function(){
+Projectile.prototype.draw = function(){
 	ctx.fillStyle='yellow';
 	ctx.fillRect(this.x,this.y,2,2);
 }
+//
+//
+//
+//
+function willCollide(x,y,w,h,dx,dy,array){
+	for(var i=0; i<array.length; i++){
+		var e = array[i];
+		if(x < e.x + e.w &&
+		x + w > e.x &&
+		y < e.y + e.h &&
+		y + h > e.y
+		){
+			return true;
+		}
+	}
+	return false;
+}
+//
+//
 //
 //
 
@@ -456,14 +463,14 @@ function animateEnemies(){
 		enemies[i].animate();
 	}
 }
-function drawBullets(){
-	for(var i=0; i<bullets.length; i++){
-		bullets[i].draw();
+function drawProjectiles(){
+	for(var i=0; i<projectiles.length; i++){
+		projectiles[i].draw();
 	}
 }
-function animateBullets(){
-	for(var i=0; i<bullets.length; i++){
-		bullets[i].animate();
+function animateProjectiles(){
+	for(var i=0; i<projectiles.length; i++){
+		projectiles[i].animate();
 	}
 }
 
@@ -808,9 +815,9 @@ function loop(){
 	flashlight.draw()
 	player1.animate();
 	animateEnemies();
-	animateBullets();
+	animateProjectiles();
 	player1.draw();
-	drawBullets();
+	drawProjectiles();
 	drawLightSources();
 	drawEnemies();
 	debug();
