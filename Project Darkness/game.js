@@ -69,29 +69,29 @@ Player.prototype.animate = function(){
 		if(rightKey){this.velx = this.speed}
 		else if(leftKey){this.velx = -this.speed}
 		else{this.velx = 0}
-		if(downKey){this.vely = this.speed}
-		else if(upKey){this.vely = -this.speed}
+		if(downKey){this.vely = -this.speed}
+		else if(upKey){this.vely = this.speed}
 		else{this.vely = 0}
 	for(var i=0; i<entities.length; i++){
-	    if((player1.x > entities[i].x && player1.x < entities[i].x + entities[i].w && Math.abs((entities[i].y + entities[i].h) -player1.y) <= 3) ||
-	       (player1.x+player1.w > entities[i].x && player1.x+player1.w < entities[i].x + entities[i].w && Math.abs((entities[i].y + entities[i].h) -player1.y) <= 3)
+	    if((player.x > entities[i].x && player.x < entities[i].x + entities[i].w && Math.abs((entities[i].y + entities[i].h) -player.y) <= 3) ||
+	       (player.x+player.w > entities[i].x && player.x+player.w < entities[i].x + entities[i].w && Math.abs((entities[i].y + entities[i].h) -player.y) <= 3)
 	    ){
-	        player1.y = (entities[i].y + entities[i].h)+2;
+	        player.y = (entities[i].y + entities[i].h)+2;
 	    }
-	    if((player1.x > entities[i].x && player1.x < entities[i].x + entities[i].w && Math.abs((entities[i].y) - (player1.y + player1.h)) <= 3) ||
-	       (player1.x+player1.w > entities[i].x && player1.x+player1.w < entities[i].x + entities[i].w && Math.abs((entities[i].y) - (player1.y + player1.h)) <= 3)
+	    if((player.x > entities[i].x && player.x < entities[i].x + entities[i].w && Math.abs((entities[i].y) - (player.y + player.h)) <= 3) ||
+	       (player.x+player.w > entities[i].x && player.x+player.w < entities[i].x + entities[i].w && Math.abs((entities[i].y) - (player.y + player.h)) <= 3)
 	    ){
-	        player1.y = (entities[i].y - player1.h)-2;
+	        player.y = (entities[i].y - player.h)-2;
 	    }
-	    if((player1.y > entities[i].y && player1.y < entities[i].y + entities[i].h && Math.abs((entities[i].x) - (player1.x + player1.w)) <= 3) ||
-	       (player1.y+player1.h > entities[i].y && player1.y+player1.h < entities[i].y + entities[i].h && Math.abs((entities[i].x) - (player1.x + player1.w)) <= 3)
+	    if((player.y > entities[i].y && player.y < entities[i].y + entities[i].h && Math.abs((entities[i].x) - (player.x + player.w)) <= 3) ||
+	       (player.y+player.h > entities[i].y && player.y+player.h < entities[i].y + entities[i].h && Math.abs((entities[i].x) - (player.x + player.w)) <= 3)
 	    ){
-	        player1.x = (entities[i].x - player1.w)-2;
+	        player.x = (entities[i].x - player.w)-2;
 	    }
-	    if((player1.y > entities[i].y && player1.y < entities[i].y + entities[i].h && Math.abs((entities[i].x + entities[i].w) -player1.x) <= 3) ||
-	       (player1.y+player1.h > entities[i].y && player1.y+player1.h < entities[i].y + entities[i].h && Math.abs((entities[i].x + entities[i].w) -player1.x) <= 3)
+	    if((player.y > entities[i].y && player.y < entities[i].y + entities[i].h && Math.abs((entities[i].x + entities[i].w) -player.x) <= 3) ||
+	       (player.y+player.h > entities[i].y && player.y+player.h < entities[i].y + entities[i].h && Math.abs((entities[i].x + entities[i].w) -player.x) <= 3)
 	    ){
-	        player1.x = (entities[i].x + entities[i].w)+2;
+	        player.x = (entities[i].x + entities[i].w)+2;
 	    }
 	}
 
@@ -134,8 +134,8 @@ Enemy.prototype.draw = function (){
 	ctx.fillRect(this.x,this.y,this.w,this.h);
 };
 Enemy.prototype.animate = function (){
-    var distx = this.x - player1.x;
-    var disty = this.y - player1.y;
+    var distx = this.x - player.x;
+    var disty = this.y - player.y;
     var hyp = Math.sqrt(distx*distx + disty*disty)
     var x = Math.round(this.x + (this.w/2) - ((this.x + this.w/2) % 32))/32;
     var y = Math.round(this.y + (this.h/2) - ((this.y + this.h/2) % 32))/32;
@@ -168,7 +168,7 @@ Enemy.prototype.animate = function (){
 	        this.x += this.velx;
 	        this.y += this.vely;
 	        if(!this.fired && hyp <= this.attackRange){
-	            this.attack(player1);
+	            this.attack(player);
 	        }
         }
         else if(this.type === 'mouse'){
@@ -482,7 +482,8 @@ var mouse = {
 document.addEventListener('mousemove',function(e){
 	mouse.x = e.clientX - 10;
 	mouse.y = e.clientY - 10;
-	mouse.angle = Math.atan2(mouse.y-flashlight.y-y_translation,mouse.x-flashlight.x-x_translation);
+	//mouse.angle = Math.atan2(mouse.y-flashlight.y-y_translation,mouse.x-flashlight.x-x_translation);
+	mouse.angle = 0;
 });
 
 document.addEventListener('keydown',keyDown);
@@ -502,6 +503,17 @@ function keyDown(e){
 		case 76:
 			if(!debug_vars.trigger3){debug_vars.trigger3 = true}
 			else{debug_vars.trigger3 = false;}
+			break;
+		case 188:
+			mouse.angle -= Math.PI/16;
+			camera.ry -= Math.PI/16
+			break;
+		case 190:
+			mouse.angle += Math.PI/16;
+			camera.ry += Math.PI/16
+			break;
+		default:
+			console.log(e.keyCode)
 			break;
 	}
 	
@@ -581,8 +593,8 @@ function createVectorFieldBase(){
 function getVectorField(){
 	var h = v_field.length;
 	var w = v_field[0].length;
-    var x = Math.round(player1.x + (player1.w/2) - ((player1.x + player1.w/2) % 32))/32;
-    var y = Math.round(player1.y + (player1.h/2) - ((player1.y + player1.h/2) % 32))/32;
+    var x = Math.round(player.x + (player.w/2) - ((player.x + player.w/2) % 32))/32;
+    var y = Math.round(player.y + (player.h/2) - ((player.y + player.h/2) % 32))/32;
     for(var i=0; i<h; i++){
         for(var j=x; j<w; j++){
         	if(floors.indexOf(map[i][j])!=-1){
@@ -755,9 +767,9 @@ function castRays(x,y,r,so,eo,rgb,obj){
 	grd.addColorStop(0,'rgba('+r+','+g+','+b+',1)');
 	grd.addColorStop(.5,'rgba('+r+','+g+','+b+',.25)');
 	grd.addColorStop(1,'rgba('+r+','+g+','+b+',0)');
-	//f_ctx.fillStyle=grd
-	//f_ctx.fill();
-	//f_ctx.fill();
+	f_ctx.fillStyle=grd
+	f_ctx.fill();
+	f_ctx.fill();
 	
 }
 
@@ -780,43 +792,65 @@ function getLineIntersection(p0_x, p0_y, p1_x, p1_y, p2_x, p2_y, p3_x, p3_y){
 	//return null
 	// No collision
 }
+var camera = {
+	x: 0,
+	y: 16,
+	z: 0,
+  	depth: 350,
+  	screen: ctx,
+  	width: canvas.width,
+  	height: canvas.height,
+  	offsetX: canvas.width/2,
+  	offsetY: canvas.height/2,
+  	rx: 0,
+  	ry: 0,
+  	rz: 0,
+}
 
 function draw3D(){
     for(var i=0; i<flashlight.points.length; i++){
         var p = flashlight.points[i];
-        var x2 = p[0];
-        var y2 = p[1];
-        var x1 = player1.x;
-        var y1 = player1.y;
-        var z = Math.sqrt((x1-y1)*(x1-y1)+(x2-y2)*(x2-y2));
-		var h = 32*450/z;
-        z *= Math.cos(mouse.angle);
-		var x3 = 225+((x2-x1)-(flashlight.r*Math.cos(mouse.angle)));
-        hud.fillRect(x3,h/2,2,h);
+        var x = p[0];
+        var y = p[1];
+		var dx = x - camera.x;
+		var dy = y - camera.y;
+		var z = Math.sqrt((dx)*(dx)+(dy)*(dy));
+		var dz = z - camera.z;
+        var scale = camera.depth / dz;
+    	var posX = scale * dx + camera.offsetX;
+    	var posY = scale * (16-scale/2) + camera.offsetY;
+    	var size = scale * 32;
+
+		var d1x = Math.cos(camera.ry)*dx + Math.sin(camera.ry)*dz;
+		var d1y = dy;
+		var d1z = Math.cos(camera.ry)*dz - Math.sin(camera.ry)*dx;
+		
+		var d2x = d1x;
+		var d2y = Math.cos(camera.rx)*d1y - Math.sin(camera.rx)*d1z;
+		var d2z = Math.cos(camera.rx)*d1z + Math.sin(camera.rx)*d1y;
+		
+		var d3x = Math.cos(camera.rz)*d2x + Math.sin(camera.rz)*d2y;
+		var d3y = Math.cos(camera.rz)*d2y - Math.sin(camera.rz)*d2x;
+		var d3z = d2z;
+
+    	if(d1z > 0){
+        hud.fillRect(posX-size/2, posY-size/2, size, size);
+    	}
 		//hud.drawImage(tiles,x2,y2,1,32*277/z);
     }
 }
 
 function init(){
 	createVectorFieldBase()
-	player1 = new Player(32,32,24,24);
+	player = new Player(32,32,24,24);
 	flashlight = new LightSource(200,200,225,[255,255,255]);
 	lights.splice(0,1);
-	//new LightSource(200,200,128,[220,120,0])
-	//new LightSource(200,200,128,[220,120,0])
-	//new LightSource(200,200,128,[220,120,0])
-	//new LightSource(200,200,128,[220,120,0])
-	//new LightSource(200,200,128,[220,120,0])
-	//new LightSource(400,400,128,[0,255,0])
-	//new LightSource(200,500,128,[0,0,255])
-	//new LightSource(200,500,200)
-	//new LightSource(500,500,200)
-	flashlight.setPosition(player1.x,player1.y);
+	flashlight.setPosition(player.x,player.y);
 	flashlight.refreshRate = 1;
 	//setTimeout(function(){enemy1 = new Enemy(32*1,32*11,24,24,'rat')},2000)
 
 	flashlight.draw = function(){
-	    castRays(this.x,this.y,100000,mouse.angle-Math.PI/2,mouse.angle+Math.PI/2,this.rgb,this)
+	    castRays(this.x,this.y,100000,mouse.angle-Math.PI/4,mouse.angle+Math.PI/4,this.rgb,this)
     };
     setTimeout(drawBuffer,10)
 	setTimeout(loop,10)
@@ -830,10 +864,12 @@ function loop(){
     getVectorField()
 	overlayShadow()
 	flashlight.draw()
-	player1.animate();
+	camera.x = player.x;
+	camera.z = player.y;
+	player.animate();
 	animateEnemies();
 	animateBullets();
-	player1.draw();
+	player.draw();
 	drawBullets();
 	drawLightSources();
 	drawEnemies();
