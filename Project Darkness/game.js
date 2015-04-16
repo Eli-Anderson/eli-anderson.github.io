@@ -6,7 +6,7 @@ var hud_canvas = document.getElementById('hud');
 var hud = hud_canvas.getContext('2d');
 var buffer_canvas = document.getElementById('buffer');
 var buffer = buffer_canvas.getContext('2d');
-
+var width = 16;
 var rightKey,leftKey,upKey,downKey;
 var entities = [];
 var entity_vertices = [];
@@ -14,7 +14,7 @@ var entity_lines = [[Infinity,Infinity,Infinity,Infinity]];
 var verticyMap = [];
 var lights = [];
 var enemies = [];
-var bullets = [];
+var projectiles = [];
 var rays = [];
 f_ctx.globalCompositeOperation = 'xor';
 //
@@ -40,14 +40,71 @@ function handleLoad(){
 //
 //
 //
+//
+function willCollide(x,y,w,h,dx,dy,target){
+	var type;
+	if(target[0] != undefined)type = 'array';
+	else if(target.x != undefined)type = 'object';
+
+	if(type=='array'){
+		for(var i=0; i<target.length; i++){
+			var e = target[i];
+			if(x+dx+w > e.x && x+dx < e.x+e.w && y+dy+h > e.y && y+dy < e.y+e.h){return true}
+		}
+		return false;
+	}
+	else if(type=='object'){
+		if(x+dx+w > target.x && x+dx < target.x+target.w && y+dy+h > target.y && y+dy < target.y+target.h){return true}
+		else{return false}
+	}
+}
+//
+//
+//
+//
 function Player(x,y,w,h){
 	this.x = x;
 	this.y = y;
 	this.w = w;
 	this.h = h;
+	this.hp = 100;
 	this.speed = 5;
 	this.velx = 0;
 	this.vely = 0;
+	this.checkpoint = {x:32,y:32}
+	this.maxHp = 100;
+
+	this.gotHit = function(dmg){
+		this.hp -= dmg;
+		animate_hud_damage();
+	}
+
+	this.death = function(){
+		animate_hud_death()
+		pause();
+		game_reset();
+	}
+}
+function game_reset(){
+	player.x = player.checkpoint.x;
+	player.y = player.checkpoint.y;
+	player.hp = player.maxHp;
+	for(var i=0; i<enemies.length; i++){
+		enemies[i].x = enemies[i].spawnedCoords.x;
+		enemies[i].y = enemies[i].spawnedCoords.y;
+		enemies[i].hp = enemies[i].maxHp;
+	}
+}
+function animate_hud_damage(){
+	var a = player.hp / 10;
+	hud.fillStyle = 'rgba(200,0,0,'+a+')'
+	hud.fillRect(0,0,1200,600)
+}
+function animate_hud_death(){
+	hud.fillStyle = 'rgba(200,0,0,.6)';
+	hud.fillRect(0,0,1200,600);
+	hud.font = '120px Trebuchet MS'
+	hud.fillText('You are dead',300,300)
 }
 
 Player.prototype.draw = function(){
@@ -56,53 +113,34 @@ Player.prototype.draw = function(){
 };
 
 Player.prototype.animate = function(){
+	if(player.hp <= 0)this.death()
+
 	hud.fillStyle = 'white';
 	hud.beginPath();
 	hud.arc(mouse.x,mouse.y,2,0,2*Math.PI);
 	hud.closePath();
 	hud.fill();
+
+
 	if(this.x + x_translation > 1200-camera.edge){moveCamera(-1*this.speed,0);this.velx-=this.speed}
 	if(this.x + x_translation < camera.edge){moveCamera(1*this.speed,0);this.velx+=this.speed}
 	if(this.y + y_translation > 600-camera.edge){moveCamera(0,-1*this.speed);this.vely-=this.speed}
 	if(this.y + y_translation < camera.edge){moveCamera(0,1*this.speed);this.vely+=this.speed}
-	flashlight.setPosition(this.x+this.w/2,this.y+this.h/2);
-		if(rightKey){this.velx = this.speed}
-		else if(leftKey){this.velx = -this.speed}
-		else{this.velx = 0}
-		if(downKey){this.vely = this.speed}
-		else if(upKey){this.vely = -this.speed}
-		else{this.vely = 0}
-	for(var i=0; i<entities.length; i++){
-	    if((player1.x > entities[i].x && player1.x < entities[i].x + entities[i].w && Math.abs((entities[i].y + entities[i].h) -player1.y) <= 3) ||
-	       (player1.x+player1.w > entities[i].x && player1.x+player1.w < entities[i].x + entities[i].w && Math.abs((entities[i].y + entities[i].h) -player1.y) <= 3)
-	    ){
-	        player1.y = (entities[i].y + entities[i].h)+2;
-	    }
-	    if((player1.x > entities[i].x && player1.x < entities[i].x + entities[i].w && Math.abs((entities[i].y) - (player1.y + player1.h)) <= 3) ||
-	       (player1.x+player1.w > entities[i].x && player1.x+player1.w < entities[i].x + entities[i].w && Math.abs((entities[i].y) - (player1.y + player1.h)) <= 3)
-	    ){
-	        player1.y = (entities[i].y - player1.h)-2;
-	    }
-	    if((player1.y > entities[i].y && player1.y < entities[i].y + entities[i].h && Math.abs((entities[i].x) - (player1.x + player1.w)) <= 3) ||
-	       (player1.y+player1.h > entities[i].y && player1.y+player1.h < entities[i].y + entities[i].h && Math.abs((entities[i].x) - (player1.x + player1.w)) <= 3)
-	    ){
-	        player1.x = (entities[i].x - player1.w)-2;
-	    }
-	    if((player1.y > entities[i].y && player1.y < entities[i].y + entities[i].h && Math.abs((entities[i].x + entities[i].w) -player1.x) <= 3) ||
-	       (player1.y+player1.h > entities[i].y && player1.y+player1.h < entities[i].y + entities[i].h && Math.abs((entities[i].x + entities[i].w) -player1.x) <= 3)
-	    ){
-	        player1.x = (entities[i].x + entities[i].w)+2;
-	    }
-	}
 
-	if(debug_vars.noclip){
-		if(rightKey){this.x += this.speed}
-		if(leftKey){this.x += -this.speed}
-		if(downKey){this.y += this.speed}
-		if(upKey){this.y += -this.speed}
-	}
-	this.x += this.velx;
-	this.y += this.vely;
+	flashlight.setPosition(this.x+this.w/2,this.y+this.h/2);
+
+
+	if(rightKey){this.velx = this.speed}
+	else if(leftKey){this.velx = -this.speed}
+	else{this.velx = 0}
+	if(downKey){this.vely = this.speed}
+	else if(upKey){this.vely = -this.speed}
+	else{this.vely = 0}
+
+	if(!willCollide(this.x,this.y,this.w,this.h,this.velx,0,entities)&&!willCollide(this.x,this.y,this.w,this.h,this.velx,0,enemies))this.x += this.velx;
+	else{this.velx = 0}
+	if(!willCollide(this.x,this.y,this.w,this.h,0,this.vely,entities)&&!willCollide(this.x,this.y,this.w,this.h,0,this.vely,enemies))this.y += this.vely;
+	else{this.vely = 0}
 
 };
 //
@@ -134,8 +172,8 @@ Enemy.prototype.draw = function (){
 	ctx.fillRect(this.x,this.y,this.w,this.h);
 };
 Enemy.prototype.animate = function (){
-    var distx = this.x - player1.x;
-    var disty = this.y - player1.y;
+    var distx = this.x - player.x;
+    var disty = this.y - player.y;
     var hyp = Math.sqrt(distx*distx + disty*disty)
     var x = Math.round(this.x + (this.w/2) - ((this.x + this.w/2) % 32))/32;
     var y = Math.round(this.y + (this.h/2) - ((this.y + this.h/2) % 32))/32;
@@ -145,14 +183,12 @@ Enemy.prototype.animate = function (){
 	}
 	catch(error){
 		console.error("Enemy entered unknown territory...");
-		//enemies.splice(enemies.indexOf(this),1);
-		//console.error("Enemy deleted...")
 		this.x = this.spawnedCoords.x;
-		this.y - this.spawnedCoords.y;
-		this.ax=0;
-		this.ay=0;
-		this.velx=0;
-		this.vely=0;
+		this.y = this.spawnedCoords.y;
+		this.ax = 0;
+		this.ay = 0;
+		this.velx = 0;
+		this.vely = 0;
 		console.error("Enemy reset...");
 	}
     if(Math.abs(this.velx) <= this.speed){
@@ -165,10 +201,12 @@ Enemy.prototype.animate = function (){
     this.vely *= .9;
 	if(hyp <= this.aggroRange){
         if(this.type === 'rat'){
-	        this.x += this.velx;
-	        this.y += this.vely;
+	        if(!willCollide(this.x,this.y,this.w,this.h,this.velx,0,entities)&&!willCollide(this.x,this.y,this.w,this.h,this.velx,0,player))this.x += this.velx;
+			else{this.velx = 0}
+			if(!willCollide(this.x,this.y,this.w,this.h,0,this.vely,entities)&&!willCollide(this.x,this.y,this.w,this.h,0,this.vely,player))this.y += this.vely;
+			else{this.vely = 0}
 	        if(!this.fired && hyp <= this.attackRange){
-	            this.attack(player1);
+	            this.attack(player);
 	        }
         }
         else if(this.type === 'mouse'){
@@ -176,28 +214,7 @@ Enemy.prototype.animate = function (){
             //this.y -= diry*this.speed;
         }
 	}
-	for(var i=0; i<entities.length; i++){
-	    if((this.x > entities[i].x && this.x < entities[i].x + entities[i].w && Math.abs((entities[i].y + entities[i].h) -this.y) <= 3) ||
-	       (this.x+this.w > entities[i].x && this.x+this.w < entities[i].x + entities[i].w && Math.abs((entities[i].y + entities[i].h) -this.y) <= 3)
-	    ){
-	        this.y = (entities[i].y + entities[i].h)+2;
-	    }
-	    if((this.x > entities[i].x && this.x < entities[i].x + entities[i].w && Math.abs((entities[i].y) - (this.y + this.h)) <= 3) ||
-	       (this.x+this.w > entities[i].x && this.x+this.w < entities[i].x + entities[i].w && Math.abs((entities[i].y) - (this.y + this.h)) <= 3)
-	    ){
-	        this.y = (entities[i].y - this.h)-2;
-	    }
-	    if((this.y > entities[i].y && this.y < entities[i].y + entities[i].h && Math.abs((entities[i].x) - (this.x + this.w)) <= 3) ||
-	       (this.y+this.h > entities[i].y && this.y+this.h < entities[i].y + entities[i].h && Math.abs((entities[i].x) - (this.x + this.w)) <= 3)
-	    ){
-	        this.x = (entities[i].x - this.w)-2;
-	    }
-	    if((this.y > entities[i].y && this.y < entities[i].y + entities[i].h && Math.abs((entities[i].x + entities[i].w) -this.x) <= 3) ||
-	       (this.y+this.h > entities[i].y && this.y+this.h < entities[i].y + entities[i].h && Math.abs((entities[i].x + entities[i].w) -this.x) <= 3)
-	    ){
-	        this.x = (entities[i].x + entities[i].w)+2;
-	    }
-	}
+	
 };
 Enemy.prototype.attack = function(target){
 	var x = this.x;
@@ -210,7 +227,7 @@ Enemy.prototype.attack = function(target){
 	dx/=dist;
 	dy/=dist;
 	if(dist > this.aggroRange){return}
-	new Bullet(x,y,dx,dy,6);
+	new Projectile(x,y,4,4,dx,dy,6,10);
 	this.fired = true;
 	var self = this;
 	setTimeout(function(){self.fired = false},this.rateOfFire)
@@ -219,31 +236,49 @@ Enemy.prototype.attack = function(target){
 //
 //
 //
-function Bullet(x,y,dx,dy,spd){
-	bullets.push(this)
+function Projectile(x,y,w,h,dx,dy,spd,dmg){
+	projectiles.push(this)
 	this.x = x;
 	this.y = y;
+	this.w = w;
+	this.h = h;
 	this.dx = dx;
 	this.dy = dy;
-	this.speed = spd
+	this.speed = spd;
+	this.damage = dmg;
 }
-Bullet.prototype.animate = function(){
-	this.x += this.dx*this.speed;
-	this.y += this.dy*this.speed;
+Projectile.prototype.animate = function(){
+	if(!willCollide(this.x,this.y,this.w,this.h,this.dx*this.speed,0,entities))this.x += this.dx*this.speed;
+	else{deleteObject(this);delete this}
+	if(!willCollide(this.x,this.y,this.w,this.h,0,this.dy*this.speed,entities))this.y += this.dy*this.speed;
+	else{deleteObject(this);delete this}
+
+	if(willCollide(this.x,this.y,this.w,this.h,this.dx*this.speed,0,player)){
+		this.hit(player);
+	}
+	else if(willCollide(this.x,this.y,this.w,this.h,0,this.dy*this.speed,player)){
+		this.hit(player);
+	}
 }
-Bullet.prototype.draw = function(){
+Projectile.prototype.draw = function(){
 	ctx.fillStyle='yellow';
-	ctx.fillRect(this.x,this.y,2,2);
+	ctx.fillRect(this.x,this.y,this.w,this.h);
+}
+Projectile.prototype.hit = function(target){
+	target.gotHit(this.damage);
+	deleteObject(this);
+	delete this;
 }
 //
 //
 
-function Entity(x,y,w,h){
+function Entity(x,y,w,h,n){
 	entities.push(this);
 	this.x = x;
 	this.y = y;
 	this.w = w;
 	this.h = h;
+	this.img = n;
 	var a = false;
 	var b = false;
 	var c = false;
@@ -315,13 +350,13 @@ function Entity(x,y,w,h){
 		
 		
 	}
-	if(!e){entity_lines.push([this.x,this.y,this.x+this.w,this.y]);}
+	if(!e){entity_lines.push([this.x,this.y,this.x+this.w,this.y,this.img]);}
 	//else{entity_lines.splice(ai,1)}
-	if(!f){entity_lines.push([this.x+this.w,this.y,this.x+this.w,this.y+this.h]);}
+	if(!f){entity_lines.push([this.x+this.w,this.y,this.x+this.w,this.y+this.h,this.img]);}
 	//else{entity_lines.splice(bi,1)}
-	if(!g){entity_lines.push([this.x,this.y+this.h,this.x+this.w,this.y+this.h]);}
+	if(!g){entity_lines.push([this.x,this.y+this.h,this.x+this.w,this.y+this.h,this.img]);}
 	//else{entity_lines.splice(ci,1)}
-	if(!h){entity_lines.push([this.x,this.y,this.x,this.y+this.h]);}
+	if(!h){entity_lines.push([this.x,this.y,this.x,this.y+this.h,this.img]);}
 	//else{entity_lines.splice(di,1)}
 
 }
@@ -366,13 +401,12 @@ function drawBuffer(){
 	    	var x1 = 32*x;
 	    	var y1 = 32*y;
 	    	if(floors.indexOf(map[y][x]) == -1){
-	    		new Entity(x1,y1,32,32);
+	    		new Entity(x1,y1,32,32,map[y][x]);
 	    	}
-	    	var width = 16;
 	        buffer.drawImage(tiles,(map[y][x]%(tiles.width/width))*width,(map[y][x]-(map[y][x]%(tiles.width/width)))/(tiles.width/width)*width,width,width,x1,y1,32,32);
-	        if(y%2 == 0 && x%2 == 0){
+	        //if(y%2 == 0 && x%2 == 0){
 				entity_vertices.push([x*32,y*32])
-	        }
+	        //}
 	    }
 	}
 	for(var p=0; p<objects.length; p++){
@@ -436,6 +470,18 @@ function overlayShadow(){
 	f_ctx.fillRect(-x_translation,-y_translation,1200,600);
 }
 
+function deleteObject(target){
+	for(var a=0; a<entities.length; a++){
+		if(entities[a] == target)entities.splice(a,1)
+	}
+	for(var b=0; b<enemies.length; b++){
+		if(enemies[b] == target)enemies.splice(b,1)
+	}
+	for(var c=0; c<projectiles.length; c++){
+		if(projectiles[c] == target)projectiles.splice(c,1)
+	}
+}
+
 function drawEntities(){
 	for(var i=0; i<entities.length; i++){
 		entities[i].draw();
@@ -456,14 +502,14 @@ function animateEnemies(){
 		enemies[i].animate();
 	}
 }
-function drawBullets(){
-	for(var i=0; i<bullets.length; i++){
-		bullets[i].draw();
+function drawProjectiles(){
+	for(var i=0; i<projectiles.length; i++){
+		projectiles[i].draw();
 	}
 }
-function animateBullets(){
-	for(var i=0; i<bullets.length; i++){
-		bullets[i].animate();
+function animateProjectiles(){
+	for(var i=0; i<projectiles.length; i++){
+		projectiles[i].animate();
 	}
 }
 
@@ -503,8 +549,11 @@ function keyDown(e){
 			if(!debug_vars.trigger3){debug_vars.trigger3 = true}
 			else{debug_vars.trigger3 = false;}
 			break;
+		case 13:
+			if(paused)unpause();
+			else pause();
 	}
-	
+	//console.log(e.keyCode)
 
 	if(e.keyCode == 65){leftKey = true}
 	else if(e.keyCode == 87){upKey = true}
@@ -559,6 +608,9 @@ function debug(){
 			hud.fillRect(entity_vertices[n][0]+x_translation,entity_vertices[n][1]+y_translation,3,3)
 		}
 	}
+	else if(debug_vars.trigger3){
+		f_ctx.clearRect(-10000,-10000,20000,20000);
+	}
 }
 var v_field = []
 var d_field = []
@@ -578,8 +630,8 @@ function createVectorFieldBase(){
 function getVectorField(){
 	var h = v_field.length;
 	var w = v_field[0].length;
-    var x = Math.round(player1.x + (player1.w/2) - ((player1.x + player1.w/2) % 32))/32;
-    var y = Math.round(player1.y + (player1.h/2) - ((player1.y + player1.h/2) % 32))/32;
+    var x = Math.round(player.x + (player.w/2) - ((player.x + player.w/2) % 32))/32;
+    var y = Math.round(player.y + (player.h/2) - ((player.y + player.h/2) % 32))/32;
     for(var i=0; i<h; i++){
         for(var j=x; j<w; j++){
         	if(floors.indexOf(map[i][j])!=-1){
@@ -684,7 +736,10 @@ function castRays(x,y,r,so,eo,rgb,obj){
 		var ey=0;
 	    points = []
 	    endpoints = []
-	    endpoints.push([Math.round(r*Math.cos(so)+sx),Math.round(r*Math.sin(so)+sy),so])
+	    //for(var a=so; a<=eo; a+=Math.PI/1800){
+	    //	endpoints.push([Math.round(r*Math.cos(a)+sx),Math.round(r*Math.sin(a)+sy),a]);
+	    //}
+	    endpoints.push([Math.round(r*Math.cos(so)+sx),Math.round(r*Math.sin(so)+sy),so]);
 	    endpoints.push([Math.round(r*Math.cos(eo)+sx),Math.round(r*Math.sin(eo)+sy),eo]);
 	    for(var a=0; a<entity_vertices.length; a++){
 	    	var vert = {x: Math.round(entity_vertices[a][0]),y: Math.round(entity_vertices[a][1])};
@@ -715,6 +770,7 @@ function castRays(x,y,r,so,eo,rgb,obj){
 		    	if(hyp1 < hyp2){
 		    		result = res1;
 					res2 = res1;
+					res3 = entity_lines[i][4];
 		    	}
 		    	else{
 					result = result;
@@ -722,13 +778,16 @@ function castRays(x,y,r,so,eo,rgb,obj){
 		    	
 		
 		    }
-		    points.push([result[0],result[1],endpoints[n][2]])
+		    //var mapx = result[0]//-result[0]%width;
+		    //var mapy = result[1]//-result[1]%width;
+		    //console.log(mapx,mapy)
+		    points.push([result[0],result[1],endpoints[n][2],res3])
 	    }
 		self.points = points;
 		f_ctx.moveTo(sx,sy);
 		for(var e=0; e<points.length; e++){
-		var xx = points[e][0]// + 8*Math.cos(points[e][2]);
-		var yy = points[e][1]// + 8*Math.sin(points[e][2]);
+		var xx = points[e][0];
+		var yy = points[e][1];
 			f_ctx.lineTo(xx,yy);
 			//hud.fillStyle='white'
 			//hud.fillRect(points[e][0]+x_translation,points[e][1]+y_translation,2,2)
@@ -775,19 +834,19 @@ function getLineIntersection(p0_x, p0_y, p1_x, p1_y, p2_x, p2_y, p3_x, p3_y){
 
 function init(){
 	createVectorFieldBase()
-	player1 = new Player(32,32,24,24);
+	player = new Player(32,32,24,24);
 	flashlight = new LightSource(200,200,225,[255,255,255]);
 	lights.splice(0,1);
-	new LightSource(200,200,128,[220,120,0])
-	new LightSource(200,200,128,[220,120,0])
-	new LightSource(200,200,128,[220,120,0])
-	new LightSource(200,200,128,[220,120,0])
-	new LightSource(200,200,128,[220,120,0])
-	new LightSource(400,400,128,[0,255,0])
-	new LightSource(200,500,128,[0,0,255])
+	//new LightSource(200,200,128,[220,120,0])
+	//new LightSource(200,200,128,[220,120,0])
+	//new LightSource(200,200,128,[220,120,0])
+	//new LightSource(200,200,128,[220,120,0])
+	//new LightSource(200,200,128,[220,120,0])
+	//new LightSource(400,400,128,[0,255,0])
+	//new LightSource(200,500,128,[0,0,255])
 	//new LightSource(200,500,200)
 	//new LightSource(500,500,200)
-	flashlight.setPosition(player1.x,player1.y);
+	flashlight.setPosition(player.x,player.y);
 	flashlight.refreshRate = 1;
 	setTimeout(function(){enemy1 = new Enemy(32*1,32*11,24,24,'rat')},2000)
 
@@ -799,20 +858,40 @@ function init(){
 	entity_vertices.push([0,0],[map[0].length*32,0],[map[0].length*32,map.length*32],[0,map.length*32])
 }
 function loop(){
-	frame++
-	clearCanvases()
-	createVerticyCounterMap(map[0].length,map.length)
-	drawMap()
-    getVectorField()
-	overlayShadow()
-	flashlight.draw()
-	player1.animate();
-	animateEnemies();
-	animateBullets();
-	player1.draw();
-	drawBullets();
-	drawLightSources();
-	drawEnemies();
-	debug();
-	requestAnimationFrame(loop);
+	if(!paused){
+		frame++;
+		clearCanvases()
+		createVerticyCounterMap(map[0].length,map.length)
+		drawMap()
+	    getVectorField()
+		overlayShadow()
+		flashlight.draw()
+		player.animate();
+		animateEnemies();
+		animateProjectiles();
+		player.draw();
+		drawProjectiles();
+		drawLightSources();
+		drawEnemies();
+		debug();
+	}
+		requestAnimationFrame(loop);
 }
+var paused = false;
+function pause(){
+	paused = true;
+}
+function unpause(){
+	paused = false;
+}
+
+
+
+
+
+
+function generateMap(){
+	
+}
+
+

@@ -175,6 +175,7 @@ function downloadFile(){
 function getMap(e){
     var file = e.target.files[0];
     var text = ''
+    console.log(file)
     if(file){
         var reader = new FileReader();
         reader.onload = function(e){
