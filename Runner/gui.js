@@ -3,7 +3,7 @@ var menus = [];
 var texts = [];
 
 function gui_loop (){
-	//ctx.clearRect(0,0,460,320)
+	//ctx.clearRect(0,0,480,320)
 	//animateMenus();
 	//animateTexts();
 	//renderMenus();
@@ -22,6 +22,7 @@ function renderMenus(){
 }
 function animateTexts(){
 	for(var i=0; i<texts.length; i++){
+		if(texts[i].animate === undefined){return}
 		texts[i].animate();
 	}
 }
@@ -96,7 +97,7 @@ function handleTouchend(e){
 }
 
 function loadMenu(){
-	b1 = new Button(0,0,460,320)
+	b1 = new Button(0,0,480,320)
 	b1.func = startGame;
 	gui_loop();
 }
