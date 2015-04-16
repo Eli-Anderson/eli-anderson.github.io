@@ -26,7 +26,7 @@ function preload(){
 	count = 0;
 	tiles = new Image();
 	tiles.onload=handleLoad();
-	tiles.src = 'tiles1.png'
+	tiles.src = 'tiles.png'
 }
 function handleLoad(){
 	count++
@@ -129,7 +129,6 @@ Player.prototype.animate = function(){
 
 	flashlight.setPosition(this.x+this.w/2,this.y+this.h/2);
 
-
 	if(rightKey){this.velx = this.speed}
 	else if(leftKey){this.velx = -this.speed}
 	else{this.velx = 0}
@@ -141,6 +140,7 @@ Player.prototype.animate = function(){
 	else{this.velx = 0}
 	if(!willCollide(this.x,this.y,this.w,this.h,0,this.vely,entities)&&!willCollide(this.x,this.y,this.w,this.h,0,this.vely,enemies))this.y += this.vely;
 	else{this.vely = 0}
+
 
 };
 //
@@ -244,6 +244,7 @@ function Projectile(x,y,w,h,dx,dy,spd,dmg){
 	this.h = h;
 	this.dx = dx;
 	this.dy = dy;
+<<<<<<< HEAD
 	this.speed = spd;
 	this.damage = dmg;
 }
@@ -269,6 +270,25 @@ Projectile.prototype.hit = function(target){
 	deleteObject(this);
 	delete this;
 }
+//
+//
+//
+//
+function willCollide(x,y,w,h,dx,dy,array){
+	for(var i=0; i<array.length; i++){
+		var e = array[i];
+		if(x < e.x + e.w &&
+		x + w > e.x &&
+		y < e.y + e.h &&
+		y + h > e.y
+		){
+			return true;
+		}
+	}
+	return false;
+}
+//
+//
 //
 //
 
@@ -858,6 +878,7 @@ function init(){
 	entity_vertices.push([0,0],[map[0].length*32,0],[map[0].length*32,map.length*32],[0,map.length*32])
 }
 function loop(){
+<<<<<<< HEAD
 	if(!paused){
 		frame++;
 		clearCanvases()
@@ -885,13 +906,5 @@ function unpause(){
 	paused = false;
 }
 
-
-
-
-
-
-function generateMap(){
-	
-}
 
 
