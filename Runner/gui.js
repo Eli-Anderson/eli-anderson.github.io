@@ -78,7 +78,8 @@ function handleTouchstart(e){
     var x = e.changedTouches[0].clientX;
     var y = e.changedTouches[0].clientY;
     
-    if(buttons.length == 0){
+    if(buttons.length === 0){
+        game.awaitingInput = false;
     	input.up = true;
     }
     else{
@@ -89,6 +90,24 @@ function handleTouchstart(e){
     		}
     	}
     }
+}
+function simulateTouchStart(x,y){
+    
+    if(buttons.length === 0){
+        game.awaitingInput = false;
+    	input.up = true;
+    }
+    else{
+    	for(var i=0; i<buttons.length; i++){
+    		var b = buttons[i];
+    		if(x < b.x + b.w && x > b.x && y < b.y + b.h && y > b.y){
+    			b.onTouch();
+    		}
+    	}
+    }
+}
+function simulateTouchEnd(x,y){
+    input.up = false;
 }
 function handleTouchend(e){
     var x = e.changedTouches[0].clientX;
