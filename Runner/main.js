@@ -1,8 +1,8 @@
 var canvas = document.getElementById('canvas')
 var ctx = canvas.getContext('2d')
 
-var coins = []
-var walls = []
+var coins = [];
+var walls = [];
 function init(){
 	game.running = true;
 	game_loop()
@@ -10,18 +10,34 @@ function init(){
 var game = {
 	frame: 0,
 	running: false,
-}
+	
+	restart: function(){
+	    player.y = 10;
+	    player.dy = 0;
+	    player.ddy = 0;
+	    player.totalPoints += player.points;
+	    player.points = 0;
+	    
+	    walls = [];
+	    coins = [];
+	    
+	    game.awaitingInput = true;
+	    game.running = true;
+	},
+};
 function game_loop(){
-	ctx.clearRect(0,0,480,320)
+	ctx.clearRect(0,0,480,320);
 	if(game.running){
-		game.frame++
+		game.frame++;
 		player.animate();
 		player.checkCollisions_coins();
 		player.checkCollisions_walls();
 		animateCoins();
 		animateWalls();
-		coinGenerator();
-		wallGenerator();
+		if(!game.awaitingInput){
+		    coinGenerator();
+		    wallGenerator();
+		}
 	}
 	renderCoins();
 	renderWalls();
@@ -63,7 +79,11 @@ var player = {
 	ddy: 0,
 	maxVel: 5,
 	points: 0,
+	totalPoints: 0,
 	animate: function(){
+	    if(game.awaitingInput){
+	        return;
+	    }
 		if(Math.abs(this.dy) < 0.01){this.dy = 0}
 		if(input.up){
 			player.ddy = -0.25;
@@ -78,11 +98,9 @@ var player = {
 		
 		player.y += player.dy;
 		
-		player.ddy *= .95;
-		player.dy *= .95;
+		player.ddy *= 0.95;
+		player.dy *= 0.95;
 		
-
-		debug.update(player.dy);
 	},
 	render: function(){
 		ctx.fillStyle = "black";
@@ -164,6 +182,10 @@ function animLoseScreen(){
 		button1.onTouch = function(){
 			text1.dy = text2.dy = text3.dy = -42;
 			menu1.dx = -80;
+			del(button1);
+			button1 = null;
+			//buttons = [];
+			game.restart();
 		}
 	},1500)
 	
@@ -243,13 +265,13 @@ Wall.prototype.animate = function(){
 	if(this.x < -20){
 		//del(this);
 	}
-}
+};
 Wall.prototype.render = function(){
 	ctx.fillStyle = "brown";
 	ctx.fillRect(this.x,this.y,this.w,this.h);
 
 	//ctx.drawImage(this.img,this.game.frameX,this.game.frameY,this.game.frameW,this.game.frameH,this.x,this.y,this.w,this.h)
-}
+};
 
 function del(obj){
 	for(var i=0; i<coins.length; i++){
@@ -275,10 +297,19 @@ function del(obj){
 var input = {
 	up: false,
 	down: true,
-}
+};
 
-document.addEventListener('keydown',keyDown)
-document.addEventListener('keyup',keyUp)
+document.addEventListener('keydown',keyDown);
+document.addEventListener('keyup',keyUp);
+document.addEventListener('mousemove',handleMousemove);
+var mouse = {
+    x: 0,
+    y: 0,
+};
+function handleMousemove(e){
+    mouse.x = e.clientX;
+    mouse.y = e.clientY;
+}
 function keyDown(e){
 	switch(e.keyCode){
 		case 38:
@@ -291,6 +322,9 @@ function keyDown(e){
 			input.h = true;
 			player.points += 100;
 			break;
+		case 32:
+		    simulateTouchStart(mouse.x,mouse.y);
+		    break;
 		default:
 			console.log(e.keyCode)
 	}
@@ -306,6 +340,9 @@ function keyUp(e){
 		case 72:
 			input.h = false;
 			break;
+		case 32:
+		    simulateTouchEnd(mouse.x,mouse.y);
+		    break;
 	}
 }
 var debug = {
