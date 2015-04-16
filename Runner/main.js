@@ -12,9 +12,9 @@ var game = {
 	running: false,
 }
 function game_loop(){
+	ctx.clearRect(0,0,480,320)
 	if(game.running){
 		game.frame++
-		ctx.clearRect(0,0,460,320)
 		player.animate();
 		player.checkCollisions_coins();
 		player.checkCollisions_walls();
@@ -121,21 +121,52 @@ var player = {
 	}
 }
 function animLoseScreen(){
-	menu1 = new Menu(20,-280,420,280,[0,0,0,1]);
+	menu1 = new Menu(60,-280,360,240,[0,0,0,1]);
 	menu1.dy = 34;
+	menu1.dx = 0;
 	menu1.animate = function(){
 		menu1.dy *= 0.9;
 		menu1.y += menu1.dy;
+		menu1.dx *= 0.9;
+		menu1.x += menu1.dx;
 	};
-	text1 = new Text(460,80,"Game Over","48px Georgia",[255,255,255,1])
+	text1 = new Text(495,80,"Game Over","48px Georgia",[255,255,255,1]);
+	text2 = new Text(580,140,"Score","32px Georgia",[255,255,255,1]);
+	text3 = new Text(605-(player.points.toString().length-1)*10,170,player.points,"38px Georgia",[255,255,255,1])
 	setTimeout(function(){
-		console.log('a')
-		text1.dx = -50
-	},5000)
-	text1.animate = function(){
-		text1.dx *= 0.9;
-		text1.x += text1.dx;
-	}
+		text1.dx = -42;
+		text1.dy = 0;
+		text1.animate = function(){
+			text1.dx *= 0.9;
+			text1.x += text1.dx;
+			text1.dy *= 0.9;
+			text1.y += text1.dy;
+		}
+	},750)
+	setTimeout(function(){
+		text2.dx = -42;
+		text2.dy = 0;
+		text2.animate = function(){
+			text2.dx *= 0.9;
+			text2.x += text2.dx;
+			text2.dy *= 0.9;
+			text2.y += text2.dy;
+		}
+		text3.dx = -42;
+		text3.dy = 0;
+		text3.animate = function(){
+			text3.dx *= 0.9;
+			text3.x += text3.dx;
+			text3.dy *= 0.9;
+			text3.y += text3.dy;
+		}
+		button1 = new Button(0,0,480,320);
+		button1.onTouch = function(){
+			text1.dy = text2.dy = text3.dy = -42;
+			menu1.dx = -80;
+		}
+	},1500)
+	
 }
 var coin_vars = {
 	framesSinceLastCoin: 0,
@@ -258,6 +289,7 @@ function keyDown(e){
 			break;
 		case 72:
 			input.h = true;
+			player.points += 100;
 			break;
 		default:
 			console.log(e.keyCode)
@@ -279,7 +311,7 @@ function keyUp(e){
 var debug = {
 	elem: document.getElementById('debugger'),
 	update: function(text){
-		debug.elem.innerHTML = text;
+		//debug.elem.innerHTML = text;
 	}
 }
 //window.onload=init()
