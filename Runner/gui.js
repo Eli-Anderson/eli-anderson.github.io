@@ -2,14 +2,6 @@ var buttons = [];
 var menus = [];
 var texts = [];
 
-function gui_loop (){
-	//ctx.clearRect(0,0,480,320)
-	//animateMenus();
-	//animateTexts();
-	//renderMenus();
-	//renderTexts();
-	//setTimeout(gui_loop,100/6)
-}
 function animateMenus(){
 	for(var i=0; i<menus.length; i++){
 		menus[i].animate();
@@ -116,14 +108,7 @@ function handleTouchend(e){
 }
 
 function loadMenu(){
-	b1 = new Button(0,0,480,320)
-	b1.func = startGame;
-	gui_loop();
-}
-function startGame(){
 	init()
-	del(b1);
-
 }
 
 window.onload=loadMenu();

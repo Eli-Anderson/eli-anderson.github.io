@@ -11,6 +11,7 @@ var game = {
 	frame: 0,
 	running: false,
 	trigger1Fired: false,
+	awaitingInput: true,
 	
 	restart: function(){
 	    player.y = 155-player.h/2;
