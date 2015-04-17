@@ -4,6 +4,7 @@ var ctx = canvas.getContext('2d')
 var coins = [];
 var walls = [];
 function init(){
+	enemy1 = new BasicEnemy(320,100,25,25);
 	game.running = true;
 	game_loop()
 }
@@ -34,6 +35,8 @@ function game_loop(){
 	game.frame++;
 	if(game.running){
 		player.animate();
+		animateEnemies();
+		animateProjectiles();
 		player.checkCollisions_coins();
 		player.checkCollisions_walls();
 		animateCoins();
@@ -41,13 +44,16 @@ function game_loop(){
 		if(!game.awaitingInput){
 		    coinGenerator();
 		    wallGenerator();
+			enemyGenerator();
 		}
 	}
 	background.animate();
 	background.render();
 	renderWalls();
 	renderCoins();
+	renderEnemies();
 	player.render();
+	renderProjectiles();
 	animateMenus();
 	animateTexts();
 	renderMenus();
@@ -73,6 +79,28 @@ function animateWalls(){
 function renderWalls(){
 	for(var i=0; i<walls.length; i++){
 		walls[i].render();
+	}
+}
+function animateEnemies(){
+	for(var i=0; i<enemies.length; i++){
+		enemies[i].animate();
+	}
+}
+function renderEnemies(){
+	for(var i=0; i<enemies.length; i++){
+		if(enemies[i] === undefined){return}
+		enemies[i].render();
+	}
+}
+function animateProjectiles(){
+	for(var i=0; i<projectiles.length; i++){
+		projectiles[i].animate();
+	}
+}
+function renderProjectiles(){
+	for(var i=0; i<projectiles.length; i++){
+		if(projectiles[i] === undefined){return}
+		projectiles[i].render();
 	}
 }
 
@@ -452,5 +480,18 @@ var debug = {
 	update: function(text){
 		//debug.elem.innerHTML = text;
 	}
+}
+
+function willCollide(obj,dx,dy,arr){
+	for(var i=0; i<arr.length; i++){
+		var a = arr[i];
+		if(obj.x + obj.dx + obj.w > a.x &&
+		obj.x + obj.dx < a.x + a.w &&
+		obj.y + obj.dy + obj.h > a.y &&
+		obj.y + obj.dy < a.y + a.h){
+			return true;
+		}
+	}
+	return false;
 }
 //window.onload=init()
