@@ -4,7 +4,6 @@ var ctx = canvas.getContext('2d')
 var coins = [];
 var walls = [];
 function init(){
-	enemy1 = new BasicEnemy(320,100,25,25);
 	game.running = true;
 	game_loop()
 }
@@ -20,9 +19,12 @@ var game = {
 	    player.ddy = 0;
 	    player.totalPoints += player.points;
 	    player.points = 0;
-	    
+	    player.hp = 3;
+		
 	    walls = [];
 	    coins = [];
+		enemies = [];
+		projectiles = [];
 
 	    coin_vars.y_scaler = 110;
 	    
@@ -114,6 +116,7 @@ var player = {
 	maxVel: 5,
 	points: 0,
 	totalPoints: 0,
+	hp: 3,
 	r: 0,
 	g: 0,
 	b: 0,
@@ -121,6 +124,7 @@ var player = {
 	    if(game.awaitingInput){
 	        return;
 	    }
+		if(player.hp === 0){player.gameOver();}
 		if(Math.abs(this.dy) < 0.01){this.dy = 0}
 		if(input.up){
 			player.ddy = -0.25;
@@ -170,6 +174,9 @@ var player = {
 				walls[i].touched();
 			}
 		}
+	},
+	gotHit: function(dmg){
+		player.hp -= dmg;
 	},
 	gameOver: function(){
 		game.running = false;
@@ -328,7 +335,7 @@ function Wall(x,y,w,h){
 }
 Wall.prototype.touched = function(){
 	//sounds.play(sounds.hitWall)
-	player.gameOver();
+	player.gotHit(player.hp);
 }
 Wall.prototype.animate = function(){
 	this.x -= 6;
@@ -422,6 +429,12 @@ function del(obj){
 			return;
 		}
 	}
+	for(var u=0; u<projectiles.length; u++){
+		if(obj == projectiles[u]){
+			projectiles.splice(u,1);
+			return;
+		}
+	}
 }
 
 var input = {
@@ -449,8 +462,8 @@ function keyDown(e){
 			//input.down = true;
 			break;
 		case 72:
-			input.h = true;
-			player.points += 100;
+			//h
+			new BasicEnemy(rand_i(320,455),rand_i(0,295),25,25);
 			break;
 		case 32:
 		    simulateTouchStart(mouse.x,mouse.y);
