@@ -257,10 +257,13 @@ Coin.prototype.animate = function(){
 		}
 	}
 }
+var coinImage = new Image();
+coinImage.src = "coin_01.png";
 Coin.prototype.render = function(){
 	if(!this.onScreen){return}
-	ctx.fillStyle = "yellow";
-	ctx.fillRect(this.x,this.y,this.w,this.h)
+	//ctx.fillStyle = "yellow";
+	//ctx.fillRect(this.x,this.y,this.w,this.h)
+	ctx.drawImage(coinImage,this.x,this.y,this.w+4,this.h+4)
 }
 
 
