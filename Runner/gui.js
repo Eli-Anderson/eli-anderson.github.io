@@ -96,7 +96,9 @@ function simulateTouchEnd(x,y){
 function handleTouchend(e){
     var x = e.changedTouches[0].clientX;
     var y = e.changedTouches[0].clientY;
-    input.up = false;
+    if(x < 240 && x > 0 && y > 0 && y < 320 && game.running){
+        input.up = false;
+    }
 }
 
 function loadMenu(){

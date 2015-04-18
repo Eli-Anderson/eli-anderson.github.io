@@ -22,7 +22,7 @@ function init(){
 		this.dx *= 0.9;
 		this.dy *= 0.9;
 	}
-	game_loop()
+	game_loop();
 }
 var game = {
 	frame: 0,
