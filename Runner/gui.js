@@ -75,6 +75,7 @@ function handleTouchstart(e){
     		var b = buttons[i];
     		if(x < b.x + b.w && x > b.x && y < b.y + b.h && y > b.y){
     			b.onTouch();
+                break;
     		}
     	}
     }
