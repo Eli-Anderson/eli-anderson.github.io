@@ -9,6 +9,9 @@ function init(){
 	button_left.onTouch = function(){
 		input.up = true;
 	}
+	button_left.onLift = function(){
+		input.up = false;
+	}
 	button_right = new Button(240,0,240,320);
 	button_right.onTouch = function(){
 		player.fire();

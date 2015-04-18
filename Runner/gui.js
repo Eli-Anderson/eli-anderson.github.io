@@ -32,6 +32,9 @@ function Button(x,y,w,h){
     
 	this.onTouch = function(){
 	}
+    this.onLift = function(){
+
+    }
     this.isPressed = false;
 }
 function getButtonInput(){
@@ -106,6 +109,7 @@ function handleTouchend(e){
         var b = buttons[i];
         if(x < b.x + b.w && x > b.x && y < b.y + b.h && y > b.y){
             b.isPressed = false;
+            b.onLift();
         }
     }
 }
