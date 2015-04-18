@@ -51,6 +51,8 @@ function Text(x,y,txt,font,rgba){
 	texts.push(this);
 	this.x = x;
 	this.y = y;
+    this.dx = 0;
+    this.dy = 0;
 	this.txt = txt;
 	this.font = font;
 	this.rgba = "rgba("+rgba[0]+","+rgba[1]+","+rgba[2]+","+rgba[3]+")";
@@ -66,8 +68,8 @@ Text.prototype.render = function(){
 function handleTouchstart(e){
 	e.preventDefault();
     for(var n=0; n<e.touches.length; n++){
-        var x = e.changedTouches[0].clientX;
-        var y = e.changedTouches[0].clientY;
+        var x = e.touches[n].clientX;
+        var y = e.touches[n].clientY;
     
     	for(var i=0; i<buttons.length; i++){
     		var b = buttons[i];
@@ -79,22 +81,17 @@ function handleTouchstart(e){
     
 }
 function simulateTouchStart(x,y){
-    
-    if(buttons.length === 0){
-        game.awaitingInput = false;
-    	input.up = true;
-    }
-    else{
-    	for(var i=0; i<buttons.length; i++){
-    		var b = buttons[i];
-    		if(x < b.x + b.w && x > b.x && y < b.y + b.h && y > b.y){
-    			b.onTouch();
-    		}
+    for(var i=0; i<buttons.length; i++){
+    	var b = buttons[i];
+    	if(x < b.x + b.w && x > b.x && y < b.y + b.h && y > b.y){
+    		b.onTouch();
     	}
     }
 }
 function simulateTouchEnd(x,y){
-    input.up = false;
+    if(x < 240 && x > 0 && y > 0 && y < 320 && game.running){
+        input.up = false;
+    }
 }
 function handleTouchend(e){
     var x = e.changedTouches[0].clientX;

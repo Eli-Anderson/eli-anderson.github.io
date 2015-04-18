@@ -23,15 +23,24 @@ function Enemy(x,y,w,h){
 	this.dx = 0;
 	this.dy = 0;
 
+	this.onScreen = true;
 	
 	this.frame = game.frame;
 
 }
 Enemy.prototype.render = function(){
-	ctx.fillRect(this.x,this.y,this.w,this.h);
+	if(this.onScreen){
+		ctx.fillRect(this.x,this.y,this.w,this.h);
+	}
 }
 Enemy.prototype.gotHit = function(dmg){
 	this.hp -= dmg;
+	if(this.hp <= 0){
+		//animate death
+		//drop coins or upgrades
+		new Coin(this.x,this.y,this.worth);
+		del(this);
+	}
 }
 function BasicEnemy(x,y,w,h){
 	Enemy.call(this,x,y,w,h);
@@ -39,6 +48,7 @@ function BasicEnemy(x,y,w,h){
 	this.maxVel = 5;
 	this.framesPerShot = 90;
 	this.hp = 1;
+	this.worth = 3;
 	
 	this.animate = function(){
 		var dist = player.y - this.y;

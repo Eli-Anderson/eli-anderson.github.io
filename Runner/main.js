@@ -13,6 +13,15 @@ function init(){
 	button_right.onTouch = function(){
 		player.fire();
 	}
+	text_score = new Text(-100,30,player.points,"32px Georgia",[255,255,255,1])
+	text_score.dx = 50;
+	text_score.dy = 0;
+	text_score.animate = function(){
+		this.x += this.dx;
+		this.y += this.dy;
+		this.dx *= 0.9;
+		this.dy *= 0.9;
+	}
 	game_loop()
 }
 var game = {
@@ -22,6 +31,9 @@ var game = {
 	awaitingInput: true,
 	
 	restart: function(){
+		player.totalPoints += player.points;
+		player.points = 0;
+
 		button_left = new Button(0,0,240,320);
 		button_left.onTouch = function(){
 			input.up = true;
@@ -30,12 +42,19 @@ var game = {
 		button_right.onTouch = function(){
 			player.fire();
 		}
+		text_score = new Text(-100,30,player.points,"32px Georgia",[255,255,255,1])
+		text_score.dx = 50;
+		text_score.dy = 0;
+		text_score.animate = function(){
+			this.x += this.dx;
+			this.y += this.dy;
+			this.dx *= 0.9;
+			this.dy *= 0.9;
+		}
 
 	    player.y = 155-player.h/2;
 	    player.dy = 0;
 	    player.ddy = 0;
-	    player.totalPoints += player.points;
-	    player.points = 0;
 	    player.hp = 3;
 		
 	    walls = [];
@@ -77,7 +96,7 @@ function game_loop(){
 	animateTexts();
 	renderMenus();
 	renderTexts();
-	requestAnimationFrame(game_loop)
+	requestAnimationFrame(game_loop);
 }
 function animateCoins(){
 	for(var i=0; i<coins.length; i++){
@@ -123,90 +142,11 @@ function renderProjectiles(){
 	}
 }
 
-var player = {
-	x: 10,
-	w: 30,
-	h: 30,
-	y: 140,
-	dy: 0,
-	ddy: 0,
-	maxVel: 5,
-	points: 0,
-	totalPoints: 0,
-	hp: 3,
-	r: 0,
-	g: 0,
-	b: 0,
-	animate: function(){
-	    if(game.awaitingInput){
-	        return;
-	    }
-		if(player.hp === 0){player.gameOver();}
-		if(Math.abs(this.dy) < 0.01){this.dy = 0}
-		if(input.up){
-			player.ddy = -0.25;
-		}
-		else if(input.down){
-			player.ddy = 0.25;
-		}
-		else{player.ddy = 0}
-		if(Math.abs(player.dy + player.ddy) < player.maxVel){
-			player.dy += player.ddy;
-		}
-		
-		player.y += player.dy;
-		
-		player.ddy *= 0.95;
-		player.dy *= 0.95;
-		
-		player.r = 120+ 20*Math.round(player.dy);
-	},
-	render: function(){
-		ctx.fillStyle = "rgb("+player.r+","+player.g+","+player.b+")";
-		ctx.fillRect(player.x,player.y,player.w,player.h);
-		//ctx.drawImage(player.spriteSheet,player.game.frameX,player.game.frameY,
-		//              player.x,player.y,player.game.frameW,player.game.frameH)
-	},
-	willCollide: function(obj){
-		var p = player;
-			var c = obj;
-			if(p.x+p.w > c.x &&
-				p.x < c.x+c.w &&
-				p.y+p.h > c.y &&
-				p.y < c.y+c.h){
-					return true
-				}
-			else{return false}
-	},
-	checkCollisions_coins: function(){
-		for(var i=0; i<coins.length; i++){
-			if(player.willCollide(coins[i]) && coins[i].touchable){
-				coins[i].touched();
-			}
-		}
-	},
-	checkCollisions_walls: function(){
-		for(var i=0; i<walls.length; i++){
-			if(player.willCollide(walls[i])){
-				walls[i].touched();
-			}
-		}
-	},
-	fire: function(){
-		var dx = player.x - this.x;
-		new Projectile(this.x,this.y,10,10,1,0,1,12,enemies)
-	},
-	gotHit: function(dmg){
-		player.hp -= dmg;
-	},
-	gameOver: function(){
-		game.running = false;
-		button_left = null;
-		button_right = null;
-		animLoseScreen();
-	}
-}
+
 function animLoseScreen(){
+	text_score.dx = 20;
+	setTimeout(function(){text_score = null},200)
+
 	menu1 = new Menu(60,-280,360,240,[0,0,0,1]);
 	menu1.dy = 34;
 	menu1.dx = 0;
@@ -296,6 +236,7 @@ function Coin(x,y,p){
 Coin.prototype.touched = function(){
 	del(this);
 	player.points += this.points;
+	text_score.txt += this.points;
 	//delete this;
 	//sounds.play(sounds.coin));
 }
@@ -391,7 +332,7 @@ var background = {
 		}
 		if(game.awaitingInput && s_frame){
 			if(game.frame - s_frame > 0){
-				text4 = new Text(30,350,"Tap to begin","32px Georgia","0,0,0,1");
+				text4 = new Text(30,350,"Tap to begin","32px Georgia",[0,0,0,1]);
 				text4.dx = 0;
 				text4.dy = -10;
 				text4.animate = function(){
@@ -452,6 +393,12 @@ function del(obj){
 			return;
 		}
 	}
+	for(var r=0; r<enemies.length; r++){
+		if(obj == enemies[r]){
+			enemies.splice(r,1);
+			return;
+		}
+	}
 	for(var u=0; u<projectiles.length; u++){
 		if(obj == projectiles[u]){
 			projectiles.splice(u,1);
@@ -479,10 +426,14 @@ function handleMousemove(e){
 function keyDown(e){
 	switch(e.keyCode){
 		case 38:
-			input.up = true;
+			simulateTouchStart(120, 160);
 			break;
 		case 40:
 			//input.down = true;
+			break;
+		case 70:
+			//f
+			simulateTouchStart(360, 160);
 			break;
 		case 72:
 			//h
@@ -504,10 +455,13 @@ function keyDown(e){
 function keyUp(e){
 	switch(e.keyCode){
 		case 38:
-			input.up = false;
+			simulateTouchEnd(120, 160);
 			break;
 		case 40:
 			//input.down = false;
+			break;
+		case 70:
+			simulateTouchEnd(360, 160);
 			break;
 		case 72:
 			input.h = false;
