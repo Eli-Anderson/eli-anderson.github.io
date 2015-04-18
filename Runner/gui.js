@@ -29,10 +29,8 @@ function Button(x,y,w,h){
     this.y = y;
     this.w = w;
     this.h = h;
-    this.func = function(){};
     
 	this.onTouch = function(){
-		this.func()
 	}
 }
 
@@ -70,18 +68,13 @@ function handleTouchstart(e){
     var x = e.changedTouches[0].clientX;
     var y = e.changedTouches[0].clientY;
     
-    if(buttons.length === 0){
-        game.awaitingInput = false;
-    	input.up = true;
-    }
-    else{
     	for(var i=0; i<buttons.length; i++){
     		var b = buttons[i];
     		if(x < b.x + b.w && x > b.x && y < b.y + b.h && y > b.y){
     			b.onTouch();
     		}
     	}
-    }
+    
 }
 function simulateTouchStart(x,y){
     

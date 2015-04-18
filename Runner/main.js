@@ -5,6 +5,14 @@ var coins = [];
 var walls = [];
 function init(){
 	game.running = true;
+	button_left = new Button(0,0,240,320);
+	button_left.onTouch = function(){
+		input.up = true;
+	}
+	button_right = new Button(240,0,240,320);
+	button_right.onTouch = function(){
+		player.fire();
+	}
 	game_loop()
 }
 var game = {
@@ -14,6 +22,15 @@ var game = {
 	awaitingInput: true,
 	
 	restart: function(){
+		button_left = new Button(0,0,240,320);
+		button_left.onTouch = function(){
+			input.up = true;
+		}
+		button_right = new Button(240,0,240,320);
+		button_right.onTouch = function(){
+			player.fire();
+		}
+
 	    player.y = 155-player.h/2;
 	    player.dy = 0;
 	    player.ddy = 0;
@@ -175,11 +192,17 @@ var player = {
 			}
 		}
 	},
+	fire: function(){
+		var dx = player.x - this.x;
+		new Projectile(this.x,this.y,10,10,1,0,1,12,enemies)
+	},
 	gotHit: function(dmg){
 		player.hp -= dmg;
 	},
 	gameOver: function(){
 		game.running = false;
+		button_left = null;
+		button_right = null;
 		animLoseScreen();
 	}
 }
@@ -367,7 +390,7 @@ var background = {
 			game.trigger1Fired = true;
 		}
 		if(game.awaitingInput && s_frame){
-			if(game.frame - s_frame > 180){
+			if(game.frame - s_frame > 0){
 				text4 = new Text(30,350,"Tap to begin","32px Georgia","0,0,0,1");
 				text4.dx = 0;
 				text4.dy = -10;
@@ -465,6 +488,12 @@ function keyDown(e){
 			//h
 			new BasicEnemy(rand_i(320,455),rand_i(0,295),25,25);
 			break;
+		case 74:
+			//j
+			for(var i=0; i<10000; i++){
+				new Coin(rand_i(320,455),rand_i(0,295),1);
+			}
+			break;
 		case 32:
 		    simulateTouchStart(mouse.x,mouse.y);
 		    break;
@@ -496,15 +525,25 @@ var debug = {
 }
 
 function willCollide(obj,dx,dy,arr){
-	for(var i=0; i<arr.length; i++){
-		var a = arr[i];
-		if(obj.x + obj.dx + obj.w > a.x &&
-		obj.x + obj.dx < a.x + a.w &&
-		obj.y + obj.dy + obj.h > a.y &&
-		obj.y + obj.dy < a.y + a.h){
-			return true;
+	if(arr[0] != undefined){
+		for(var i=0; i<arr.length; i++){
+			var a = arr[i];
+			if(obj.x + obj.dx + obj.w > a.x &&
+			obj.x + obj.dx < a.x + a.w &&
+			obj.y + obj.dy + obj.h > a.y &&
+			obj.y + obj.dy < a.y + a.h){
+				return true;
+			}
 		}
+	}
+	else{
+		var a = arr;
+		if(obj.x + obj.dx + obj.w > a.x &&
+			obj.x + obj.dx < a.x + a.w &&
+			obj.y + obj.dy + obj.h > a.y &&
+			obj.y + obj.dy < a.y + a.h){
+				return true;
+			}
 	}
 	return false;
 }
-//window.onload=init()
