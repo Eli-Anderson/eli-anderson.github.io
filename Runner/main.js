@@ -71,6 +71,7 @@ var game = {
 function game_loop(){
 	ctx.clearRect(0,0,480,320);
 	game.frame++;
+	getButtonInput();
 	if(game.running){
 		player.animate();
 		animateEnemies();

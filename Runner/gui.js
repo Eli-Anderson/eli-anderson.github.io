@@ -32,6 +32,14 @@ function Button(x,y,w,h){
     
 	this.onTouch = function(){
 	}
+    this.isPressed = false;
+}
+function getButtonInput(){
+    for(var i=0; i<buttons.length; i++){
+        if(buttons[i].isPressed){
+            buttons[i].onTouch();
+        }
+    }
 }
 
 function Menu(x,y,w,h,rgba){
@@ -60,23 +68,20 @@ function Text(x,y,txt,font,rgba){
 Text.prototype.render = function(){
 	ctx.fillStyle = this.rgba;
 	ctx.font = this.font;
-	ctx.fillText(this.txt,this.x,this.y)
+	ctx.fillText(this.txt,this.x,this.y);
 }
 
 
 
 function handleTouchstart(e){
 	e.preventDefault();
-    for(var n=0; n<e.touches.length; n++){
-        var x = e.touches[n].clientX;
-        var y = e.touches[n].clientY;
-    
-    	for(var i=0; i<buttons.length; i++){
-    		var b = buttons[i];
-    		if(x < b.x + b.w && x > b.x && y < b.y + b.h && y > b.y){
-    			b.onTouch();
-                break;
-    		}
+    var x = e.changedTouches[0].clientX;
+    var y = e.changedTouches[0].clientY;
+
+    for(var i=0; i<buttons.length; i++){
+    	var b = buttons[i];
+    	if(x < b.x + b.w && x > b.x && y < b.y + b.h && y > b.y){
+    		b.isPressed = true;
     	}
     }
     
@@ -97,8 +102,11 @@ function simulateTouchEnd(x,y){
 function handleTouchend(e){
     var x = e.changedTouches[0].clientX;
     var y = e.changedTouches[0].clientY;
-    if(x < 240 && x > 0 && y > 0 && y < 320 && game.running){
-        input.up = false;
+    for(var i=0; i<buttons.length; i++){
+        var b = buttons[i];
+        if(x < b.x + b.w && x > b.x && y < b.y + b.h && y > b.y){
+            b.isPressed = false;
+        }
     }
 }
 
