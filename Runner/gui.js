@@ -65,8 +65,9 @@ Text.prototype.render = function(){
 
 function handleTouchstart(e){
 	e.preventDefault();
-    var x = e.changedTouches[0].clientX;
-    var y = e.changedTouches[0].clientY;
+    for(var n=0; n<e.touches.length; n++){
+        var x = e.changedTouches[0].clientX;
+        var y = e.changedTouches[0].clientY;
     
     	for(var i=0; i<buttons.length; i++){
     		var b = buttons[i];
@@ -74,6 +75,7 @@ function handleTouchstart(e){
     			b.onTouch();
     		}
     	}
+    }
     
 }
 function simulateTouchStart(x,y){
