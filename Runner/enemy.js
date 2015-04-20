@@ -38,7 +38,8 @@ Enemy.prototype.gotHit = function(dmg){
 	if(this.hp <= 0){
 		//animate death
 		//drop coins or upgrades
-		new Coin(this.x,this.y,this.worth);
+		var a = new Coin(this.x,this.y,this.worth);
+		a.magnet = true;
 		del(this);
 	}
 }

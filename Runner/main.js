@@ -3,6 +3,9 @@ var ctx = canvas.getContext('2d')
 
 var coins = [];
 var walls = [];
+
+var heart_img = new Image();
+heart_img.src = 'heart.png';
 function init(){
 	game.running = true;
 	button_left = new Button(0,0,240,320);
@@ -40,6 +43,9 @@ var game = {
 		button_left = new Button(0,0,240,320);
 		button_left.onTouch = function(){
 			input.up = true;
+		}
+		button_left.onLift = function(){
+			input.up = false;
 		}
 		button_right = new Button(240,0,240,320);
 		button_right.onTouch = function(){
@@ -83,6 +89,7 @@ function game_loop(){
 		player.checkCollisions_walls();
 		animateCoins();
 		animateWalls();
+		animateUpgrades();
 		if(!game.awaitingInput){
 		    coinGenerator();
 		    wallGenerator();
@@ -93,6 +100,7 @@ function game_loop(){
 	background.render();
 	renderWalls();
 	renderCoins();
+	renderUpgrades();
 	renderEnemies();
 	player.render();
 	renderProjectiles();
@@ -143,6 +151,17 @@ function renderProjectiles(){
 	for(var i=0; i<projectiles.length; i++){
 		if(projectiles[i] === undefined){return}
 		projectiles[i].render();
+	}
+}
+function animateUpgrades(){
+	for(var i=0; i<upgrades.length; i++){
+		upgrades[i].animate();
+	}
+}
+function renderUpgrades(){
+	for(var i=0; i<upgrades.length; i++){
+		if(upgrades[i] === undefined){return}
+		upgrades[i].render();
 	}
 }
 
@@ -204,119 +223,19 @@ function animLoseScreen(){
 	},1500)
 	
 }
-var coin_vars = {
-	framesSinceLastCoin: 0,
-	y: 0,
-	theda: 0,
-	y_scaler: 110,
-	counter: 0,
-}
-
-function coinGenerator(){
-	coin_vars.framesSinceLastCoin ++;
-	if(coin_vars.framesSinceLastCoin == 10){
-		if(coin_vars.y_scaler >= 150){
-			coin_vars.y_scaler *= rand_d(0.9,1);
-		}
-		else{coin_vars.y_scaler *= rand_d(0.9,1.1);}
-	    coin_vars.y = 160+coin_vars.y_scaler*Math.sin(coin_vars.theda);
-		new Coin(500,coin_vars.y,1);
-		coin_vars.framesSinceLastCoin = 0;
-		coin_vars.theda += Math.PI/8;
-		coin_vars.counter ++;
-	}
-}
-function Coin(x,y,p){
-	coins.push(this);
-	this.x = x;
-	this.y = y;
-	this.points = p;
-	this.w = 15;
-	this.h = 15;
-
-	this.onScreen = true;
-	this.touchable = true;
-}
-Coin.prototype.touched = function(){
-	del(this);
-	player.points += this.points;
-	text_score.txt += this.points;
-	//delete this;
-	//sounds.play(sounds.coin));
-}
-Coin.prototype.animate = function(){
-	this.x -= 6;
-	if(this.x < -20){
-		this.onScreen = false;
-	}
-	for(var i=0; i<walls.length; i++){
-		var dx = walls[i].x - this.x;
-		var dy = walls[i].y - this.y;
-		var dist1 = dx*dx + dy*dy;
-
-		if(dist1 < 55*55){
-			this.onScreen = false;
-			this.touchable = false;
-		}
-	}
-}
-var coinImage = new Image();
-coinImage.src = "coin_01.png";
-Coin.prototype.render = function(){
-	if(!this.onScreen){return}
-	//ctx.fillStyle = "yellow";
-	//ctx.fillRect(this.x,this.y,this.w,this.h)
-	ctx.drawImage(coinImage,this.x,this.y,this.w+4,this.h+4)
-}
 
 
-var wall_vars = {
-	framesSinceLastWall: 0,
-	y: 0,
-	w: 0,
-	h: 0,
-}
 
-function wallGenerator(){
-	wall_vars.framesSinceLastWall ++;
-	if(wall_vars.framesSinceLastWall == 45){
-		wall_vars.y = player.y+rand_i(-120,120)
-		wall_vars.w = 20+Math.floor(Math.random()*40)
-		wall_vars.h = 20+Math.floor(Math.random()*40)
 
-		new Wall(500,wall_vars.y,wall_vars.w,wall_vars.h);
-		wall_vars.framesSinceLastWall = 0;
-	}
-}
+
+
 function rand_i(n1,n2){
 	return n1+Math.floor(Math.random()*(n2-n1));
 }
 function rand_d(n1,n2){
 	return n1+Math.random()*(n2-n1);
 }
-function Wall(x,y,w,h){
-	walls.push(this);
-	this.x = x;
-	this.y = y;
-	this.w = w;
-	this.h = h;
-}
-Wall.prototype.touched = function(){
-	//sounds.play(sounds.hitWall)
-	player.gotHit(player.hp);
-}
-Wall.prototype.animate = function(){
-	this.x -= 6;
-	if(this.x < -20){
-		//del(this);
-	}
-};
-Wall.prototype.render = function(){
-	ctx.fillStyle = "brown";
-	ctx.fillRect(this.x,this.y,this.w,this.h);
 
-	//ctx.drawImage(this.img,this.game.frameX,this.game.frameY,this.game.frameW,this.game.frameH,this.x,this.y,this.w,this.h)
-};
 var background_img = new Image();
 background_img.src = "desert_BG.png"
 var background = {
@@ -326,10 +245,6 @@ var background = {
 	w: 0,
 	h: 0,
 	animate: function(){
-		//background.x -= 3;
-		//if(background.x + background.w <= canvas.width){
-		//	background.x = 0;
-		//}
 		if(game.awaitingInput && !game.trigger1Fired){
 			s_frame = game.frame;
 			game.trigger1Fired = true;
@@ -366,7 +281,11 @@ var background = {
 	},
 	render: function(){
 		//ctx.drawImage(background.img,-background.x,0,canvas.width,canvas.height,background.x,background.y,background.w,background.h)
-		ctx.drawImage(background.img,0,0)
+		ctx.drawImage(background.img,0,0);
+
+		for(var i=0; i<player.hp; i++){
+			ctx.drawImage(heart_img,5+(i*42)+i*5,5,42,42)
+		}
 	},
 
 }
@@ -400,6 +319,12 @@ function del(obj){
 	for(var r=0; r<enemies.length; r++){
 		if(obj == enemies[r]){
 			enemies.splice(r,1);
+			return;
+		}
+	}
+	for(var e=0; e<upgrades.length; e++){
+		if(obj == upgrades[e]){
+			upgrades.splice(e,1);
 			return;
 		}
 	}
@@ -441,13 +366,12 @@ function keyDown(e){
 			break;
 		case 72:
 			//h
-			new BasicEnemy(rand_i(320,455),rand_i(0,295),25,25);
+			var asdf = new HealthUpgrade(rand_i(320,455),rand_i(0,295),10,10,1);
+			asdf.magnet = true;
 			break;
 		case 74:
 			//j
-			for(var i=0; i<10000; i++){
-				new Coin(rand_i(320,455),rand_i(0,295),1);
-			}
+			sound.play(sound.list.a,0)
 			break;
 		case 32:
 		    simulateTouchStart(mouse.x,mouse.y);
@@ -496,10 +420,10 @@ function willCollide(obj,dx,dy,arr){
 	}
 	else{
 		var a = arr;
-		if(obj.x + obj.dx + obj.w > a.x &&
-			obj.x + obj.dx < a.x + a.w &&
-			obj.y + obj.dy + obj.h > a.y &&
-			obj.y + obj.dy < a.y + a.h){
+		if(obj.x + dx + obj.w > a.x &&
+			obj.x + dx < a.x + a.w &&
+			obj.y + dy + obj.h > a.y &&
+			obj.y + dy < a.y + a.h){
 				return true;
 			}
 	}
