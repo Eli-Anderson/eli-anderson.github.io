@@ -366,7 +366,7 @@ function keyDown(e){
 			break;
 		case 72:
 			//h
-			var asdf = new HealthUpgrade(rand_i(320,455),rand_i(0,295),10,10,1);
+			var asdf = new BasicEnemy(rand_i(320,455),rand_i(0,295),30,30);
 			asdf.magnet = true;
 			break;
 		case 74:

@@ -42,7 +42,7 @@ Coin.prototype.touched = function(){
 	del(this);
 	player.points += this.points;
 	text_score.txt += this.points;
-	sound.play(sound.list.a,0);
+	//sound.play(sound.list.a,0);
 }
 Coin.prototype.animate = function(){
 	this.x += this.dx;
