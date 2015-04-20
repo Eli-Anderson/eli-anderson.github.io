@@ -14,6 +14,7 @@ function coinGenerator(){
 		}
 		else{coin_vars.y_scaler *= rand_d(0.9,1.1);}
 	    coin_vars.y = 160+coin_vars.y_scaler*Math.sin(coin_vars.theda);
+		new Coin(500,coin_vars.y,1);
 		coin_vars.framesSinceLastCoin = 0;
 		coin_vars.theda += Math.PI/8;
 		coin_vars.counter ++;
