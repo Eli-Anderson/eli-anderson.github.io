@@ -92,7 +92,7 @@ var _default = {
 	shotsLeft: Infinity,
 	fire: function(){
 		if(this.framesPerShot - this.framesSinceLastShot <= 0 && !game.awaitingInput){
-			new Projectile(player.x+player.w/2,player.y+player.h/2,10,10,1,0,1,12,enemies,0,20);
+			new Projectile(player.x+player.w/2,player.y+player.h/2,10,10,1,0,1,12,enemies,sound.list.rocket_explosion,20);
 			this.framesSinceLastShot = 0;
 			sound.play(sound.list.default_fire,1)
 		}

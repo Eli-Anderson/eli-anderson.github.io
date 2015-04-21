@@ -12,7 +12,7 @@ var sound = {
 	tracks: [document.getElementById('audio_main'),document.getElementById('audio_sub1'),document.getElementById('audio_sub2')],
 
 	play: function(arg,track){
-		sound.tracks[track].src = arg;
-		sound.tracks[track].play();
+		var a = new buzz.sound(arg)
+		a.play();
 	},
 }

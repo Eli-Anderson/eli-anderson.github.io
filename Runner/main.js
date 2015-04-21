@@ -387,11 +387,6 @@ function keyDown(e){
 			break;
 		case 74:
 			//j
-			rand_a([
-				function(){new HealthUpgrade(rand_i(320,455),rand_i(0,295),20,20,1)},
-				function(){new RocketLauncherUpgrade(rand_i(320,455),rand_i(0,295),20,20,3)},
-				function(){new Coin(rand_i(320,455),rand_i(0,295),5)},
-				])()
 			break;
 		case 75:
 			//k
