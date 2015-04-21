@@ -38,16 +38,20 @@ Enemy.prototype.gotHit = function(dmg){
 	if(this.hp <= 0){
 		//animate death
 		//drop coins or upgrades
-		var a = new Coin(this.x,this.y,this.worth);
-		var b = new HealthUpgrade(this.x,this.y,25,25,1);
-		a.magnet = true;
+		var x = this.x;
+		var y = this.y;
+		rand_a([
+					function(){new HealthUpgrade(x,y,20,20,1)},
+					function(){new RocketLauncherUpgrade(x,y,20,20,3)},
+					function(){new Coin(x,y,5)},
+				])()
 		del(this);
 	}
 }
 function BasicEnemy(x,y,w,h){
 	Enemy.call(this,x,y,w,h);
 	
-	this.maxVel = 5;
+	this.maxVel = 3;
 	this.framesPerShot = 90;
 	this.hp = 1;
 	this.worth = 3;
@@ -78,7 +82,7 @@ BasicEnemy.prototype = Object.create(Enemy.prototype);
 BasicEnemy.prototype.constructor = BasicEnemy;
 
 
-function Projectile(x,y,w,h,dx,dy,dmg,spd,targets){
+function Projectile(x,y,w,h,dx,dy,dmg,spd,targets,sound,explSize){
 	projectiles.push(this);
 	this.x = x;
 	this.y = y;
@@ -89,6 +93,8 @@ function Projectile(x,y,w,h,dx,dy,dmg,spd,targets){
 	this.dmg = dmg;
 	this.spd = spd;
 	this.targets = targets;
+	this.sound = sound;
+	this.explSize = explSize;
 	this.onScreen = true;
 }
 Projectile.prototype.animate = function(){
@@ -96,7 +102,9 @@ Projectile.prototype.animate = function(){
 		this.x += this.dx*this.spd;
 		this.y += this.dy*this.spd;
 	}
-	else{del(this)}
+	else{
+		del(this)
+	}
 	if(this.targets[0] === undefined){
 		if(willCollide(this,this.dx,this.dy,this.targets)){
 			this.targets.gotHit(this.dmg);
@@ -109,6 +117,8 @@ Projectile.prototype.animate = function(){
 			if(willCollide(this,this.dx,this.dy,targ)){
 				targ.gotHit(this.dmg);
 				del(this);
+				sound.play(this.sound,2);
+				new Explosion(this.x,this.y,this.explSize,this.explSize)
 			}
 		}
 	}

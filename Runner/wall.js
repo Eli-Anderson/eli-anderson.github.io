@@ -58,3 +58,7 @@ Wall.prototype.render = function(){
 
 	//ctx.drawImage(this.img,this.game.frameX,this.game.frameY,this.game.frameW,this.game.frameH,this.x,this.y,this.w,this.h)
 };
+Wall.prototype.gotHit = function(){
+	//animate explosion
+	del(this)
+}

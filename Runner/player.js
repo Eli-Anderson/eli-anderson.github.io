@@ -15,7 +15,7 @@ var player = {
 	g: 0,
 	b: 0,
 	animate: function(){
-		this.framesSinceLastShot ++;
+		this.weapon.framesSinceLastShot ++;
 	    if(game.awaitingInput){
 	        return;
 	    }
@@ -38,6 +38,11 @@ var player = {
 		this.dy *= 0.95;
 		
 		this.r = 120+ 20*Math.round(this.dy);
+
+
+		if((this.y+this.h < 0 || this.y > 320) && game.frame % 60 == 0){
+			player.hp --;
+		}
 	},
 	render: function(){
 		ctx.fillStyle = "rgb("+this.r+","+this.g+","+this.b+")";
@@ -71,10 +76,7 @@ var player = {
 		}
 	},
 	fire: function(){
-		if(this.framesPerShot - this.framesSinceLastShot <= 0 && !game.awaitingInput){
-			new Projectile(this.x,this.y,10,10,1,0,1,12,enemies);
-			this.framesSinceLastShot = 0;
-		}
+		this.weapon.fire();
 	},
 	gotHit: function(dmg){
 		this.hp -= dmg;
@@ -84,5 +86,6 @@ var player = {
 		button_left = null;
 		button_right = null;
 		animLoseScreen();
-	}
+	},
+	weapon: _default,
 }

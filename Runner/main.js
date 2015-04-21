@@ -7,6 +7,7 @@ var walls = [];
 var heart_img = new Image();
 heart_img.src = 'heart.png';
 function init(){
+	document.getElementById('audio_sub2').volume = 0.5;
 	game.running = true;
 	button_left = new Button(0,0,240,320);
 	button_left.onTouch = function(){
@@ -37,6 +38,7 @@ var game = {
 	awaitingInput: true,
 	
 	restart: function(){
+		game.frame = 0;
 		player.totalPoints += player.points;
 		player.points = 0;
 
@@ -70,6 +72,7 @@ var game = {
 	    coins = [];
 		enemies = [];
 		projectiles = [];
+		upgrades = [];
 
 	    coin_vars.y_scaler = 110;
 	    
@@ -90,6 +93,7 @@ function game_loop(){
 		animateCoins();
 		animateWalls();
 		animateUpgrades();
+		animateExplosions();
 		if(!game.awaitingInput){
 		    coinGenerator();
 		    wallGenerator();
@@ -104,6 +108,7 @@ function game_loop(){
 	renderEnemies();
 	player.render();
 	renderProjectiles();
+	renderExplosions();
 	animateMenus();
 	animateTexts();
 	renderMenus();
@@ -162,6 +167,17 @@ function renderUpgrades(){
 	for(var i=0; i<upgrades.length; i++){
 		if(upgrades[i] === undefined){return}
 		upgrades[i].render();
+	}
+}
+function animateExplosions(){
+	for(var i=0; i<explosions.length; i++){
+		explosions[i].animate();
+	}
+}
+function renderExplosions(){
+	for(var i=0; i<explosions.length; i++){
+		if(explosions[i] === undefined){return}
+		explosions[i].render();
 	}
 }
 
@@ -371,8 +387,15 @@ function keyDown(e){
 			break;
 		case 74:
 			//j
-			sound.play(sound.list.a,0)
+			rand_a([
+				function(){new HealthUpgrade(rand_i(320,455),rand_i(0,295),20,20,1)},
+				function(){new RocketLauncherUpgrade(rand_i(320,455),rand_i(0,295),20,20,3)},
+				function(){new Coin(rand_i(320,455),rand_i(0,295),5)},
+				])()
 			break;
+		case 75:
+			//k
+			new HealthUpgrade(rand_i(320,455),rand_i(0,295),1)
 		case 32:
 		    simulateTouchStart(mouse.x,mouse.y);
 		    break;
@@ -428,4 +451,9 @@ function willCollide(obj,dx,dy,arr){
 			}
 	}
 	return false;
+}
+
+function rand_a(arr){
+	var r = rand_i(0,arr.length);
+	return arr[r];
 }

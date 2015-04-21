@@ -8,7 +8,7 @@ var coin_vars = {
 
 function coinGenerator(){
 	coin_vars.framesSinceLastCoin ++;
-	if(coin_vars.framesSinceLastCoin == 10){
+	if(coin_vars.framesSinceLastCoin == 60){
 		if(coin_vars.y_scaler >= 150){
 			coin_vars.y_scaler *= rand_d(0.9,1);
 		}
@@ -42,7 +42,7 @@ Coin.prototype.touched = function(){
 	del(this);
 	player.points += this.points;
 	text_score.txt += this.points;
-	//sound.play(sound.list.a,0);
+	sound.play(sound.list.coin_pickup,2);
 }
 Coin.prototype.animate = function(){
 	this.x += this.dx;
