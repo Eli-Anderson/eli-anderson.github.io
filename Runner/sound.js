@@ -12,11 +12,8 @@ var sound = {
 	tracks: [document.getElementById('audio_main'),document.getElementById('audio_sub1'),document.getElementById('audio_sub2')],
 
 	play: function(arg,track){
-		var a = new buzz.sound(arg,{
-			preload: true,
-			autoplay: true,
-			loop: false,
-			webAudioApi: true})
+		var a = sound.tracks[track];
+		a.src = arg
 		a.play();
 	},
 }
