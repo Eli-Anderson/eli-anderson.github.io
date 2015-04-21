@@ -388,6 +388,9 @@ function keyDown(e){
 			break;
 		case 74:
 			//j
+			for(var i=0; i<100; i++){
+				new Coin(200,player.y,1)
+			}
 			break;
 		case 75:
 			//k

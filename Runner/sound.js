@@ -12,8 +12,9 @@ var sound = {
 	tracks: [document.getElementById('audio_main'),document.getElementById('audio_sub1'),document.getElementById('audio_sub2')],
 
 	play: function(arg,track){
-		var a = sound.tracks[track];
-		a.src = arg
+		var a = new Howl({
+			urls: [arg]
+		})
 		a.play();
 	},
 }
