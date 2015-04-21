@@ -33,6 +33,7 @@ function init(){
 }
 var game = {
 	frame: 0,
+	total_frame: 0,
 	running: false,
 	trigger1Fired: false,
 	awaitingInput: true,
@@ -83,6 +84,7 @@ var game = {
 function game_loop(){
 	ctx.clearRect(0,0,480,320);
 	game.frame++;
+	game.total_frame++;
 	getButtonInput();
 	if(game.running){
 		player.animate();
@@ -262,11 +264,11 @@ var background = {
 	h: 0,
 	animate: function(){
 		if(game.awaitingInput && !game.trigger1Fired){
-			s_frame = game.frame;
+			s_frame = game.total_frame;
 			game.trigger1Fired = true;
 		}
 		if(game.awaitingInput && s_frame){
-			if(game.frame - s_frame > 0){
+			if(game.total_frame - s_frame > 0){
 				text4 = new Text(30,350,"Tap to begin","32px Georgia",[0,0,0,1]);
 				text4.dx = 0;
 				text4.dy = -10;
@@ -275,14 +277,13 @@ var background = {
 					text4.x += text4.dx;
 					text4.dy *= 0.9;
 					text4.y += text4.dy;
-					if(game.frame % 10 == 0){
+					if(game.total_frame % 10 == 0){
 						text4.dy += 3*Math.sin(game.frame)
 					}
 				}
 				button2 = new Button(0,0,480,320);
 				button2.onTouch = function(){
 					game.awaitingInput = false;
-    				input.up = true;
     				text4.dx = 60;
 					del(button2);
 					setTimeout(function(){
