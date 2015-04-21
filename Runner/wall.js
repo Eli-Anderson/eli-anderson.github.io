@@ -3,6 +3,7 @@ var wall_vars = {
 	y: 0,
 	w: 0,
 	h: 0,
+	indexes: [],
 }
 
 function wallGenerator(){
@@ -48,15 +49,17 @@ Wall.prototype.touched = function(){
 }
 Wall.prototype.animate = function(){
 	this.x -= 6;
-	if(this.x < -20){
-		//del(this);
+	if(this.x + this.w < 0){
+		this.onScreen = false;
 	}
 };
 Wall.prototype.render = function(){
-	ctx.fillStyle = "brown";
-	ctx.fillRect(this.x,this.y,this.w,this.h);
+	if(this.onScreen){
+		ctx.fillStyle = "brown";
+		ctx.fillRect(this.x,this.y,this.w,this.h);
 
-	//ctx.drawImage(this.img,this.game.frameX,this.game.frameY,this.game.frameW,this.game.frameH,this.x,this.y,this.w,this.h)
+		//ctx.drawImage(this.img,this.game.frameX,this.game.frameY,this.game.frameW,this.game.frameH,this.x,this.y,this.w,this.h)
+	}
 };
 Wall.prototype.gotHit = function(){
 	//animate explosion

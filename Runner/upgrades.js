@@ -37,7 +37,7 @@ function HealthUpgrade(x,y,w,h,amt){
 	this.onCollide = function(){
 		player.hp += this.hp;
 		del(this);
-		sound.play(sound.list.heart_pickup,0);
+		sound.play(sound.list.heart_pickup);
 	}
 }
 
@@ -58,7 +58,7 @@ function RocketLauncherUpgrade(x,y,w,h,amt){
 		_rocket.shotsLeft = this.duration;
 		player.weapon = _rocket;
 		del(this);
-		sound.play(sound.list.rocket_pickup,2);
+		sound.play(sound.list.rocket_pickup);
 	}
 }
 RocketLauncherUpgrade.prototype = Object.create(Upgrade.prototype);
@@ -73,10 +73,27 @@ var _rocket = {
 	shotsLeft: 3,
 	fire: function(){
 		if(this.framesPerShot - this.framesSinceLastShot <= 0 && !game.awaitingInput){
-			new Projectile(player.x+player.w/2,player.y+player.h/2,10,10,1,0,10,12,enemies.concat(walls),sound.list.rocket_explosion,30);
+			new Projectile_rocket(player.x+player.w/2,player.y+player.h/2,1,0,enemies.concat(walls));
 			this.framesSinceLastShot = 0;
 			this.shotsLeft --;
-			sound.play(sound.list.rocket_fire,1)
+			sound.play(sound.list.rocket_fire);
+		}
+		if(this.shotsLeft <= 0){
+			player.weapon = _default;
+		}
+	},
+}
+
+var _plasma = {
+	framesPerShot: 120,
+	framesSinceLastShot: 120,
+	shotsLeft: 3,
+	fire: function(){
+		if(this.framesPerShot - this.framesSinceLastShot <= 0 && !game.awaitingInput){
+			new Projectile_plasma(player.x+player.w/2,player.y+player.h/2,1,0,enemies);
+			this.framesSinceLastShot = 0;
+			this.shotsLeft --;
+			sound.play(sound.list.plasma_fire);
 		}
 		if(this.shotsLeft <= 0){
 			player.weapon = _default;
@@ -92,9 +109,9 @@ var _default = {
 	shotsLeft: Infinity,
 	fire: function(){
 		if(this.framesPerShot - this.framesSinceLastShot <= 0 && !game.awaitingInput){
-			new Projectile(player.x+player.w/2,player.y+player.h/2,10,10,1,0,1,12,enemies,sound.list.rocket_explosion,20);
+			new Projectile_basic(player.x+player.w/2,player.y+player.h/2,1,0,enemies);
 			this.framesSinceLastShot = 0;
-			sound.play(sound.list.default_fire,1)
+			sound.play(sound.list.default_fire);
 		}
 	},
 }

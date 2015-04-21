@@ -263,6 +263,9 @@ var background = {
 	w: 0,
 	h: 0,
 	animate: function(){
+		if(!game.awaitingInput){
+			return;
+		}
 		if(game.awaitingInput && !game.trigger1Fired){
 			s_frame = game.total_frame;
 			game.trigger1Fired = true;
@@ -388,9 +391,7 @@ function keyDown(e){
 			break;
 		case 74:
 			//j
-			for(var i=0; i<100; i++){
-				new Coin(200,player.y,1)
-			}
+			player.weapon = _plasma;
 			break;
 		case 75:
 			//k
@@ -419,12 +420,6 @@ function keyUp(e){
 		case 32:
 		    simulateTouchEnd(mouse.x,mouse.y);
 		    break;
-	}
-}
-var debug = {
-	elem: document.getElementById('debugger'),
-	update: function(text){
-		//debug.elem.innerHTML = text;
 	}
 }
 

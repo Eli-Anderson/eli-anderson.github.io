@@ -1,5 +1,4 @@
 var enemies = [];
-var projectiles = [];
 
 var enemy_vars = {
 	framesSinceLastEnemy: 0,
@@ -80,58 +79,3 @@ function BasicEnemy(x,y,w,h){
 
 BasicEnemy.prototype = Object.create(Enemy.prototype);
 BasicEnemy.prototype.constructor = BasicEnemy;
-
-
-function Projectile(x,y,w,h,dx,dy,dmg,spd,targets,sound,explSize){
-	projectiles.push(this);
-	this.x = x;
-	this.y = y;
-	this.w = w;
-	this.h = h;
-	this.dx = dx;
-	this.dy = dy;
-	this.dmg = dmg;
-	this.spd = spd;
-	this.targets = targets;
-	this.sound = sound;
-	this.explSize = explSize;
-	this.onScreen = true;
-}
-Projectile.prototype.animate = function(){
-	if(!willCollide(this,this.dx,this.dy,walls)){
-		this.x += this.dx*this.spd;
-		this.y += this.dy*this.spd;
-	}
-	else{
-		del(this)
-	}
-	if(this.targets[0] === undefined){
-		if(willCollide(this,this.dx,this.dy,this.targets)){
-			this.targets.gotHit(this.dmg);
-			del(this);
-		}
-	}
-	else{
-		for(var i=0; i<this.targets.length; i++){
-			var targ = this.targets[i];
-			if(willCollide(this,this.dx,this.dy,targ)){
-				targ.gotHit(this.dmg);
-				del(this);
-				sound.play(this.sound,2);
-				new Explosion(this.x,this.y,this.explSize,this.explSize)
-			}
-		}
-	}
-
-
-	if(this.x + this.w < 0 || this.x > 480 || this.y + this.h < 0 || this.y > 320){
-		this.onScreen = false;
-		del(this)
-	}
-	else{this.onScreen = true;}
-	
-}
-Projectile.prototype.render = function(){
-	if(!this.onScreen){return;}
-	ctx.fillRect(this.x,this.y,this.w,this.h)
-}
