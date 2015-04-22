@@ -87,8 +87,8 @@ function Enemy_easy(x,y,w,h){
 	this.framesPerShot = 90;
 	this.hp = 1;
 	this.worth = 3;
-	this.counter = 0;
-	this.dy = 0//rand_a([-1,1]);
+	this.counter = (this.y/320)*Math.PI*2;
+	this.dy = 0;
 	this.friction = .99;
 	
 	this.animate = function(){
