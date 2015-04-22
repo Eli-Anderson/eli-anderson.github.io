@@ -10,9 +10,7 @@ var sound = {
 		plasma_fire: "fire2.wav"
 	},
 
-	tracks: [document.getElementById('audio_main'),document.getElementById('audio_sub1'),document.getElementById('audio_sub2')],
-
-	play: function(arg,track){
+	play: function(arg){
 		var a = new Howl({
 			urls: [arg]
 		});

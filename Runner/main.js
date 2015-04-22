@@ -7,7 +7,6 @@ var walls = [];
 var heart_img = new Image();
 heart_img.src = 'heart.png';
 function init(){
-	document.getElementById('audio_sub2').volume = 0.5;
 	game.running = true;
 	button_left = new Button(0,0,240,320);
 	button_left.onTouch = function(){
@@ -386,8 +385,8 @@ function keyDown(e){
 			break;
 		case 72:
 			//h
-			var asdf = new BasicEnemy(rand_i(320,455),rand_i(0,295),30,30);
-			asdf.magnet = true;
+			var asdf = new Enemy_easy(rand_i(320,455),rand_i(0,295),30,30);
+			//asdf.magnet = true;
 			break;
 		case 74:
 			//j

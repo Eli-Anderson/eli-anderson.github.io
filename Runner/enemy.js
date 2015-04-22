@@ -47,6 +47,7 @@ Enemy.prototype.gotHit = function(dmg){
 		del(this);
 	}
 }
+
 function BasicEnemy(x,y,w,h){
 	Enemy.call(this,x,y,w,h);
 	
@@ -73,9 +74,37 @@ function BasicEnemy(x,y,w,h){
 		var dist = Math.sqrt(dx*dx+dy*dy);
 		dx/=dist;
 		dy/=dist;
-		new Projectile(this.x,this.y,10,10,dx,dy,1,6,player)
+		new Projectile_basic(this.x,this.y,-1,0,player);
+	}
+}
+BasicEnemy.prototype = Object.create(Enemy.prototype);
+BasicEnemy.prototype.constructor = BasicEnemy;
+
+function Enemy_easy(x,y,w,h){
+	Enemy.call(this,x,y,w,h);
+	
+	this.maxVel = 3;
+	this.framesPerShot = 90;
+	this.hp = 1;
+	this.worth = 3;
+	this.counter = 0;
+	this.dy = 0//rand_a([-1,1]);
+	this.friction = .99;
+	
+	this.animate = function(){
+		this.dy = Math.sin(this.counter)
+		if(!willCollide(this,this.dx,this.dy,walls)){
+			this.y += 4*this.dy;
+		}
+		//this.dy *= this.friction;
+		
+		if((game.frame - this.frame) % this.framesPerShot == 0 && !game.awaitingInput){this.fire()}
+		this.counter += Math.PI/128
+	};
+	this.fire = function(){
+		new Projectile_basic(this.x,this.y,-1,0,player);
 	}
 }
 
-BasicEnemy.prototype = Object.create(Enemy.prototype);
-BasicEnemy.prototype.constructor = BasicEnemy;
+Enemy_easy.prototype = Object.create(Enemy.prototype);
+Enemy_easy.prototype.constructor = Enemy_easy;
