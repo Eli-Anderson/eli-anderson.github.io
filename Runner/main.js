@@ -42,7 +42,7 @@ var game = {
 	running: false,
 	trigger1Fired: false,
 	awaitingInput: true,
-	global_dxdy: .5,
+	global_dxdy: 1,
 	
 	restart: function(){
 		game.frame = 0;
