@@ -13,9 +13,7 @@ var player = {
 	framesSinceLastShot: 0,
 	framesPerShot: 60,
 	hp: 3,
-	r: 0,
-	g: 0,
-	b: 0,
+	onScreen: true,
 	animate: function(){
 		this.weapon.framesSinceLastShot ++;
 	    if(game.awaitingInput){
@@ -73,7 +71,9 @@ var player = {
 		//ctx.fillRect(this.x,this.y,this.w,this.h);
 		//ctx.drawImage(this.spriteSheet,this.game.frameX,this.game.frameY,
 		//              this.x,this.y,this.game.frameW,this.game.frameH)
-		ctx.drawImage(player_img,this.x,this.y,this.w,this.h)
+		if(this.onScreen){
+			ctx.drawImage(player_img,this.x,this.y,this.w,this.h);
+		}
 	},
 	willCollide: function(obj){
 		var p = player;
@@ -123,7 +123,7 @@ var player = {
 		this.hp -= dmg;
 		if(this.hp <= 0){
 			this.gameOver();
-			new Explosion(this.x,this.y,50,50)
+			new Explosion(this.x+this.w/2,this.y+this.h/2,50,50)
 		}
 		else{
 			sound.play(sound.list.player_hit);
@@ -131,6 +131,7 @@ var player = {
 	},
 	gameOver: function(){
 		sound.play(sound.list.player_killed);
+		this.onScreen = false;
 		game.running = false;
 		button_left = null;
 		button_right = null;
