@@ -46,6 +46,7 @@ var game = {
 	
 	restart: function(){
 		game.frame = 0;
+		game.global_dxdy = 1;
 		player.totalPoints += player.points;
 		player.points = 0;
 
@@ -92,6 +93,7 @@ function game_loop(){
 	game.frame++;
 	game.total_frame++;
 	getButtonInput();
+	animateExplosions();
 	if(game.running){
 		player.animate();
 		animateEnemies();
@@ -101,7 +103,6 @@ function game_loop(){
 		animateCoins();
 		animateWalls();
 		animateUpgrades();
-		animateExplosions();
 		if(!game.awaitingInput){
 		    coinGenerator();
 		    wallGenerator();
