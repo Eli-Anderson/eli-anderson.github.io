@@ -45,6 +45,7 @@ var game = {
 	global_dxdy: 1,
 	
 	restart: function(){
+		player.onScreen = true;
 		game.frame = 0;
 		game.global_dxdy = 1;
 		player.totalPoints += player.points;
