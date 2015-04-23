@@ -131,11 +131,11 @@ var player = {
 	},
 	gameOver: function(){
 		sound.play(sound.list.player_killed);
-		
+		game.running = false;
+		button_left = null;
+		button_right = null;
+		game.global_dxdy = 0;
 		setTimeout(function(){
-			game.running = false;
-			button_left = null;
-			button_right = null;
 			animLoseScreen();
 		}, 1500)
 	},
