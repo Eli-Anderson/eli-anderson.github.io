@@ -10,7 +10,7 @@ function Projectile(x,y,dx,dy,targets){
 	this.onScreen = true;
 }
 Projectile.prototype.animate = function(){
-	if(!willCollide(this,this.dx,this.dy,walls)){
+	if(!isColliding_rc(this,walls)){
 		this.x += this.dx*this.spd;
 		this.y += this.dy*this.spd;
 	}
@@ -18,14 +18,14 @@ Projectile.prototype.animate = function(){
 		del(this)
 	}
 	if(this.targets[0] === undefined){
-		if(willCollide(this,this.dx,this.dy,this.targets)){
+		if(isColliding_rc(this,[this.targets])){
 			this.onHit(this.targets)
 		}
 	}
 	else{
 		for(var i=0; i<this.targets.length; i++){
 			var targ = this.targets[i];
-			if(willCollide(this,this.dx,this.dy,targ)){
+			if(willCollide(this,this.dx*this.spd,this.dy*this.spd,targ)){
 				this.onHit(targ)
 			}
 		}

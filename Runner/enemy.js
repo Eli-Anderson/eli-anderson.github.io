@@ -6,18 +6,16 @@ var enemy_vars = {
 function enemyGenerator(){
 	if((game.frame > 900 || player.points > 50) &&
 	enemy_vars.framesSinceLastEnemy > 600){
-		new BasicEnemy(rand_i(320,455),rand_i(0,295),25,25);
+		new Enemy_easy(rand_i(320,455),rand_i(0,295));
 		enemy_vars.framesSinceLastEnemy = 0;
 	}
 	enemy_vars.framesSinceLastEnemy ++;
 }
 
-function Enemy(x,y,w,h){
+function Enemy(x,y){
 	enemies.push(this);
 	this.x = x;
 	this.y = y;
-	this.w = w;
-	this.h = h;
 
 	this.dx = 0;
 	this.dy = 0;
@@ -48,9 +46,12 @@ Enemy.prototype.gotHit = function(dmg){
 	}
 }
 
-function BasicEnemy(x,y,w,h){
-	Enemy.call(this,x,y,w,h);
+function BasicEnemy(x,y){
+	Enemy.call(this,x,y);
 	
+	this.w = 20;
+	this.h = 20;
+
 	this.maxVel = 3;
 	this.framesPerShot = 90;
 	this.hp = 1;
@@ -80,9 +81,12 @@ function BasicEnemy(x,y,w,h){
 BasicEnemy.prototype = Object.create(Enemy.prototype);
 BasicEnemy.prototype.constructor = BasicEnemy;
 
-function Enemy_easy(x,y,w,h){
-	Enemy.call(this,x,y,w,h);
+function Enemy_easy(x,y){
+	Enemy.call(this,x,y);
 	
+	this.w = 25;
+	this.h = 25;
+
 	this.maxVel = 3;
 	this.framesPerShot = 90;
 	this.hp = 1;

@@ -19,7 +19,6 @@ var player = {
 	    if(game.awaitingInput){
 	        return;
 	    }
-		if(this.hp === 0){this.gameOver();}
 		if(Math.abs(this.dy) < 0.01){this.dy = 0}
 		if(input.up){
 			this.ddy = -0.25;
@@ -41,7 +40,7 @@ var player = {
 
 
 		if((this.y+this.h < 0 || this.y > 320) && game.frame % 60 == 0){
-			player.hp --;
+			this.gotHit(1);
 		}
 	},
 	render: function(){
@@ -52,7 +51,8 @@ var player = {
 	},
 	willCollide: function(obj){
 		var p = player;
-			var c = obj;
+		var c = obj;
+		if(c.w != undefined){
 			if(p.x+p.w > c.x &&
 				p.x < c.x+c.w &&
 				p.y+p.h > c.y &&
@@ -60,6 +60,21 @@ var player = {
 					return true
 				}
 			else{return false}
+		}
+		else{
+			var distX = Math.abs(c.x - this.x-this.w/2);
+    		var distY = Math.abs(c.y - this.y-this.h/2);
+
+		    if (distX > (this.w/2 + c.r)) { return false; }
+		    if (distY > (this.h/2 + c.r)) { return false; }
+
+		    if (distX <= (this.w/2)) { return true; } 
+		    if (distY <= (this.h/2)) { return true; }
+
+		    var dx=distX-this.w/2;
+		    var dy=distY-this.h/2;
+		    return (dx*dx+dy*dy<=(c.r*c.r));
+		}
 	},
 	checkCollisions_coins: function(){
 		for(var i=0; i<coins.length; i++){
@@ -80,8 +95,15 @@ var player = {
 	},
 	gotHit: function(dmg){
 		this.hp -= dmg;
+		if(this.hp <= 0){
+			this.gameOver();
+		}
+		else{
+			sound.play(sound.list.player_hit);
+		}
 	},
 	gameOver: function(){
+		sound.play(sound.list.player_killed);
 		game.running = false;
 		button_left = null;
 		button_right = null;

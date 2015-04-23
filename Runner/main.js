@@ -385,7 +385,7 @@ function keyDown(e){
 			break;
 		case 72:
 			//h
-			var asdf = new Enemy_easy(rand_i(320,455),rand_i(0,295),30,30);
+			var asdf = new Enemy_easy(rand_i(320,455),rand_i(0,295));
 			//asdf.magnet = true;
 			break;
 		case 74:
@@ -423,25 +423,59 @@ function keyUp(e){
 }
 
 function willCollide(obj,dx,dy,arr){
-	if(arr[0] != undefined){
+	if(arr.length != undefined){
+
 		for(var i=0; i<arr.length; i++){
-			var a = arr[i];
-			if(obj.x + obj.dx + obj.w > a.x &&
-			obj.x + obj.dx < a.x + a.w &&
-			obj.y + obj.dy + obj.h > a.y &&
-			obj.y + obj.dy < a.y + a.h){
-				return true;
+			if(arr[i].r != undefined){
+				var c = arr[i];
+				var distX = Math.abs(c.x - obj.x+dx-obj.w/2);
+		    	var distY = Math.abs(c.y - obj.y+dy-obj.h/2);
+
+			//	if (distX > (obj.w/2 + c.r)) { return false; }
+			//	if (distY > (obj.h/2 + c.r)) { return false; }
+
+				if (distX <= (obj.w/2)) { return true; } 
+				if (distY <= (obj.h/2)) { return true; }
+
+				var dx=distX-obj.w/2;
+				var dy=distY-obj.h/2;
+			//	return (dx*dx+dy*dy<=(c.r*c.r));
+			}
+			else{
+				var a = arr[i];
+				if(obj.x + dx + obj.w > a.x &&
+				obj.x + dx < a.x + a.w &&
+				obj.y + dy + obj.h > a.y &&
+				obj.y + dy < a.y + a.h){
+					return true;
+				}
 			}
 		}
 	}
 	else{
-		var a = arr;
-		if(obj.x + dx + obj.w > a.x &&
+		if(arr.r != undefined){
+			var distX = Math.abs(c.x - obj.x+dx-obj.w/2);
+	    	var distY = Math.abs(c.y - obj.y+dy-obj.h/2);
+
+		//	if (distX > (obj.w/2 + c.r)) { return false; }
+		//	if (distY > (obj.h/2 + c.r)) { return false; }
+
+			if (distX <= (obj.w/2)) { return true; } 
+			if (distY <= (obj.h/2)) { return true; }
+
+			var dx=distX-obj.w/2;
+			var dy=distY-obj.h/2;
+		//	return (dx*dx+dy*dy<=(c.r*c.r));
+		}
+		else{
+			var a = arr;
+			if(obj.x + dx + obj.w > a.x &&
 			obj.x + dx < a.x + a.w &&
 			obj.y + dy + obj.h > a.y &&
 			obj.y + dy < a.y + a.h){
 				return true;
 			}
+		}
 	}
 	return false;
 }
@@ -449,4 +483,24 @@ function willCollide(obj,dx,dy,arr){
 function rand_a(arr){
 	var r = rand_i(0,arr.length);
 	return arr[r];
+}
+
+function isColliding_rc(r,c_arr){
+	for(var i=0; i<c_arr.length; i++){
+		var c = c_arr[i];
+
+		var distX = Math.abs(c.x - r.x-r.w/2);
+	    var distY = Math.abs(c.y - r.y-r.h/2);
+
+		if (distX > (r.w/2 + c.r)) { continue; }
+    	if (distY > (r.h/2 + c.r)) { continue; }
+
+		if (distX <= (r.w/2)) { return true; } 
+		if (distY <= (r.h/2)) { return true; }
+
+		var dx=distX-r.w/2;
+		var dy=distY-r.h/2;
+		if(dx*dx+dy*dy<=(c.r*c.r)){ return true; }
+	}
+	return false;
 }
