@@ -45,6 +45,9 @@ Coin.prototype.touched = function(){
 	sound.play(sound.list.coin_pickup,2);
 }
 Coin.prototype.animate = function(){
+	this.dx = -6;
+	this.dx *= game.global_dxdy;
+	this.dy *= game.global_dxdy;
 	this.x += this.dx;
 	this.y += this.dy;
 

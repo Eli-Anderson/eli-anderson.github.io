@@ -1,3 +1,5 @@
+var player_img = new Image();
+player_img.src = "Ship/ship0.png"
 var player = {
 	x: 40,
 	w: 30,
@@ -27,27 +29,51 @@ var player = {
 			this.ddy = 0.25;
 		}
 		else{this.ddy = 0}
+		this.ddy *= game.global_dxdy;
 		if(Math.abs(this.dy + this.ddy) < this.maxVel){
 			this.dy += this.ddy;
 		}
-		
+		this.dy *= 0.95;
 		this.y += this.dy;
 		
 		this.ddy *= 0.95;
-		this.dy *= 0.95;
-		
-		this.r = 120+ 20*Math.round(this.dy);
-
+		//this.dy *= 0.95;
 
 		if((this.y+this.h < 0 || this.y > 320) && game.frame % 60 == 0){
 			this.gotHit(1);
 		}
+		if(game.frame % 15 == 0){
+			switch(Math.floor(this.dy)){
+				case -3:
+					player_img.src = "Ship/ship-3.png";
+					break;
+				case -2:
+					player_img.src = "Ship/ship-2.png";
+					break;
+				case -1:
+					player_img.src = "Ship/ship-1.png";
+					break;
+				case 0:
+					player_img.src = "Ship/ship0.png";
+					break;
+				case 1:
+					player_img.src = "Ship/ship1.png";
+					break;
+				case 2:
+					player_img.src = "Ship/ship2.png";
+					break;
+				case 3:
+					player_img.src = "Ship/ship3.png";
+					break;
+			}
+		}
 	},
 	render: function(){
-		ctx.fillStyle = "rgb("+this.r+","+this.g+","+this.b+")";
-		ctx.fillRect(this.x,this.y,this.w,this.h);
+		//ctx.fillStyle = "rgb("+this.r+","+this.g+","+this.b+")";
+		//ctx.fillRect(this.x,this.y,this.w,this.h);
 		//ctx.drawImage(this.spriteSheet,this.game.frameX,this.game.frameY,
 		//              this.x,this.y,this.game.frameW,this.game.frameH)
+		ctx.drawImage(player_img,this.x,this.y,this.w,this.h)
 	},
 	willCollide: function(obj){
 		var p = player;
@@ -97,6 +123,7 @@ var player = {
 		this.hp -= dmg;
 		if(this.hp <= 0){
 			this.gameOver();
+			new Explosion(this.x,this.y,50,50)
 		}
 		else{
 			sound.play(sound.list.player_hit);
@@ -104,10 +131,13 @@ var player = {
 	},
 	gameOver: function(){
 		sound.play(sound.list.player_killed);
-		game.running = false;
-		button_left = null;
-		button_right = null;
-		animLoseScreen();
+		
+		setTimeout(function(){
+			game.running = false;
+			button_left = null;
+			button_right = null;
+			animLoseScreen();
+		}, 1500)
 	},
 	weapon: _default,
 }

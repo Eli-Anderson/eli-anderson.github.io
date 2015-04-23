@@ -7,6 +7,12 @@ var walls = [];
 var heart_img = new Image();
 heart_img.src = 'heart.png';
 function init(){
+	for(var i=0; i<100; i++){
+		background.stars.push({
+			x: rand_i(0,480),
+			y: rand_i(0,320),
+		})
+	}
 	game.running = true;
 	button_left = new Button(0,0,240,320);
 	button_left.onTouch = function(){
@@ -36,6 +42,7 @@ var game = {
 	running: false,
 	trigger1Fired: false,
 	awaitingInput: true,
+	global_dxdy: .5,
 	
 	restart: function(){
 		game.frame = 0;
@@ -261,9 +268,13 @@ var background = {
 	y: 0,
 	w: 0,
 	h: 0,
+	stars: [],
 	animate: function(){
-		if(!game.awaitingInput){
-			return;
+		for(var i=0; i<this.stars.length; i++){
+			this.stars[i].x -= 2;
+			if(this.stars[i].x <= -2){
+				this.stars[i].x = 480
+			}
 		}
 		if(game.awaitingInput && !game.trigger1Fired){
 			s_frame = game.total_frame;
@@ -300,7 +311,14 @@ var background = {
 	},
 	render: function(){
 		//ctx.drawImage(background.img,-background.x,0,canvas.width,canvas.height,background.x,background.y,background.w,background.h)
-		ctx.drawImage(background.img,0,0);
+		//ctx.drawImage(background.img,0,0);
+		ctx.fillStyle='black';
+		ctx.fillRect(0,0,480,320);
+		
+		for(var n=0; n<this.stars.length; n++){
+			ctx.fillStyle='white';
+			ctx.fillRect(this.stars[n].x,this.stars[n].y,2,2)
+		}
 
 		for(var i=0; i<player.hp; i++){
 			ctx.drawImage(heart_img,5+(i*42)+i*5,5,42,42)
@@ -423,59 +441,25 @@ function keyUp(e){
 }
 
 function willCollide(obj,dx,dy,arr){
-	if(arr.length != undefined){
-
+	if(arr[0] != undefined){
 		for(var i=0; i<arr.length; i++){
-			if(arr[i].r != undefined){
-				var c = arr[i];
-				var distX = Math.abs(c.x - obj.x+dx-obj.w/2);
-		    	var distY = Math.abs(c.y - obj.y+dy-obj.h/2);
-
-			//	if (distX > (obj.w/2 + c.r)) { return false; }
-			//	if (distY > (obj.h/2 + c.r)) { return false; }
-
-				if (distX <= (obj.w/2)) { return true; } 
-				if (distY <= (obj.h/2)) { return true; }
-
-				var dx=distX-obj.w/2;
-				var dy=distY-obj.h/2;
-			//	return (dx*dx+dy*dy<=(c.r*c.r));
-			}
-			else{
-				var a = arr[i];
-				if(obj.x + dx + obj.w > a.x &&
-				obj.x + dx < a.x + a.w &&
-				obj.y + dy + obj.h > a.y &&
-				obj.y + dy < a.y + a.h){
-					return true;
-				}
+			var a = arr[i];
+			if(obj.x + obj.dx + obj.w > a.x &&
+			obj.x + obj.dx < a.x + a.w &&
+			obj.y + obj.dy + obj.h > a.y &&
+			obj.y + obj.dy < a.y + a.h){
+				return true;
 			}
 		}
 	}
 	else{
-		if(arr.r != undefined){
-			var distX = Math.abs(c.x - obj.x+dx-obj.w/2);
-	    	var distY = Math.abs(c.y - obj.y+dy-obj.h/2);
-
-		//	if (distX > (obj.w/2 + c.r)) { return false; }
-		//	if (distY > (obj.h/2 + c.r)) { return false; }
-
-			if (distX <= (obj.w/2)) { return true; } 
-			if (distY <= (obj.h/2)) { return true; }
-
-			var dx=distX-obj.w/2;
-			var dy=distY-obj.h/2;
-		//	return (dx*dx+dy*dy<=(c.r*c.r));
-		}
-		else{
-			var a = arr;
-			if(obj.x + dx + obj.w > a.x &&
+		var a = arr;
+		if(obj.x + dx + obj.w > a.x &&
 			obj.x + dx < a.x + a.w &&
 			obj.y + dy + obj.h > a.y &&
 			obj.y + dy < a.y + a.h){
 				return true;
 			}
-		}
 	}
 	return false;
 }
@@ -502,5 +486,12 @@ function isColliding_rc(r,c_arr){
 		var dy=distY-r.h/2;
 		if(dx*dx+dy*dy<=(c.r*c.r)){ return true; }
 	}
+	return false;
+}
+function isColliding_rr(r1,r2){
+	if(r1.x + r1.w > r2.x &&
+	r1.x < r2.x + r2.w &&
+	r1.y + r1.h > r2.y &&
+	r1.y < r2.y + r2.h){ return true; }
 	return false;
 }

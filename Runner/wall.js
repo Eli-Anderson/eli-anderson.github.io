@@ -22,6 +22,9 @@ function Wall(x,y){
 	this.x = x;
 	this.y = y;
 	this.r = 25;
+	
+	this.dx = -6;
+	this.dy = 0;
 
 	this.frameX = 0;
 	this.frameY = 0;
@@ -51,8 +54,12 @@ Wall.prototype.touched = function(){
 	player.gotHit(player.hp);
 }
 Wall.prototype.animate = function(){
-	this.x -= 6;
-	if(this.x + this.r< 0){
+	this.dx = -6;
+	this.dx *= game.global_dxdy;
+	this.dy *= game.global_dxdy;
+	this.x += this.dx;
+	this.y += this.dy;
+	if(this.x + this.r < 0){
 		this.onScreen = false;
 	}
 };

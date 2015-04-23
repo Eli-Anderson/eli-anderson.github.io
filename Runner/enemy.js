@@ -1,5 +1,6 @@
 var enemies = [];
-
+var enemy_basic_img = new Image();
+enemy_basic_img.src = "Ship/stateczek.png";
 var enemy_vars = {
 	framesSinceLastEnemy: 0,
 }
@@ -27,7 +28,8 @@ function Enemy(x,y){
 }
 Enemy.prototype.render = function(){
 	if(this.onScreen){
-		ctx.fillRect(this.x,this.y,this.w,this.h);
+		//ctx.fillRect(this.x,this.y,this.w,this.h);
+		ctx.drawImage(this.img,this.x,this.y,this.w,this.h)
 	}
 }
 Enemy.prototype.gotHit = function(dmg){
@@ -48,7 +50,7 @@ Enemy.prototype.gotHit = function(dmg){
 
 function BasicEnemy(x,y){
 	Enemy.call(this,x,y);
-	
+	this.img = enemy_basic_img;
 	this.w = 20;
 	this.h = 20;
 
@@ -62,6 +64,9 @@ function BasicEnemy(x,y){
 		if(Math.abs(this.dy) < this.maxVel){
 			this.dy += dist/Math.abs(dist);
 		}
+		this.dy *= game.global_dxdy;
+		this.dx *= game.global_dxdy;
+		
 		if(!willCollide(this,this.dx,this.dy,walls)){
 			this.y += this.dy;
 		}
@@ -83,7 +88,7 @@ BasicEnemy.prototype.constructor = BasicEnemy;
 
 function Enemy_easy(x,y){
 	Enemy.call(this,x,y);
-	
+	this.img = enemy_basic_img;
 	this.w = 25;
 	this.h = 25;
 
@@ -93,10 +98,15 @@ function Enemy_easy(x,y){
 	this.worth = 3;
 	this.counter = (this.y/(320-this.h))*Math.PI*2;
 	this.dy = 0;
+	this.dx = 0;
 	this.friction = .99;
 	
 	this.animate = function(){
 		this.dy = Math.sin(this.counter)
+		
+		this.dy *= game.global_dxdy;
+		this.dx *= game.global_dxdy;
+		
 		if(!willCollide(this,this.dx,this.dy,walls)){
 			this.y += 4*this.dy;
 		}

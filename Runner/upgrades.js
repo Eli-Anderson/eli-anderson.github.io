@@ -7,6 +7,9 @@ function Upgrade(x,y,w,h){
 	this.y = y;
 	this.w = w;
 	this.h = h;
+	
+	this.dx = -6;
+	this.dy = 0;
 
 	this.onScreen = true;
 }
@@ -17,10 +20,13 @@ Upgrade.prototype.render = function(){
 	}
 }
 Upgrade.prototype.animate = function(){
-	if(willCollide(this,-6,0,player)){
+	if(willCollide(this,this.dx,0,player)){
 		this.onCollide();
 	}
-	this.x -= 6;
+	this.dx *= game.global_dxdy;
+	this.dy *= game.global_dxdy;
+	this.x += this.dx;
+	this.y += this.dy;
 }
 Upgrade.prototype.onCollide = function(){
 }
