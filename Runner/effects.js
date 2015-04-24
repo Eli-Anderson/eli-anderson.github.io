@@ -148,3 +148,9 @@ Particle.prototype.render = function(){
 	ctx.drawImage(asteroid_img,this.frameX,this.frameY,this.frameW,this.frameH,this.x,this.y,this.w,this.h);
 	ctx.restore();
 }
+
+function small_particle_explosion(x,y){
+    for(var i=0; i<10; i++){
+        new Particle(x,y,7,7,-6+Math.cos(i),Math.sin(i));
+    }
+}
