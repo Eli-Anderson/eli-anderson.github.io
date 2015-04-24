@@ -15,7 +15,6 @@ function Upgrade(x,y,w,h){
 }
 Upgrade.prototype.render = function(){
 	if(this.onScreen){
-		//ctx.fillRect(this.x,this.y,this.w,this.h);
 		ctx.drawImage(this.img,this.imgFrameX,this.imgFrameY,this.imgW,this.imgH,this.x,this.y,this.w,this.h);
 	}
 }
@@ -42,7 +41,7 @@ function HealthUpgrade(x,y,w,h,amt){
 
 	this.onCollide = function(){
 		player.hp += this.hp;
-		del(this,projectiles);
+		del(this,upgrades);
 		sound.play(sound.list.heart_pickup);
 	}
 }
@@ -63,7 +62,7 @@ function RocketLauncherUpgrade(x,y,w,h,amt){
 	this.onCollide = function(){
 		_rocket.shotsLeft = this.duration;
 		player.weapon = _rocket;
-		del(this,projectiles);
+		del(this,upgrades);
 		sound.play(sound.list.rocket_pickup);
 	}
 }
