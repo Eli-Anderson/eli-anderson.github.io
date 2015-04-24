@@ -17,7 +17,8 @@ Projectile.prototype.animate = function(){
 		this.y += this.dy*this.spd;
 	}
 	else{
-		del(this,projectiles)
+	    small_particle_explosion(this.x,this.y);
+		del(this, projectiles);
 	}
 	if(this.targets[0] === undefined){
 		if(isColliding_rr(this,this.targets)){
@@ -56,7 +57,7 @@ function Projectile_basic(x,y,dx,dy,targets){
 	this.dmg = 1;
 	this.spd = 10;
 	this.sound = sound.list.default_fire;
-	this.explSize = 15; 
+	this.explSize = 15;
 
 	this.onHit = function(receiver){
 		receiver.gotHit(this.dmg);
@@ -76,7 +77,7 @@ function Projectile_rocket(x,y,dx,dy,targets){
 	this.dmg = 3;
 	this.spd = 11;
 	this.sound = sound.list.rocket_explosion;
-	this.explSize = 35; 
+	this.explSize = 35;
 
 	this.onHit = function(receiver){
 		receiver.gotHit(this.dmg);
@@ -96,7 +97,7 @@ function Projectile_plasma(x,y,dx,dy,targets){
 	this.dmg = 2;
 	this.spd = 14;
 	this.sound = sound.list.plasma_fire;
-	this.explSize = 100; 
+	this.explSize = 100;
 
 	this.onHit = function(receiver){
 		receiver.gotHit(this.dmg);
