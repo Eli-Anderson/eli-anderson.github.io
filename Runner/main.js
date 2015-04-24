@@ -238,10 +238,10 @@ function animLoseScreen(){
 		button1.onTouch = function(){
 			text1.dy = text2.dy = text3.dy = -42;
 			menu1.dx = -80;
-			del(button1);
-			del(text1);
-			del(text2);
-			del(text3);
+			del(button1, buttons);
+			del(text1, texts);
+			del(text2, texts);
+			del(text3, texts);
 			button1 = null;
 			game.restart();
 		}
@@ -291,7 +291,7 @@ var background = {
 					text4.x += text4.dx;
 					text4.dy *= 0.9;
 					text4.y += text4.dy;
-					if(game.total_frame % 10 == 0){
+					if(game.total_frame % 10 === 0){
 						text4.dy += 3*Math.sin(game.frame)
 					}
 				}
@@ -299,9 +299,9 @@ var background = {
 				button2.onTouch = function(){
 					game.awaitingInput = false;
     				text4.dx = 60;
-					del(button2);
+					del(button2,buttons);
 					setTimeout(function(){
-						del(text4)
+						del(text4,texts)
 					},750)
 					game.trigger1Fired = false;
 				}
@@ -375,8 +375,8 @@ function keyDown(e){
 		case 74:
 			//j
 			for(var i=0; i<10; i++){
-			new Particle(player.x,player.y,5,5,Math.cos(i),Math.sin(i))
-		}
+			    new Particle(player.x,player.y,5,5,Math.cos(i),Math.sin(i))
+		    }
 			break;
 		case 75:
 			//k
@@ -447,7 +447,7 @@ function isColliding_rc(r,c_arr){
 		if (distX > (r.w/2 + c.r)) { continue; }
     	if (distY > (r.h/2 + c.r)) { continue; }
 
-		if (distX <= (r.w/2)) { return true; } 
+		if (distX <= (r.w/2)) { return true; }
 		if (distY <= (r.h/2)) { return true; }
 
 		var dx=distX-r.w/2;
