@@ -44,7 +44,7 @@ Enemy.prototype.gotHit = function(dmg){
 					function(){new RocketLauncherUpgrade(x,y,20,20,3)},
 					function(){new Coin(x,y,5)},
 				])()
-		del(this);
+		del(this,enemies);
 	}
 }
 

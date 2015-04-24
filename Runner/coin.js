@@ -39,7 +39,7 @@ function Coin(x,y,p){
 	this.touchable = true;
 }
 Coin.prototype.touched = function(){
-	del(this);
+	del(this,coins);
 	player.points += this.points;
 	text_score.txt += this.points;
 	sound.play(sound.list.coin_pickup,2);

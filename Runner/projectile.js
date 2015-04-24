@@ -17,7 +17,7 @@ Projectile.prototype.animate = function(){
 		this.y += this.dy*this.spd;
 	}
 	else{
-		del(this)
+		del(this,projectiles)
 	}
 	if(this.targets[0] === undefined){
 		if(isColliding_rr(this,this.targets)){
@@ -36,7 +36,7 @@ Projectile.prototype.animate = function(){
 
 	if(this.x + this.w < 0 || this.x > 480 || this.y + this.h < 0 || this.y > 320){
 		this.onScreen = false;
-		del(this)
+		del(this,projectiles)
 	}
 	else{this.onScreen = true;}
 	
@@ -60,7 +60,7 @@ function Projectile_basic(x,y,dx,dy,targets){
 
 	this.onHit = function(receiver){
 		receiver.gotHit(this.dmg);
-		del(this);
+		del(this,projectiles);
 		sound.play(this.sound);
 		new Explosion(this.x,this.y,this.explSize,this.explSize);
 	}
@@ -80,7 +80,7 @@ function Projectile_rocket(x,y,dx,dy,targets){
 
 	this.onHit = function(receiver){
 		receiver.gotHit(this.dmg);
-		del(this);
+		del(this,projectiles);
 		sound.play(this.sound);
 		new Explosion(this.x,this.y,this.explSize,this.explSize);
 	}
@@ -100,7 +100,7 @@ function Projectile_plasma(x,y,dx,dy,targets){
 
 	this.onHit = function(receiver){
 		receiver.gotHit(this.dmg);
-		del(this);
+		del(this,projectiles);
 		sound.play(this.sound);
 		for(var i=0; i<enemies.length; i++){
 			var x1 = this.x + this.w/2;

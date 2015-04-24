@@ -42,7 +42,7 @@ function HealthUpgrade(x,y,w,h,amt){
 
 	this.onCollide = function(){
 		player.hp += this.hp;
-		del(this);
+		del(this,projectiles);
 		sound.play(sound.list.heart_pickup);
 	}
 }
@@ -63,7 +63,7 @@ function RocketLauncherUpgrade(x,y,w,h,amt){
 	this.onCollide = function(){
 		_rocket.shotsLeft = this.duration;
 		player.weapon = _rocket;
-		del(this);
+		del(this,projectiles);
 		sound.play(sound.list.rocket_pickup);
 	}
 }

@@ -94,7 +94,7 @@ function game_loop(){
 	game.frame++;
 	game.total_frame++;
 	getButtonInput();
-	animateExplosions();
+	animateEffects();
 	if(game.running){
 		player.animate();
 		animateEnemies();
@@ -118,7 +118,7 @@ function game_loop(){
 	renderEnemies();
 	player.render();
 	renderProjectiles();
-	renderExplosions();
+	renderEffects();
 	animateMenus();
 	animateTexts();
 	renderMenus();
@@ -179,15 +179,14 @@ function renderUpgrades(){
 		upgrades[i].render();
 	}
 }
-function animateExplosions(){
-	for(var i=0; i<explosions.length; i++){
-		explosions[i].animate();
+function animateEffects(){
+	for(var i=0, arr = explosions.concat(particles); i<arr.length; i++){
+		arr[i].animate();
 	}
 }
-function renderExplosions(){
-	for(var i=0; i<explosions.length; i++){
-		if(explosions[i] === undefined){return}
-		explosions[i].render();
+function renderEffects(){
+	for(var i=0, arr = explosions.concat(particles); i<arr.length; i++){
+		arr[i].render();
 	}
 }
 
@@ -330,46 +329,11 @@ var background = {
 }
 
 
-function del(obj){
-	for(var i=0; i<coins.length; i++){
-		if(obj == coins[i]){
-			coins.splice(i,1);
-			return;
-		}
-	}
-	for(var k=0; k<walls.length; k++){
-		if(obj == walls[k]){
-			walls.splice(k,1);
-			return;
-		}
-	}
-	for(var n=0; n<buttons.length; n++){
-		if(obj == buttons[n]){
-			buttons.splice(n,1);
-			return;
-		}
-	}
-	for(var t=0; t<texts.length; t++){
-		if(obj == texts[t]){
-			texts.splice(t,1);
-			return;
-		}
-	}
-	for(var r=0; r<enemies.length; r++){
-		if(obj == enemies[r]){
-			enemies.splice(r,1);
-			return;
-		}
-	}
-	for(var e=0; e<upgrades.length; e++){
-		if(obj == upgrades[e]){
-			upgrades.splice(e,1);
-			return;
-		}
-	}
-	for(var u=0; u<projectiles.length; u++){
-		if(obj == projectiles[u]){
-			projectiles.splice(u,1);
+
+function del(obj,arr){
+	for(var u=0; u<arr.length; u++){
+		if(obj == arr[u]){
+			arr.splice(u,1);
 			return;
 		}
 	}
@@ -410,7 +374,9 @@ function keyDown(e){
 			break;
 		case 74:
 			//j
-			player.weapon = _plasma;
+			for(var i=0; i<10; i++){
+			new Particle(player.x,player.y,5,5,Math.cos(i),Math.sin(i))
+		}
 			break;
 		case 75:
 			//k

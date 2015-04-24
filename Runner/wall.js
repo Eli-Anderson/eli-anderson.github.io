@@ -160,5 +160,5 @@ Wall.prototype.render = function(){
 };
 Wall.prototype.gotHit = function(){
 	//animate explosion
-	del(this)
+	del(this,walls)
 }

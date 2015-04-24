@@ -1,5 +1,5 @@
 var player_img = new Image();
-player_img.src = "Ship/ship0.png"
+player_img.src = "Ship/spritesheet.png"
 var player = {
 	x: 40,
 	w: 30,
@@ -14,6 +14,26 @@ var player = {
 	framesPerShot: 60,
 	hp: 3,
 	onScreen: true,
+	
+	frameX: 410,
+	frameY: 0,
+	frameW: 80,
+	frameH: 87,
+	
+	sprite: {
+		"-5": {x: 0, y:0, w: 82, h: 80},
+		"-4": {x: 82, y:0, w: 82, h: 82},
+		"-3": {x: 164, y:0, w: 82, h: 84},
+		"-2": {x: 246, y:0, w: 82, h: 86},
+		"-1": {x: 328, y:0, w: 82, h: 86},
+		"0": {x: 410, y:0, w: 80, h: 87},
+		"1": {x: 490, y:0, w: 81, h: 86},
+		"2": {x: 571, y:0, w: 82, h: 86},
+		"3": {x: 653, y:0, w: 82, h: 84},
+		"4": {x: 735, y:0, w: 82, h: 82},
+		"5": {x: 817, y:0, w: 82, h: 80},
+	},
+	
 	animate: function(){
 		this.weapon.framesSinceLastShot ++;
 	    if(game.awaitingInput){
@@ -35,44 +55,20 @@ var player = {
 		this.y += this.dy;
 		
 		this.ddy *= 0.95;
-		//this.dy *= 0.95;
 
 		if((this.y+this.h < 0 || this.y > 320) && game.frame % 60 == 0){
 			this.gotHit(1);
 		}
-		if(game.frame % 15 == 0){
-			switch(Math.floor(this.dy)){
-				case -3:
-					player_img.src = "Ship/ship-3.png";
-					break;
-				case -2:
-					player_img.src = "Ship/ship-2.png";
-					break;
-				case -1:
-					player_img.src = "Ship/ship-1.png";
-					break;
-				case 0:
-					player_img.src = "Ship/ship0.png";
-					break;
-				case 1:
-					player_img.src = "Ship/ship1.png";
-					break;
-				case 2:
-					player_img.src = "Ship/ship2.png";
-					break;
-				case 3:
-					player_img.src = "Ship/ship3.png";
-					break;
-			}
+		if(game.frame % 1 == 0){
+			var s = Math.round(this.dy).toString()
+			this.frameX = this.sprite[s].x;
+			this.frameW = this.sprite[s].w;
+			this.frameH = this.sprite[s].h;
 		}
 	},
 	render: function(){
-		//ctx.fillStyle = "rgb("+this.r+","+this.g+","+this.b+")";
-		//ctx.fillRect(this.x,this.y,this.w,this.h);
-		//ctx.drawImage(this.spriteSheet,this.game.frameX,this.game.frameY,
-		//              this.x,this.y,this.game.frameW,this.game.frameH)
 		if(this.onScreen){
-			ctx.drawImage(player_img,this.x,this.y,this.w,this.h);
+			ctx.drawImage(player_img,this.frameX,this.frameY,this.frameW,this.frameH,this.x,this.y,this.w,this.h);
 		}
 	},
 	willCollide: function(obj){
