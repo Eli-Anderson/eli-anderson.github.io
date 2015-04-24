@@ -72,7 +72,7 @@ function BasicEnemy(x,y){
 		}
 		this.dy *= 0.99;
 		
-		if((game.frame - this.frame) % this.framesPerShot == 0 && !game.awaitingInput){this.fire()}
+		if((game.frame - this.frame) % this.framesPerShot === 0 && !game.awaitingInput){this.fire()}
 	};
 	this.fire = function(){
 		var dx = player.x - this.x;
@@ -81,7 +81,7 @@ function BasicEnemy(x,y){
 		dx/=dist;
 		dy/=dist;
 		new Projectile_basic(this.x,this.y,-1,0,player);
-	}
+	};
 }
 BasicEnemy.prototype = Object.create(Enemy.prototype);
 BasicEnemy.prototype.constructor = BasicEnemy;
@@ -96,28 +96,28 @@ function Enemy_easy(x,y){
 	this.framesPerShot = 90;
 	this.hp = 1;
 	this.worth = 3;
-	this.counter = (this.y/(320-this.h))*Math.PI*2;
+	this.counter = 0;
 	this.dy = 0;
 	this.dx = 0;
-	this.friction = .99;
+	this.friction = 0.99;
 	
 	this.animate = function(){
-		this.dy = Math.sin(this.counter)
+		this.dy = 4*Math.cos(this.counter);
 		
 		this.dy *= game.global_dxdy;
 		this.dx *= game.global_dxdy;
 		
 		if(!willCollide(this,this.dx,this.dy,walls)){
-			this.y += 4*this.dy;
+			this.y += this.dy;
 		}
 		//this.dy *= this.friction;
 		
-		if((game.frame - this.frame) % this.framesPerShot == 0 && !game.awaitingInput){this.fire()}
-		this.counter += Math.PI/128
+		if((game.frame - this.frame) % this.framesPerShot === 0 && !game.awaitingInput){this.fire()}
+		this.counter += Math.PI/128;
 	};
 	this.fire = function(){
 		new Projectile_basic(this.x,this.y,-1,0,player);
-	}
+	};
 }
 
 Enemy_easy.prototype = Object.create(Enemy.prototype);
