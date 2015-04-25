@@ -9,7 +9,7 @@ function Explosion(x,y,w,h){
 	this.w = w;
 	this.h = h;
 	
-	this.dx = -6;
+	this.dx = -3;
 	this.dy = 0;
 
 	this.frame = 0;
@@ -145,12 +145,24 @@ Particle.prototype.animate = function(){
 Particle.prototype.render = function(){
 	ctx.save();
 	ctx.globalAlpha = this.alpha;
-	ctx.drawImage(asteroid_img,this.frameX,this.frameY,this.frameW,this.frameH,this.x,this.y,this.w,this.h);
+	ctx.drawImage(asteroid_img,this.frameX,this.frameY,this.frameW,this.frameH,this.x-this.w/2,this.y-this.h/2,this.w,this.h);
 	ctx.restore();
 }
-
-function small_particle_explosion(x,y){
-    for(var i=0; i<10; i++){
-        new Particle(x,y,7,7,-6+Math.cos(i),Math.sin(i));
-    }
+var effects = {
+	small_particle_explosion: function (x,y){
+    	for(var i=0; i<10; i++){
+    		var r = rand_i(3,12);
+			var ry = rand_i(-2,2);
+			var rx = rand_i(-2,2);
+        	new Particle(x,y,r,r,-6+rx+Math.cos(i),ry+Math.sin(i));
+    	}
+	},
+	medium_particle_explosion: function(x,y){
+		for(var i=0; i<6; i++){
+			var r = rand_i(30,70);
+			var ry = rand_i(-2,2);
+			var rx = rand_i(-2,2);
+        	new Particle(x,y,r,r,-6+rx+Math.cos(i),ry+Math.sin(i));
+    	}
+	}
 }

@@ -98,10 +98,10 @@ var player = {
 		    return (dx*dx+dy*dy<=(c.r*c.r));
 		}
 	},
-	checkCollisions_coins: function(){
-		for(var i=0; i<coins.length; i++){
-			if(this.willCollide(coins[i]) && coins[i].touchable){
-				coins[i].touched();
+	checkCollisions_orbs: function(){
+		for(var i=0; i<orbs.length; i++){
+			if(this.willCollide(orbs[i]) && orbs[i].touchable){
+				orbs[i].touched();
 			}
 		}
 	},

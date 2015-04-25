@@ -1,5 +1,8 @@
 var projectiles = [];
 
+var projectile_img = new Image();
+projectile_img.src = "beams.png";
+
 function Projectile(x,y,dx,dy,targets){
 	projectiles.push(this);
 	this.x = x;
@@ -12,14 +15,6 @@ function Projectile(x,y,dx,dy,targets){
 Projectile.prototype.animate = function(){
 	this.dx *= game.global_dxdy;
 	this.dy *= game.global_dxdy;
-	if(!isColliding_rc(this,walls)){
-		this.x += this.dx*this.spd;
-		this.y += this.dy*this.spd;
-	}
-	else{
-	    small_particle_explosion(this.x,this.y);
-		del(this, projectiles);
-	}
 	if(this.targets[0] === undefined){
 		if(isColliding_rr(this,this.targets)){
 			this.onHit(this.targets);
@@ -30,6 +25,17 @@ Projectile.prototype.animate = function(){
 			var targ = this.targets[i];
 			if(isColliding_rr(this,targ)){
 				this.onHit(targ);
+			}
+		}
+	}
+	if(!isColliding_rc(this,walls)){
+		this.x += this.dx*this.spd;
+		this.y += this.dy*this.spd;
+	}
+	else{
+		for(var n=0; n<walls.length; n++){
+			if(isColliding_rc(this,[walls[n]])){
+				this.hitsWall(n)
 			}
 		}
 	}
@@ -44,7 +50,7 @@ Projectile.prototype.animate = function(){
 }
 Projectile.prototype.render = function(){
 	if(!this.onScreen){return;}
-	ctx.fillRect(this.x,this.y,this.w,this.h)
+	ctx.drawImage(projectile_img,this.frameX,this.frameY,this.frameW,this.frameH,this.x,this.y,this.w,this.h)
 }
 
 Projectile_basic.prototype = Object.create(Projectile.prototype);
@@ -59,11 +65,28 @@ function Projectile_basic(x,y,dx,dy,targets){
 	this.sound = sound.list.default_fire;
 	this.explSize = 15;
 
+	this.frameX = 5;
+	this.frameY = 8;
+	this.frameW = 18;
+	this.frameH = 20;
+
 	this.onHit = function(receiver){
 		receiver.gotHit(this.dmg);
 		del(this,projectiles);
 		sound.play(this.sound);
 		new Explosion(this.x,this.y,this.explSize,this.explSize);
+	};
+
+	this.hitsWall = function(n){
+		var x1 = this.x + this.w/2;
+		var y1 = this.y + this.h/2;
+		var x2 = walls[n].x;
+		var y2 = walls[n].y;
+		var angle = Math.atan((y2-y1)/(x2-x1));
+		walls[n].dx += Math.cos(angle);
+		walls[n].dy += Math.sin(angle);
+		effects.small_particle_explosion(this.x+this.w/2,this.y+this.h/2);
+		del(this, projectiles);
 	}
 }
 
@@ -79,11 +102,25 @@ function Projectile_rocket(x,y,dx,dy,targets){
 	this.sound = sound.list.rocket_explosion;
 	this.explSize = 35;
 
+	this.frameX = 5;
+	this.frameY = 123;
+	this.frameW = 18;
+	this.frameH = 20;
+
 	this.onHit = function(receiver){
 		receiver.gotHit(this.dmg);
 		del(this,projectiles);
 		sound.play(this.sound);
 		new Explosion(this.x,this.y,this.explSize,this.explSize);
+	};
+
+	this.hitsWall = function(n){
+		var x = walls[n].x
+		var y = walls[n].y
+		effects.medium_particle_explosion(x,y);
+		new Explosion(x,y,35,35);
+		del(this, projectiles);
+		walls.splice(n,1)
 	}
 }
 
@@ -99,6 +136,11 @@ function Projectile_plasma(x,y,dx,dy,targets){
 	this.sound = sound.list.plasma_fire;
 	this.explSize = 100;
 
+	this.frameX = 83;
+	this.frameY = 12;
+	this.frameW = 18;
+	this.frameH = 20;
+
 	this.onHit = function(receiver){
 		receiver.gotHit(this.dmg);
 		del(this,projectiles);
@@ -113,5 +155,22 @@ function Projectile_plasma(x,y,dx,dy,targets){
 			}
 		}
 		new Explosion(this.x,this.y,this.explSize,this.explSize);
+	};
+
+	this.hitsWall = function(n){
+		new Explosion(this.x,this.y,this.explSize,this.explSize);
+		effects.medium_particle_explosion(walls[n].x+walls[n].r/2,walls[n].y+walls[n].r/2);
+		walls.splice(n,1);
+		del(this,projectiles);
+		sound.play(this.sound);
+		for(var i=0; i<enemies.length; i++){
+			var x1 = this.x + this.w/2;
+			var y1 = this.y + this.h/2;
+			var x2 = enemies[i].x + enemies[i].w/2;
+			var y2 = enemies[i].y + enemies[i].h/2;
+			if((x2-x1)*(x2-x1)+(y2-y1)*(y2-y1) < Math.pow(this.explSize,2)){
+				enemies.splice(i,1);
+			}
+		}
 	}
 }

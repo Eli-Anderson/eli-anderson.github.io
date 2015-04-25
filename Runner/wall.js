@@ -23,8 +23,11 @@ function Wall(x,y){
 	this.y = y;
 	this.r = 25;
 	
-	this.dx = -6;
+	this.dx = 0;
 	this.dy = 0;
+
+	this.ddx = -6;
+	this.ddy = 0;
 
 	this.frameX = 0;
 	this.frameY = 0;
@@ -34,18 +37,18 @@ function Wall(x,y){
 
 	this.onScreen = true;
 
-	for(var i=0; i<coins.length; i++){
+	for(var i=0; i<orbs.length; i++){
 		var x2 = this.x
 		var y2 = this.y
 
-		var dx = coins[i].x - x2;
-		var dy = coins[i].y - y2;
+		var dx = orbs[i].x - x2;
+		var dy = orbs[i].y - y2;
 		var dist1 = dx*dx + dy*dy;
 		//dist1 += dist2;
 
 		if(dist1 < 55*55){
-			coins[i].onScreen = false;
-			coins[i].touchable = false;
+			orbs[i].onScreen = false;
+			orbs[i].touchable = false;
 		}
 	}
 }
@@ -54,34 +57,19 @@ Wall.prototype.touched = function(){
 	player.gotHit(player.hp);
 }
 Wall.prototype.animate = function(){
-	this.dx = -6;
+	if(Math.abs(this.dx + this.ddx) <= 6){
+		this.dx += this.ddx;
+	}
+	this.dy += this.ddy;
 	this.dx *= game.global_dxdy;
 	this.dy *= game.global_dxdy;
 	this.x += this.dx;
 	this.y += this.dy;
 	if(this.x + this.r < 0){
 		this.onScreen = false;
-	}
+	};
 };
-/*
-a10000 = 0 0 120 120
-a10001 = 121 0 120 120
-a10002 = 0 121 120 120
-a10003 = 121 121 120 120
-a10004 = 242 0 120 120
-a10005 = 242 121 120 120
-a10006 = 363 0 120 120
-a10007 = 363 121 120 120
-a10008 = 0 242 120 120
-a10009 = 0 363 120 120
-a10010 = 121 242 120 120
-a10011 = 242 242 120 120
-a10012 = 121 363 120 120
-a10013 = 242 363 120 120
-a10014 = 363 242 120 120
-a10015 = 363 363 120 120
 
-*/
 Wall.prototype.render = function(){
 	if(this.onScreen){
 		//ctx.drawImage(asteroid_img,this.x-60,this.y-60)
@@ -155,10 +143,10 @@ Wall.prototype.render = function(){
 					this.frameY = 363;
 					break;
 			}
-		ctx.drawImage(asteroid_img,this.frameX,this.frameY,this.frameW,this.frameH,this.x-60,this.y-60,this.frameW,this.frameH);
+		ctx.drawImage(asteroid_img,this.frameX,this.frameY,this.frameW,this.frameH,
+			this.x-60,this.y-60,this.frameW,this.frameH);
 	}
 };
 Wall.prototype.gotHit = function(){
-	//animate explosion
 	del(this,walls)
 }

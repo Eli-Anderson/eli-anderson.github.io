@@ -1,7 +1,7 @@
 var canvas = document.getElementById('canvas')
 var ctx = canvas.getContext('2d')
 
-var coins = [];
+var orbs = [];
 var walls = [];
 
 var heart_img = new Image();
@@ -78,12 +78,12 @@ var game = {
 	    player.hp = 3;
 		
 	    walls = [];
-	    coins = [];
+	    orbs = [];
 		enemies = [];
 		projectiles = [];
 		upgrades = [];
 
-	    coin_vars.y_scaler = 110;
+	    orb_vars.y_scaler = 110;
 	    
 	    game.awaitingInput = true;
 	    game.running = true;
@@ -99,13 +99,13 @@ function game_loop(){
 		player.animate();
 		animateEnemies();
 		animateProjectiles();
-		player.checkCollisions_coins();
+		player.checkCollisions_orbs();
 		player.checkCollisions_walls();
-		animateCoins();
+		animateOrbs();
 		animateWalls();
 		animateUpgrades();
 		if(!game.awaitingInput){
-		    coinGenerator();
+		    orbGenerator();
 		    wallGenerator();
 			enemyGenerator();
 		}
@@ -113,7 +113,7 @@ function game_loop(){
 	background.animate();
 	background.render();
 	renderWalls();
-	renderCoins();
+	renderOrbs();
 	renderUpgrades();
 	renderEnemies();
 	player.render();
@@ -125,15 +125,15 @@ function game_loop(){
 	renderTexts();
 	requestAnimationFrame(game_loop);
 }
-function animateCoins(){
-	for(var i=0; i<coins.length; i++){
-		coins[i].animate();
+function animateOrbs(){
+	for(var i=0; i<orbs.length; i++){
+		orbs[i].animate();
 	}
 }
-function renderCoins(){
-	for(var i=0; i<coins.length; i++){
-		if(coins[i] === undefined){return}
-		coins[i].render();
+function renderOrbs(){
+	for(var i=0; i<orbs.length; i++){
+		if(orbs[i] === undefined){return}
+		orbs[i].render();
 	}
 }
 function animateWalls(){
@@ -283,7 +283,7 @@ var background = {
 		}
 		if(game.awaitingInput && s_frame){
 			if(game.total_frame - s_frame > 0){
-				text4 = new Text(30,350,"Tap to begin","32px Georgia",[0,0,0,1]);
+				text4 = new Text(30,350,"Tap to begin","32px Georgia",[255,255,255,1]);
 				text4.dx = 0;
 				text4.dy = -10;
 				text4.animate = function(){
@@ -363,6 +363,23 @@ function keyDown(e){
 		case 40:
 			//input.down = true;
 			break;
+		case 49:
+			//1
+			player.weapon = _default;
+			break;
+		case 50:
+			//2
+			_rocket.shotsLeft = Infinity;
+			player.weapon = _rocket
+			break;
+		case 51:
+			_plasma.shotsLeft = Infinity;
+			player.weapon = _plasma;
+			//3
+			break;
+		case 52:
+			//4
+			break;
 		case 70:
 			//f
 			simulateTouchStart(360, 160);
@@ -374,13 +391,12 @@ function keyDown(e){
 			break;
 		case 74:
 			//j
-			for(var i=0; i<10; i++){
-			    new Particle(player.x,player.y,5,5,Math.cos(i),Math.sin(i))
-		    }
+			game.global_dxdy = .75;
 			break;
 		case 75:
 			//k
-			new HealthUpgrade(rand_i(320,455),rand_i(0,295),1)
+			var angle = Math.atan2(mouse.x,mouse.y,debugWall.x,debugWall.y);
+			console.log(angle);
 		case 32:
 		    simulateTouchStart(mouse.x,mouse.y);
 		    break;
@@ -400,8 +416,9 @@ function keyUp(e){
 			simulateTouchEnd(360, 160);
 			break;
 		case 72:
-			input.h = false;
 			break;
+		case 74:
+			game.global_dxdy = 1;
 		case 32:
 		    simulateTouchEnd(mouse.x,mouse.y);
 		    break;

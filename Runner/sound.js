@@ -6,10 +6,11 @@ var sound = {
 		rocket_fire: "fire3.wav",
 		rocket_explosion: "explosion.ogg",
 		default_fire: "fire1.wav",
-		coin_pickup: "sfx7.wav",
+		orb_pickup: "SFX_Pickup_06.wav",
 		plasma_fire: "fire2.wav",
 		player_hit: "sfx4.wav",
 		player_killed: "sfx5.wav",
+
 	},
 
 	play: function(arg){

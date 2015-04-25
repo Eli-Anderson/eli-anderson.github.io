@@ -36,13 +36,13 @@ Enemy.prototype.gotHit = function(dmg){
 	this.hp -= dmg;
 	if(this.hp <= 0){
 		//animate death
-		//drop coins or upgrades
+		//drop orbs or upgrades
 		var x = this.x;
 		var y = this.y;
 		rand_a([
 					function(){new HealthUpgrade(x,y,20,20,1)},
 					function(){new RocketLauncherUpgrade(x,y,20,20,3)},
-					function(){new Coin(x,y,5)},
+					function(){new Orb(x,y,5)},
 				])()
 		del(this,enemies);
 	}
@@ -69,6 +69,9 @@ function BasicEnemy(x,y){
 		
 		if(!willCollide(this,this.dx,this.dy,walls)){
 			this.y += this.dy;
+		}
+		else{
+			this.gotHit(this.hp);
 		}
 		this.dy *= 0.99;
 		
@@ -110,7 +113,9 @@ function Enemy_easy(x,y){
 		if(!willCollide(this,this.dx,this.dy,walls)){
 			this.y += this.dy;
 		}
-		//this.dy *= this.friction;
+		else{
+			this.gotHit(this.hp);
+		}
 		
 		if((game.frame - this.frame) % this.framesPerShot === 0 && !game.awaitingInput){this.fire()}
 		this.counter += Math.PI/128;
