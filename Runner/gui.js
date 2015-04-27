@@ -166,32 +166,51 @@ function loadMenu(){
     menu_loop();
 }
 function splashScreen(){
+	ctx.fillStyle = "red";
+	ctx.fillRect(120,140,180,20);
     for(var a in sound.list){
         sound.load(eval("sound.list."+a));
     }
+	heart_img = new Image();
+	heart_img.src = 'heart.png';
+	heart_img.onload = handleAssetLoad();
+	player_img = new Image();
+	player_img.src = "Ship/spritesheet.png";
+	player_img.onload = handleAssetLoad();
+	asteroid_img = new Image();
+	asteroid_img.src = "a1.png";
+	asteroid_img.onload = handleAssetLoad();
+	enemy_basic_img = new Image();
+	enemy_basic_img.src = "Ship/stateczek.png";
+	enemy_basic_img.onload = handleAssetLoad();
+	projectile_img = new Image();
+	projectile_img.src = "beams.png";
+	projectile_img.onload = handleAssetLoad();
+	rocket_img = new Image();
+	rocket_img.src = "icons.png"
+	rocket_img.onload = handleAssetLoad();
+	explosion_img = new Image();
+	explosion_img.src = "explosion.png";
+	explosion_img.onload = handleAssetLoad();
+	
     ctx.font = "16px Georgia";
     ctx.fillStyle = "black";
     ctx.fillText("Created by Eli Anderson", 310, 320);
-    //var x = 120
-    //var inter = setInterval(function(){
-    //    ctx.fillRect(x,140,10,20);
-    //    x+=10;
-    //    if(x >= 360){
-    //        clearInterval(inter);
-    //        setTimeout(loadMenu, 500)
-    //    }
-    //},100)
 }
-var TOTAL_ASSETS = 18;
+var TOTAL_ASSETS = 25;
 var asset_counter = 0;
 function handleAssetLoad(){
-
+	ctx.fillStyle = "green"
     ctx.fillRect(asset_counter*10 + 120,140,10,20);
     asset_counter++;
     if(asset_counter >= TOTAL_ASSETS){
         loadMenu();
     }
 }
+//images
+
+
+//
 
 function menu_loop(){
     ctx.clearRect(0,0,480,320);

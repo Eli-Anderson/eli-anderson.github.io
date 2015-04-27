@@ -48,8 +48,7 @@ function HealthUpgrade(x,y,w,h,amt){
 
 HealthUpgrade.prototype = Object.create(Upgrade.prototype);
 HealthUpgrade.prototype.constructor = HealthUpgrade;
-var rocket_img = new Image();
-rocket_img.src = "icons.png"
+
 
 function RocketLauncherUpgrade(x,y,w,h,amt){
 	Upgrade.call(this,x,y,w,h);

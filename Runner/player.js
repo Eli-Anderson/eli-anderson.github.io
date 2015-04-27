@@ -1,5 +1,4 @@
-var player_img = new Image();
-player_img.src = "Ship/spritesheet.png"
+
 var player = {
 	x: 40,
 	w: 30,

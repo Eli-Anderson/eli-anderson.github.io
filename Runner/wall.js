@@ -1,5 +1,4 @@
-var asteroid_img = new Image();
-asteroid_img.src = "a1.png";
+
 var wall_vars = {
 	framesSinceLastWall: 0,
 	y: 0,

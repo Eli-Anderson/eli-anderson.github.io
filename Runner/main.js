@@ -4,8 +4,6 @@ var ctx = canvas.getContext('2d')
 var orbs = [];
 var walls = [];
 
-var heart_img = new Image();
-heart_img.src = 'heart.png';
 function init(){
 	sound.play(sound.list.background_music);
 	for(var i=0; i<100; i++){
@@ -260,9 +258,10 @@ function animLoseScreen(){
 		menu1.dx *= 0.9;
 		menu1.x += menu1.dx;
 	};
+	var points = player.points + player.spentPoints;
 	text1 = new Text(495,80,"Game Over","48px Georgia",[255,255,255,1]);
 	text2 = new Text(580,140,"Score","32px Georgia",[255,255,255,1]);
-	text3 = new Text(610-(player.points.toString().length-1)*10,170,player.points,"38px Georgia",[255,255,255,1])
+	text3 = new Text(610-(points.toString().length-1)*10,170,points,"38px Georgia",[255,255,255,1])
 	setTimeout(function(){
 		text1.dx = -42;
 		text1.dy = 0;

@@ -1,7 +1,6 @@
 var explosions = [];
 var particles = [];
-var explosion_img = new Image();
-explosion_img.src = "explosion.png"
+
 function Explosion(x,y,w,h){
 	explosions.push(this)
 	this.x = x;

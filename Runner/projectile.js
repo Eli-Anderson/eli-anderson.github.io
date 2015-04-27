@@ -1,8 +1,5 @@
 var projectiles = [];
 
-var projectile_img = new Image();
-projectile_img.src = "beams.png";
-
 function Projectile(x,y,dx,dy,targets){
 	projectiles.push(this);
 	this.x = x;

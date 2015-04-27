@@ -1,6 +1,5 @@
 var enemies = [];
-var enemy_basic_img = new Image();
-enemy_basic_img.src = "Ship/stateczek.png";
+
 var enemy_vars = {
 	framesSinceLastEnemy: 0,
 	frame: 0,
