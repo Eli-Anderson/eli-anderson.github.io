@@ -153,15 +153,7 @@ function handleTouchend(e){
 }
 
 function loadMenu(){
-    var a = new Menu(20,-280,440,280,[255,255,255,1]);
-    a.dy = 6;
-    a.animate = function(){
-        if(a.y+a.h < 300){
-            a.y += a.dy;
-            a.dy ++
-        }
-        else{a.y = 300-a.h}
-    }
+    
 	var b = new Button(0,0,480,320);
     b.onLift = function(){
         menus = [];
@@ -169,6 +161,8 @@ function loadMenu(){
         texts = [];
         init();
     };
+
+
     menu_loop();
 }
 function splashScreen(){
@@ -207,6 +201,15 @@ function menu_loop(){
     animateTexts();
     renderMenus();
     renderTexts();
+    ctx.fillStyle = 'white'
+    ctx.font = "12px Georgia"
+    ctx.fillText("Mobile: touch left screen to fly upward, and right screen to fire", 0, 100);
+    ctx.fillText("Touch the top left corner to access the inventory, top right corner to access the store", 0, 120);
+    ctx.font = "16px Georgia"
+    ctx.fillText("PC: Use the UP ARROW to fly upward, and F to fire", 0, 160);
+    ctx.fillText("Use S to access the inventory, and D to access the store", 0, 180);
+
+    ctx.fillText("Touch, click, or hit UP to continue", 0, 300)
     requestAnimationFrame(menu_loop);
 }
 
