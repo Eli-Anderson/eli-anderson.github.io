@@ -2,11 +2,12 @@
 var wall_vars = {
 	framesSinceLastWall: 0,
 	y: 0,
+	framesPerWall: 120,
 }
 
 function wallGenerator(){
 	wall_vars.framesSinceLastWall ++;
-	if(wall_vars.framesSinceLastWall == 45){
+	if(wall_vars.framesSinceLastWall >= wall_vars.framesPerWall){
 		wall_vars.y = player.y+rand_i(-120,120)
 		wall_vars.w = 20+Math.floor(Math.random()*40)
 		wall_vars.h = 20+Math.floor(Math.random()*40)
