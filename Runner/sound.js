@@ -36,6 +36,10 @@ var sound = {
 			volume: 0,
 			onload: function(){
 				handleAssetLoad();
+			},
+			onerror: function(){
+				console.error("Sound asset failed to load");
+				ctx.fillText("Sound asset failed to load",0,30)
 			}
 		});
 
