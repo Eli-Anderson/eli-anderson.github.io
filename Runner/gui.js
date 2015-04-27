@@ -167,7 +167,7 @@ function loadMenu(){
 }
 function splashScreen(){
 	ctx.fillStyle = "red";
-	ctx.fillRect(120,140,180,20);
+	ctx.fillRect(120,140,250,20);
     for(var a in sound.list){
         sound.load(eval("sound.list."+a));
     }
