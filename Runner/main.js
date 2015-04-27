@@ -7,6 +7,7 @@ var walls = [];
 var heart_img = new Image();
 heart_img.src = 'heart.png';
 function init(){
+	sound.play(sound.list.background_music);
 	for(var i=0; i<100; i++){
 		background.stars.push({
 			x: rand_i(0,480),
@@ -14,17 +15,27 @@ function init(){
 		})
 	}
 	game.running = true;
-	button_left = new Button(0,0,240,320);
+	button_left = new Button(0,80,240,320);
 	button_left.onTouch = function(){
 		input.up = true;
 	}
 	button_left.onLift = function(){
 		input.up = false;
 	}
-	button_right = new Button(240,0,240,320);
+	button_right = new Button(240,80,240,320);
 	button_right.onTouch = function(){
 		player.fire();
 	}
+	store_button = new Button(400,0,80,60);
+	store_button.onLift = function(){
+		game.pause();
+		store.animate_open();
+	}
+	inventory_button = new Button(0,0,80,60);
+	inventory_button.onLift = function(){
+		game.pause();
+		inventory.animate_open();
+	};
 	text_score = new Text(-100,30,player.points,"32px Georgia",[255,255,255,1])
 	text_score.dx = 50;
 	text_score.dy = 0;
@@ -48,10 +59,11 @@ var game = {
 		player.onScreen = true;
 		game.frame = 0;
 		game.global_dxdy = 1;
-		player.totalPoints += player.points;
-		player.points = 0;
 
-		button_left = new Button(0,0,240,320);
+		enemy_vars.frame = 0;
+		enemy_vars.framesSinceLastEnemy = 0;
+
+		button_left = new Button(0,80,240,320);
 		button_left.onTouch = function(){
 			input.up = true;
 		}
@@ -62,6 +74,16 @@ var game = {
 		button_right.onTouch = function(){
 			player.fire();
 		}
+		store_button = new Button(400,0,80,60);
+		store_button.onLift = function(){
+			game.pause();
+			store.animate_open();
+		};
+		inventory_button = new Button(0,0,80,60);
+		inventory_button.onLift = function(){
+			game.pause();
+			inventory.animate_open();
+		};
 		text_score = new Text(-100,30,player.points,"32px Georgia",[255,255,255,1])
 		text_score.dx = 50;
 		text_score.dy = 0;
@@ -76,6 +98,14 @@ var game = {
 	    player.dy = 0;
 	    player.ddy = 0;
 	    player.hp = 3;
+	    player.totalPoints += player.points;
+		player.points = 0;
+
+	    weapons._default.ammo = 10;
+	    weapons._rocket.ammo = 0;
+	    weapons._plasma.ammo = 0;
+
+	    player.weapon = weapons._default;
 		
 	    walls = [];
 	    orbs = [];
@@ -88,6 +118,12 @@ var game = {
 	    game.awaitingInput = true;
 	    game.running = true;
 	},
+	pause: function(){
+		game.running = false;
+	},
+	unpause: function(){
+		game.running = true;
+	}
 };
 function game_loop(){
 	ctx.clearRect(0,0,480,320);
@@ -121,8 +157,28 @@ function game_loop(){
 	renderEffects();
 	animateMenus();
 	animateTexts();
+	animateImages();
 	renderMenus();
+	renderImages();
 	renderTexts();
+
+	if(input.grid){
+		ctx.strokeStyle='white'
+		for(var x=0; x<480; x+=10){
+			ctx.beginPath();
+			ctx.moveTo(x,0);
+			ctx.lineTo(x,320);
+			ctx.closePath();
+			ctx.stroke();
+		};
+		for(var y=0; y<320; y+=10){
+			ctx.beginPath();
+			ctx.moveTo(0,y);
+			ctx.lineTo(480,y);
+			ctx.closePath();
+			ctx.stroke();
+		}
+	}
 	requestAnimationFrame(game_loop);
 }
 function animateOrbs(){
@@ -291,13 +347,14 @@ var background = {
 					text4.x += text4.dx;
 					text4.dy *= 0.9;
 					text4.y += text4.dy;
-					if(game.total_frame % 10 === 0){
-						text4.dy += 3*Math.sin(game.frame)
+					if(game.total_frame % 11 === 0){
+						text4.dy += .5*Math.sin(game.frame)
 					}
 				}
-				button2 = new Button(0,0,480,320);
+				button2 = new Button(0,80,480,320);
 				button2.onTouch = function(){
 					game.awaitingInput = false;
+					game.frame = 0;
     				text4.dx = 60;
 					del(button2,buttons);
 					setTimeout(function(){
@@ -342,11 +399,14 @@ function del(obj,arr){
 var input = {
 	up: false,
 	down: true,
+	grid: false,
 };
 
 document.addEventListener('keydown',keyDown);
 document.addEventListener('keyup',keyUp);
 document.addEventListener('mousemove',handleMousemove);
+document.addEventListener('mousedown',handleMouseDown);
+document.addEventListener('mouseup',handleMouseUp);
 var mouse = {
     x: 0,
     y: 0,
@@ -354,6 +414,13 @@ var mouse = {
 function handleMousemove(e){
     mouse.x = e.clientX;
     mouse.y = e.clientY;
+}
+function handleMouseDown(e){
+	console.log(e.clientX,e.clientY);
+	simulateTouchStart(e.clientX,e.clientY);
+}
+function handleMouseUp(e){
+	simulateTouchEnd(e.clientX,e.clientY);
 }
 function keyDown(e){
 	switch(e.keyCode){
@@ -365,24 +432,31 @@ function keyDown(e){
 			break;
 		case 49:
 			//1
-			player.weapon = _default;
+			player.weapon = weapons._default;
 			break;
 		case 50:
 			//2
-			_rocket.shotsLeft = Infinity;
-			player.weapon = _rocket
+			weapons._rocket.ammo = Infinity;
+			player.weapon = weapons._rocket
 			break;
 		case 51:
-			_plasma.shotsLeft = Infinity;
-			player.weapon = _plasma;
+			weapons._plasma.ammo = Infinity;
+			player.weapon = weapons._plasma;
 			//3
 			break;
 		case 52:
 			//4
 			break;
+		case 68:
+			//d
+			simulateTouchStart(440,30);
+			break;
 		case 70:
 			//f
-			simulateTouchStart(360, 160);
+			simulateTouchStart(360,160);
+			break;
+		case 71:
+			input.grid = true;
 			break;
 		case 72:
 			//h
@@ -391,14 +465,19 @@ function keyDown(e){
 			break;
 		case 74:
 			//j
-			game.global_dxdy = .75;
+			new Enemy_medium(rand_i(320,455),rand_i(0,295));
+			player.hp = 999;
 			break;
 		case 75:
 			//k
-			var angle = Math.atan2(mouse.x,mouse.y,debugWall.x,debugWall.y);
-			console.log(angle);
+			Howler.volume(.1);
+			break;
+		case 83:
+			//s
+			simulateTouchStart(40,30);
+			break;
 		case 32:
-		    simulateTouchStart(mouse.x,mouse.y);
+		    effects.ship.medium_particle_explosion(rand_i(0,480),rand_i(0,320))
 		    break;
 		default:
 			console.log(e.keyCode)
@@ -412,13 +491,23 @@ function keyUp(e){
 		case 40:
 			//input.down = false;
 			break;
+		case 68:
+			simulateTouchEnd(440,30);
+			break;
 		case 70:
 			simulateTouchEnd(360, 160);
+			break;
+		case 71:
+			input.grid = false;
 			break;
 		case 72:
 			break;
 		case 74:
 			game.global_dxdy = 1;
+			break;
+		case 83:
+			simulateTouchEnd(40,30);
+			break;
 		case 32:
 		    simulateTouchEnd(mouse.x,mouse.y);
 		    break;

@@ -75,6 +75,7 @@ function Projectile_basic(x,y,dx,dy,targets){
 		del(this,projectiles);
 		sound.play(this.sound);
 		new Explosion(this.x,this.y,this.explSize,this.explSize);
+		effects.ship.small_particle_explosion(this.x,this.y);
 	};
 
 	this.hitsWall = function(n){
@@ -85,7 +86,7 @@ function Projectile_basic(x,y,dx,dy,targets){
 		var angle = Math.atan((y2-y1)/(x2-x1));
 		walls[n].dx += Math.cos(angle);
 		walls[n].dy += Math.sin(angle);
-		effects.small_particle_explosion(this.x+this.w/2,this.y+this.h/2);
+		effects.asteroid.small_particle_explosion(this.x+this.w/2,this.y+this.h/2);
 		del(this, projectiles);
 	}
 }
@@ -117,7 +118,7 @@ function Projectile_rocket(x,y,dx,dy,targets){
 	this.hitsWall = function(n){
 		var x = walls[n].x
 		var y = walls[n].y
-		effects.medium_particle_explosion(x,y);
+		effects.asteroid.medium_particle_explosion(x,y);
 		new Explosion(x,y,35,35);
 		del(this, projectiles);
 		walls.splice(n,1)
@@ -159,7 +160,7 @@ function Projectile_plasma(x,y,dx,dy,targets){
 
 	this.hitsWall = function(n){
 		new Explosion(this.x,this.y,this.explSize,this.explSize);
-		effects.medium_particle_explosion(walls[n].x+walls[n].r/2,walls[n].y+walls[n].r/2);
+		effects.asteroid.medium_particle_explosion(walls[n].x+walls[n].r/2,walls[n].y+walls[n].r/2);
 		walls.splice(n,1);
 		del(this,projectiles);
 		sound.play(this.sound);

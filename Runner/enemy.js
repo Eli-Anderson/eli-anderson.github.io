@@ -3,14 +3,36 @@ var enemy_basic_img = new Image();
 enemy_basic_img.src = "Ship/stateczek.png";
 var enemy_vars = {
 	framesSinceLastEnemy: 0,
+	frame: 0,
+	framesPerEnemy: 300,
+	options: [Enemy_easy],
+
 }
+/*  1 -- 60
+	2 -- 120
+	3 -- 180
+	4 -- 240
+	5 -- 300
+	10 -- 600
+	15 -- 900
+	30 -- 1800
+	45 -- 2700
+	60 -- 3600
+
+*/
 function enemyGenerator(){
-	if((game.frame > 900 || player.points > 50) &&
-	enemy_vars.framesSinceLastEnemy > 600){
+	enemy_vars.frame ++;
+	enemy_vars.framesSinceLastEnemy ++;
+	var f = enemy_vars.frame;
+	if(enemy_vars.framesSinceLastEnemy < enemy_vars.framesPerEnemy){ return; }
+	if(f > 300 && f < 1800){
 		new Enemy_easy(rand_i(320,455),rand_i(0,295));
 		enemy_vars.framesSinceLastEnemy = 0;
 	}
-	enemy_vars.framesSinceLastEnemy ++;
+	else if(f > 1800){
+		new Enemy_medium(rand_i(320,455),rand_i(0,295));
+		enemy_vars.framesSinceLastEnemy = 0;
+	}
 }
 
 function Enemy(x,y){
@@ -33,6 +55,7 @@ Enemy.prototype.render = function(){
 	}
 }
 Enemy.prototype.gotHit = function(dmg){
+	sound.play(this.sound);
 	this.hp -= dmg;
 	if(this.hp <= 0){
 		//animate death
@@ -48,7 +71,7 @@ Enemy.prototype.gotHit = function(dmg){
 	}
 }
 
-function BasicEnemy(x,y){
+function Enemy_medium(x,y){
 	Enemy.call(this,x,y);
 	this.img = enemy_basic_img;
 	this.w = 20;
@@ -56,24 +79,25 @@ function BasicEnemy(x,y){
 
 	this.maxVel = 3;
 	this.framesPerShot = 90;
-	this.hp = 1;
+	this.hp = 3;
 	this.worth = 3;
+
+	this.ddy = 0;
+
+	this.sound = sound.list.enemy_medium_hit;
 	
 	this.animate = function(){
-		var dist = player.y - this.y;
+		if(this.y < player.y){this.ddy = rand_i(0,2)}
+		else{this.ddy = rand_i(-2,0);}
 		if(Math.abs(this.dy) < this.maxVel){
-			this.dy += dist/Math.abs(dist);
+			this.dy += this.ddy;
 		}
 		this.dy *= game.global_dxdy;
 		this.dx *= game.global_dxdy;
 		
-		if(!willCollide(this,this.dx,this.dy,walls)){
-			this.y += this.dy;
-		}
-		else{
-			this.gotHit(this.hp);
-		}
+		this.y += this.dy;
 		this.dy *= 0.99;
+		this.ddy *= 0.5;
 		
 		if((game.frame - this.frame) % this.framesPerShot === 0 && !game.awaitingInput){this.fire()}
 	};
@@ -86,8 +110,8 @@ function BasicEnemy(x,y){
 		new Projectile_basic(this.x,this.y,-1,0,player);
 	};
 }
-BasicEnemy.prototype = Object.create(Enemy.prototype);
-BasicEnemy.prototype.constructor = BasicEnemy;
+Enemy_medium.prototype = Object.create(Enemy.prototype);
+Enemy_medium.prototype.constructor = Enemy_medium;
 
 function Enemy_easy(x,y){
 	Enemy.call(this,x,y);
@@ -103,6 +127,7 @@ function Enemy_easy(x,y){
 	this.dy = 0;
 	this.dx = 0;
 	this.friction = 0.99;
+	this.sound = sound.list.enemy_easy_hit;
 	
 	this.animate = function(){
 		this.dy = 4*Math.cos(this.counter);
@@ -110,12 +135,7 @@ function Enemy_easy(x,y){
 		this.dy *= game.global_dxdy;
 		this.dx *= game.global_dxdy;
 		
-		if(!willCollide(this,this.dx,this.dy,walls)){
-			this.y += this.dy;
-		}
-		else{
-			this.gotHit(this.hp);
-		}
+		this.y += this.dy;
 		
 		if((game.frame - this.frame) % this.framesPerShot === 0 && !game.awaitingInput){this.fire()}
 		this.counter += Math.PI/128;

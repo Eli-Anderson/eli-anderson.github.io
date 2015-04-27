@@ -37,7 +37,7 @@ Explosion.prototype.render = function(){
 }
 
 
-function Particle(x,y,w,h,dx,dy){
+function Asteroid_Particle(x,y,w,h,dx,dy){
 	particles.push(this);
 	this.x = x;
 	this.y = y;
@@ -57,7 +57,7 @@ function Particle(x,y,w,h,dx,dy){
 	
 	this.img = asteroid_img;
 }
-Particle.prototype.animate = function(){
+Asteroid_Particle.prototype.animate = function(){
 	var dx = this.dx * game.global_dxdy;
 	var dy = this.dy * game.global_dxdy;
 	this.x += dx;
@@ -139,30 +139,77 @@ Particle.prototype.animate = function(){
 					break;
 			}
 			if(this.alpha < .01){
-				del(this,particles);
+				del(this, particles);
 			}
 }
-Particle.prototype.render = function(){
+Asteroid_Particle.prototype.render = function(){
 	ctx.save();
 	ctx.globalAlpha = this.alpha;
 	ctx.drawImage(asteroid_img,this.frameX,this.frameY,this.frameW,this.frameH,this.x-this.w/2,this.y-this.h/2,this.w,this.h);
 	ctx.restore();
 }
+function Ship_Particle(x,y,w,h,dx,dy,rgba){
+	particles.push(this);
+	this.x = x;
+	this.y = y;
+	this.w = w;
+	this.h = h;
+	this.dx = dx;
+	this.dy = dy;
+	this.alpha = 1;
+	this.rgb = "rgba("+rgba[0]+","+rgba[1]+","+rgba[2];
+}
+Ship_Particle.prototype.animate = function(){
+	this.x += this.dx;
+	this.y += this.dy;
+	this.dx *= .95;
+	this.dy *= .95;
+	this.alpha *= .95;
+	if(this.alpha < .01){
+		del(this, particles)
+	}
+}
+Ship_Particle.prototype.render = function(){
+	ctx.fillStyle=this.rgb + ","+this.alpha+")";
+	ctx.fillRect(this.x,this.y,this.w,this.h);
+}
 var effects = {
-	small_particle_explosion: function (x,y){
-    	for(var i=0; i<10; i++){
-    		var r = rand_i(3,12);
-			var ry = rand_i(-2,2);
-			var rx = rand_i(-2,2);
-        	new Particle(x,y,r,r,-6+rx+Math.cos(i),ry+Math.sin(i));
-    	}
+	asteroid: {
+		small_particle_explosion: function (x,y){
+	    	for(var i=0; i<10; i++){
+	    		var r = rand_i(3,12);
+				var ry = rand_i(-2,2);
+				var rx = rand_i(-2,2);
+	        	new Asteroid_Particle(x,y,r,r,-6+rx+Math.cos(i),ry+Math.sin(i));
+	    	}
+		},
+		medium_particle_explosion: function(x,y){
+			for(var i=0; i<6; i++){
+				var r = rand_i(30,70);
+				var ry = rand_i(-2,2);
+				var rx = rand_i(-2,2);
+	        	new Asteroid_Particle(x,y,r,r,-6+rx+Math.cos(i),ry+Math.sin(i));
+	    	}
+		},
 	},
-	medium_particle_explosion: function(x,y){
-		for(var i=0; i<6; i++){
-			var r = rand_i(30,70);
-			var ry = rand_i(-2,2);
-			var rx = rand_i(-2,2);
-        	new Particle(x,y,r,r,-6+rx+Math.cos(i),ry+Math.sin(i));
-    	}
+	ship: {
+		small_particle_explosion: function (x,y){
+	    	for(var i=0; i<Math.PI/2; i+=Math.PI/5){
+	    		var w = rand_i(2,5);
+	    		var h = rand_i(2,5)
+				var ry = rand_i(-2,2);
+				var rx = rand_i(-2,2);
+	        	new Ship_Particle(x,y,w,h,-6+rx+Math.cos(i),ry+Math.sin(i),[rand_i(160,200),rand_i(160,200),rand_i(160,200)]);
+	    	}
+		},
+		medium_particle_explosion: function(x,y){
+			for(var i=0; i<Math.PI*2; i+=Math.PI/3){
+				var w = rand_i(5,9);
+				var h = rand_i(5,9);
+				var ry = rand_i(-2,2);
+				var rx = rand_i(-2,2);
+	        	new Ship_Particle(x,y,w,h,-6+rx+Math.cos(i),ry+Math.sin(i),[rand_i(160,200),rand_i(160,200),rand_i(160,200)]);
+	    	}
+		},
 	}
 }

@@ -10,6 +10,7 @@ var player = {
 	maxVel: 5,
 	points: 0,
 	totalPoints: 0,
+	spentPoints: 0,
 	framesSinceLastShot: 0,
 	framesPerShot: 60,
 	hp: 3,
@@ -58,13 +59,21 @@ var player = {
 
 		if((this.y+this.h < 0 || this.y > 320) && game.frame % 60 == 0){
 			this.gotHit(1);
-		}
+		};
 		if(game.frame % 1 == 0){
 			var s = Math.round(this.dy).toString()
 			this.frameX = this.sprite[s].x;
 			this.frameW = this.sprite[s].w;
 			this.frameH = this.sprite[s].h;
+		};
+		player.weapon_array = [];
+		for(var w in weapons){
+			w = eval("weapons."+w);
+			if(w.ammo > 0){
+				player.weapon_array.push(w);
+			}
 		}
+		document.getElementById('debug').innerHTML = player.weapon_array;
 	},
 	render: function(){
 		if(this.onScreen){
@@ -136,5 +145,11 @@ var player = {
 			animLoseScreen();
 		}, 1500)
 	},
-	weapon: _default,
+	weapon: weapons._default,
+	weapon_array: [],
+	next_weapon: function(){
+		if(player.weapon_array[0] == undefined){return 0}
+		player.weapon = player.weapon_array[0];
+		return 1;
+	},
 }

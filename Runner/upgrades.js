@@ -60,8 +60,9 @@ function RocketLauncherUpgrade(x,y,w,h,amt){
 	this.imgFrameX = 51;
 	this.imgFrameY = 23;
 	this.onCollide = function(){
-		_rocket.shotsLeft = this.duration;
-		player.weapon = _rocket;
+		weapons._rocket.ammo = this.duration;
+		weapons._rocket.framesSinceLastShot = 120;
+		player.weapon = weapons._rocket;
 		del(this,upgrades);
 		sound.play(sound.list.rocket_pickup);
 	}
@@ -71,52 +72,69 @@ RocketLauncherUpgrade.prototype.constructor = RocketLauncherUpgrade;
 
 
 
-
-var _rocket = {
-	framesPerShot: 120,
-	framesSinceLastShot: 120,
-	shotsLeft: 3,
-	fire: function(){
-		if(this.framesPerShot - this.framesSinceLastShot <= 0 && !game.awaitingInput){
-			new Projectile_rocket(player.x+player.w/2,player.y+player.h/2,1,0,enemies.concat(walls));
-			this.framesSinceLastShot = 0;
-			this.shotsLeft --;
-			sound.play(sound.list.rocket_fire);
-		}
-		if(this.shotsLeft <= 0){
-			player.weapon = _default;
-		}
+var weapons = {
+	_plasma: {
+		framesPerShot: 120,
+		framesSinceLastShot: 120,
+		ammo: 3,
+		purchaseCost: 7,
+		fire: function(){
+			if(this.framesPerShot - this.framesSinceLastShot <= 0 && !game.awaitingInput){
+				new Projectile_plasma(player.x+player.w/2,player.y+player.h/2,1,0,enemies);
+				this.framesSinceLastShot = 0;
+				this.ammo --;
+				sound.play(sound.list.plasma_fire);
+			}
+			if(this.ammo <= 0){
+				if(!player.next_weapon()){
+						sound.play(sound.list.out_of_ammo);
+					}
+				this.framesSinceLastShot = 0;
+			}
+		},
 	},
-}
 
-var _plasma = {
-	framesPerShot: 120,
-	framesSinceLastShot: 120,
-	shotsLeft: 3,
-	fire: function(){
-		if(this.framesPerShot - this.framesSinceLastShot <= 0 && !game.awaitingInput){
-			new Projectile_plasma(player.x+player.w/2,player.y+player.h/2,1,0,enemies);
-			this.framesSinceLastShot = 0;
-			this.shotsLeft --;
-			sound.play(sound.list.plasma_fire);
-		}
-		if(this.shotsLeft <= 0){
-			player.weapon = _default;
-		}
+	_rocket: {
+		framesPerShot: 120,
+		framesSinceLastShot: 120,
+		ammo: 3,
+		purchaseCost: 3,
+		fire: function(){
+			if(this.framesPerShot - this.framesSinceLastShot <= 0 && !game.awaitingInput){
+				new Projectile_rocket(player.x+player.w/2,player.y+player.h/2,1,0,enemies.concat(walls));
+				this.framesSinceLastShot = 0;
+				this.ammo --;
+				sound.play(sound.list.rocket_fire);
+			}
+			if(this.ammo <= 0){
+				if(!player.next_weapon()){
+						sound.play(sound.list.out_of_ammo);
+					}
+				this.framesSinceLastShot = 0;
+			}
+		},
 	},
-}
 
-
-
-var _default = {
-	framesPerShot: 60,
-	framesSinceLastShot: 60,
-	shotsLeft: Infinity,
-	fire: function(){
-		if(this.framesPerShot - this.framesSinceLastShot <= 0 && !game.awaitingInput){
-			new Projectile_basic(player.x+player.w/2,player.y+player.h/2,1,0,enemies);
-			this.framesSinceLastShot = 0;
-			sound.play(sound.list.default_fire);
-		}
+	_default: {
+		framesPerShot: 10,
+		framesSinceLastShot: 60,
+		ammo: 10,
+		purchaseCost: 1,
+		fire: function(){
+			if(this.framesPerShot - this.framesSinceLastShot <= 0 && !game.awaitingInput){
+				if(this.ammo > 0){
+					new Projectile_basic(player.x+player.w/2,player.y+player.h/2,1,0,enemies);
+					this.framesSinceLastShot = 0;
+					sound.play(sound.list.default_fire);
+					this.ammo --;
+				}
+				else{
+					if(!player.next_weapon()){
+						sound.play(sound.list.out_of_ammo);
+					}
+					this.framesSinceLastShot = 0;
+				}
+			}
+		},
 	},
 }

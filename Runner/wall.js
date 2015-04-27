@@ -12,7 +12,7 @@ function wallGenerator(){
 		wall_vars.w = 20+Math.floor(Math.random()*40)
 		wall_vars.h = 20+Math.floor(Math.random()*40)
 
-		new Wall(500,wall_vars.y);
+		new Wall(1000,wall_vars.y);
 		wall_vars.framesSinceLastWall = 0;
 	}
 }
@@ -50,6 +50,16 @@ function Wall(x,y){
 			orbs[i].onScreen = false;
 			orbs[i].touchable = false;
 		}
+	};
+	this.dc = rand_a([-1,1]);
+	this.spin = function(){
+		if(this.frameCounter >= 0 && this.frameCounter <= 15){
+			this.frameCounter += this.dc;
+		}
+		else if(this.frameCounter < 0){
+			this.frameCounter = 15;
+		}
+		else{this.frameCounter = 0}
 	}
 }
 Wall.prototype.touched = function(){
@@ -74,8 +84,7 @@ Wall.prototype.render = function(){
 	if(this.onScreen){
 		//ctx.drawImage(asteroid_img,this.x-60,this.y-60)
 		if(game.frame % 5 == 0){
-			if(this.frameCounter < 15){this.frameCounter++}
-			else{this.frameCounter = 0}
+			this.spin();
 		}
 			switch(this.frameCounter){
 				case 0:
