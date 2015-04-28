@@ -114,10 +114,11 @@ function handleTouchstart(e){
 	e.preventDefault();
     var x = e.changedTouches[0].clientX;
     var y = e.changedTouches[0].clientY;
-
+	console.log(x,y)
     for(var i=0; i<buttons.length; i++){
     	var b = buttons[i];
-    	if(x < b.x + b.w && x > b.x && y < b.y + b.h && y > b.y){
+    	if(x < b.x*screen.dw + b.w*screen.dw && x > b.x*screen.dw &&
+		y < b.y*screen.dh + b.h*screen.dh && y > b.y*screen.dh){
     		b.isPressed = true;
     	}
     }
@@ -145,7 +146,8 @@ function handleTouchend(e){
     var y = e.changedTouches[0].clientY;
     for(var i=0; i<buttons.length; i++){
         var b = buttons[i];
-        if(x < b.x + b.w && x > b.x && y < b.y + b.h && y > b.y){
+        if(x < b.x*screen.dw + b.w*screen.dw && x > b.x*screen.dw &&
+		y < b.y*screen.dh + b.h*screen.dh && y > b.y*screen.dh){
             b.isPressed = false;
             b.onLift();
         }
@@ -195,7 +197,7 @@ function splashScreen(){
 	
     ctx.font = "16px Georgia";
     ctx.fillStyle = "black";
-    ctx.fillText("Created by Eli Anderson", 310, 320);
+    ctx.fillText("Created by Eli Anderson", 310, 300);
 }
 var TOTAL_ASSETS = 25;
 var asset_counter = 0;
@@ -227,8 +229,71 @@ function menu_loop(){
     ctx.fillText("Touch, click, or hit UP to continue", 0, 300)
     requestAnimationFrame(menu_loop);
 }
-
-window.onload=splashScreen();
+var screen = {
+	mobile: false,
+	width: 480,
+	height: 320,
+	dw: 1,
+	dh: 1,
+}
+function detectDevice(){
+	if(isMobile.any()){
+		screen.mobile = true;
+	}
+	
+	// only change the size of the canvas if the size it's being displayed
+   // has changed.
+   var width = canvas.clientWidth;
+   var height = canvas.clientHeight;
+   if (canvas.style.width != width ||
+       canvas.style.height != height) {
+     // Change the size of the canvas to match the size it's being displayed
+	 
+     canvas.style.width = width;
+     canvas.style.height = height;
+	 screen.dw = (width/480);
+	 screen.dh = (height/320);
+   }
+   else{
+		screen.dw = (width/480);
+		screen.dh = (height/320);
+   }
+   if(width > 1080 || height > 720){
+		width = 1080;
+		height = 720;
+		
+		screen.dw = (width/canvas.style.width);
+		screen.dh = (height/canvas.style.height);
+		
+		canvas.style.width = width;
+		canvas.style.height = height;
+		screen.dw = (width/480);
+		screen.dh = (height/320);
+   }
+	
+	splashScreen();
+}
+var isMobile = {
+    Android: function() {
+        return navigator.userAgent.match(/Android/i);
+    },
+    BlackBerry: function() {
+        return navigator.userAgent.match(/BlackBerry/i);
+    },
+    iOS: function() {
+        return navigator.userAgent.match(/iPhone|iPad|iPod/i);
+    },
+    Opera: function() {
+        return navigator.userAgent.match(/Opera Mini/i);
+    },
+    Windows: function() {
+        return navigator.userAgent.match(/IEMobile/i) || navigator.userAgent.match(/WPDesktop/i);
+    },
+    any: function() {
+        return (isMobile.Android() || isMobile.BlackBerry() || isMobile.iOS() || isMobile.Opera() || isMobile.Windows());
+    }
+};
+window.onload=detectDevice();
 
 document.addEventListener('touchstart',handleTouchstart)
 document.addEventListener('touchend',handleTouchend)

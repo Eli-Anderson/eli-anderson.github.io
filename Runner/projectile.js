@@ -149,7 +149,7 @@ function Projectile_plasma(x,y,dx,dy,targets){
 			var x2 = enemies[i].x + enemies[i].w/2;
 			var y2 = enemies[i].y + enemies[i].h/2;
 			if((x2-x1)*(x2-x1)+(y2-y1)*(y2-y1) < Math.pow(this.explSize,2)){
-				enemies.splice(i,1);
+				enemies[i].gotHit(this.dmg)
 			}
 		}
 		new Explosion(this.x,this.y,this.explSize,this.explSize);

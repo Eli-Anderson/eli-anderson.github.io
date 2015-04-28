@@ -3,12 +3,27 @@
 	<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
 	<meta name="apple-mobile-web-app-capable" content="yes">
 	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+	<style>
+		body, html {
+			width: 100%;
+			height: 100%;
+			border: 0px;
+			padding: 0px;
+			margin: 0px;
+		}
+		canvas {
+			width: 100%;
+			height: 100%;
+		}
+	</style>
 </head>
 <body>
+	<div id='gameArea'>
 	<canvas id='canvas' width=480 height=320 style='border:1px solid black;position:absolute;
 				top:-2px;
 				left:-2px;'>
 	</canvas>
+	</div>
 	<p id='debug' style='position:absolute;top:400px'></p>
 	
 	<script src="howler.js"></script>
