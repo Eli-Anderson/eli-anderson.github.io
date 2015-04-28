@@ -35,11 +35,11 @@ var sound = {
 			urls: arg[0],
 			volume: 0,
 			onload: function(){
-				handleAssetLoad();
+				handleAssetLoad(arg[0]);
 			},
 			onerror: function(){
 				console.error("Sound asset failed to load");
-				ctx.fillText("Sound asset failed to load",0,30)
+				alert("Sound asset"+ arg[0] +"failed to load");
 			}
 		});
 
