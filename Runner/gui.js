@@ -171,7 +171,8 @@ function splashScreen(){
 	ctx.fillStyle = "red";
 	ctx.fillRect(120,140,250,20);
     for(var a in sound.list){
-        sound.load(eval("sound.list."+a));
+    	if(screen.mobile && a=="background_music"){continue}
+        sound.load(sound.list[a]);
     }
 	heart_img = new Image();
 	heart_img.src = 'heart.png';
@@ -243,8 +244,8 @@ function detectDevice(){
 	
 	// only change the size of the canvas if the size it's being displayed
    // has changed.
-   var width = canvas.clientWidth;
-   var height = canvas.clientHeight;
+   var width = window.innerWidth;
+   var height = window.innerHeight;
    if (canvas.style.width != width ||
        canvas.style.height != height) {
      // Change the size of the canvas to match the size it's being displayed
