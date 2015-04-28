@@ -1,12 +1,24 @@
 var upgrades = [];
+var upgradeGen = {
+	frame: 0,
+	framesPer: rand_i(480,600),
+}
+function upgradeGenerator(){
+	upgradeGen.frame ++;
+	if(upgradeGen.frame >= upgradeGen.framesPer){
+		rand_a([
+			function(){new HealthUpgrade(500,rand_i(0,300),rand_i(1,3))},
+		])();
+		upgradeGen.frame = 0;
+		upgradeGen.framesPer = rand_i(480,600);
+	}
+}
 
-function Upgrade(x,y,w,h){
+function Upgrade(x,y){
 	upgrades.push(this);
 
 	this.x = x;
 	this.y = y;
-	this.w = w;
-	this.h = h;
 	
 	this.dx = -6;
 	this.dy = 0;
@@ -30,14 +42,16 @@ Upgrade.prototype.animate = function(){
 Upgrade.prototype.onCollide = function(){
 }
 
-function HealthUpgrade(x,y,w,h,amt){
-	Upgrade.call(this,x,y,w,h);
+function HealthUpgrade(x,y,amt){
+	Upgrade.call(this,x,y);
 	this.hp = amt;
 	this.img = heart_img;
 	this.imgW = heart_img.width;
 	this.imgH = heart_img.height;
 	this.imgFrameX = 0;
 	this.imgFrameY = 0;
+	this.w = 20;
+	this.h = 20;
 
 	this.onCollide = function(){
 		player.hp += this.hp;
@@ -50,14 +64,16 @@ HealthUpgrade.prototype = Object.create(Upgrade.prototype);
 HealthUpgrade.prototype.constructor = HealthUpgrade;
 
 
-function RocketLauncherUpgrade(x,y,w,h,amt){
-	Upgrade.call(this,x,y,w,h);
+function RocketLauncherUpgrade(x,y,amt){
+	Upgrade.call(this,x,y);
 	this.duration = amt;
 	this.img = rocket_img;
 	this.imgW = 16;
 	this.imgH = 16;
 	this.imgFrameX = 51;
 	this.imgFrameY = 23;
+	this.w = 20;
+	this.h = 20;
 	this.onCollide = function(){
 		weapons._rocket.ammo = this.duration;
 		weapons._rocket.framesSinceLastShot = 120;

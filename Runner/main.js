@@ -82,15 +82,6 @@ var game = {
 			game.pause();
 			inventory.animate_open();
 		};
-		text_score = new Text(-100,30,player.points,"32px Georgia",[255,255,255,1])
-		text_score.dx = 50;
-		text_score.dy = 0;
-		text_score.animate = function(){
-			this.x += this.dx;
-			this.y += this.dy;
-			this.dx *= 0.9;
-			this.dy *= 0.9;
-		}
 
 	    player.y = 155-player.h/2;
 	    player.dy = 0;
@@ -98,6 +89,7 @@ var game = {
 	    player.hp = 3;
 	    player.totalPoints += player.points;
 		player.points = 0;
+		player.spentPoints = 0;
 
 	    weapons._default.ammo = 10;
 	    weapons._rocket.ammo = 0;
@@ -115,6 +107,15 @@ var game = {
 	    
 	    game.awaitingInput = true;
 	    game.running = true;
+	    text_score = new Text(-100,30,player.points,"32px Georgia",[255,255,255,1])
+		text_score.dx = 50;
+		text_score.dy = 0;
+		text_score.animate = function(){
+			this.x += this.dx;
+			this.y += this.dy;
+			this.dx *= 0.9;
+			this.dy *= 0.9;
+		}
 	},
 	pause: function(){
 		game.running = false;
@@ -142,6 +143,7 @@ function game_loop(){
 		    orbGenerator();
 		    wallGenerator();
 			enemyGenerator();
+			upgradeGenerator();
 		}
 	}
 	background.animate();
@@ -567,4 +569,18 @@ function isColliding_rr(r1,r2){
 	r1.y + r1.h > r2.y &&
 	r1.y < r2.y + r2.h){ return true; }
 	return false;
+}
+
+
+
+function log(arg1,arg2,arg3,arg4,arg5){
+	var args = []
+	for(var i in arguments){
+		if(!arguments[i].hasOwnProperty()){
+			args.push(arguments[i])
+		}
+	}
+	args = args.toString();
+	console.log(args)
+	document.getElementById('debug').innerHTML = args;
 }

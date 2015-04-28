@@ -207,10 +207,6 @@ function handleAssetLoad(){
         loadMenu();
     }
 }
-//images
-
-
-//
 
 function menu_loop(){
     ctx.clearRect(0,0,480,320);

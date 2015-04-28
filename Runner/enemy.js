@@ -7,16 +7,18 @@ var enemy_vars = {
 	options: [Enemy_easy],
 
 }
-/*  1 -- 60
-	2 -- 120
-	3 -- 180
-	4 -- 240
-	5 -- 300
-	10 -- 600
-	15 -- 900
-	30 -- 1800
-	45 -- 2700
-	60 -- 3600
+/*
+  seconds  -- frames
+		1  -- 60
+		2  -- 120
+		3  -- 180
+		4  -- 240
+		5  -- 300
+		10 -- 600
+		15 -- 900
+		30 -- 1800
+		45 -- 2700
+		60 -- 3600
 
 */
 function enemyGenerator(){
@@ -39,6 +41,7 @@ function Enemy(x,y){
 	this.x = x;
 	this.y = y;
 
+
 	this.dx = 0;
 	this.dy = 0;
 
@@ -59,13 +62,7 @@ Enemy.prototype.gotHit = function(dmg){
 	if(this.hp <= 0){
 		//animate death
 		//drop orbs or upgrades
-		var x = this.x;
-		var y = this.y;
-		rand_a([
-					function(){new HealthUpgrade(x,y,20,20,1)},
-					function(){new RocketLauncherUpgrade(x,y,20,20,3)},
-					function(){new Orb(x,y,5)},
-				])()
+		rand_a(this.drops)()
 		del(this,enemies);
 	}
 }
@@ -79,7 +76,12 @@ function Enemy_medium(x,y){
 	this.maxVel = 3;
 	this.framesPerShot = 90;
 	this.hp = 3;
-	this.worth = 3;
+	var that = this;
+	this.drops = [
+		function(){new HealthUpgrade(that.x,that.y,rand_i(1,3))},
+		function(){new RocketLauncherUpgrade(that.x,that.y,3)},
+		function(){new Orb(that.x,that.y,rand_i(5,10))},
+	];
 
 	this.ddy = 0;
 
@@ -121,7 +123,12 @@ function Enemy_easy(x,y){
 	this.maxVel = 3;
 	this.framesPerShot = 90;
 	this.hp = 1;
-	this.worth = 3;
+	var that = this;
+	this.drops = [
+		function(){new HealthUpgrade(that.x,that.y,1)},
+		function(){new RocketLauncherUpgrade(that.x,that.y,1)},
+		function(){new Orb(that.x,that.y,rand_i(1,3))},
+	]
 	this.counter = 0;
 	this.dy = 0;
 	this.dx = 0;
