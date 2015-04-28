@@ -426,7 +426,7 @@ function handleMouseUp(e){
 function keyDown(e){
 	switch(e.keyCode){
 		case 38:
-			simulateTouchStart(120, 160);
+			simulateTouchStart(120*screen.dw, 160*screen.dh);
 			break;
 		case 40:
 			//input.down = true;
@@ -450,11 +450,11 @@ function keyDown(e){
 			break;
 		case 68:
 			//d
-			simulateTouchStart(440,30);
+			simulateTouchStart(440*screen.dw,30*screen.dh);
 			break;
 		case 70:
 			//f
-			simulateTouchStart(360,160);
+			simulateTouchStart(360*screen.dw,160*screen.dh);
 			break;
 		case 71:
 			input.grid = true;
@@ -475,7 +475,7 @@ function keyDown(e){
 			break;
 		case 83:
 			//s
-			simulateTouchStart(40,30);
+			simulateTouchStart(40*screen.dw,30*screen.dh);
 			break;
 		case 32:
 		    effects.ship.medium_particle_explosion(rand_i(0,480),rand_i(0,320))
@@ -487,16 +487,16 @@ function keyDown(e){
 function keyUp(e){
 	switch(e.keyCode){
 		case 38:
-			simulateTouchEnd(120, 160);
+			simulateTouchEnd(120*scren.dw, 160*screen.dh);
 			break;
 		case 40:
 			//input.down = false;
 			break;
 		case 68:
-			simulateTouchEnd(440,30);
+			simulateTouchEnd(440*scren.dw,30*screen.dh);
 			break;
 		case 70:
-			simulateTouchEnd(360, 160);
+			simulateTouchEnd(360*scren.dw, 160*screen.dh);
 			break;
 		case 71:
 			input.grid = false;
@@ -507,7 +507,7 @@ function keyUp(e){
 			game.global_dxdy = 1;
 			break;
 		case 83:
-			simulateTouchEnd(40,30);
+			simulateTouchEnd(40*scren.dw,30*screen.dh);
 			break;
 		case 32:
 		    simulateTouchEnd(mouse.x,mouse.y);
