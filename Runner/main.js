@@ -406,8 +406,8 @@ var input = {
 document.addEventListener('keydown',keyDown);
 document.addEventListener('keyup',keyUp);
 document.addEventListener('mousemove',handleMousemove);
-document.addEventListener('mousedown',handleMouseDown);
-document.addEventListener('mouseup',handleMouseUp);
+canvas.addEventListener('mousedown',handleMouseDown);
+canvas.addEventListener('mouseup',handleMouseUp);
 var mouse = {
     x: 0,
     y: 0,
@@ -426,7 +426,8 @@ function handleMouseUp(e){
 function keyDown(e){
 	switch(e.keyCode){
 		case 38:
-			simulateTouchStart(120*screen.dw, 160*screen.dh);
+		    //up
+			simulateTouchStart(120*game_screen.dw, 160*game_screen.dh);
 			break;
 		case 40:
 			//input.down = true;
@@ -450,11 +451,11 @@ function keyDown(e){
 			break;
 		case 68:
 			//d
-			simulateTouchStart(440*screen.dw,30*screen.dh);
+			simulateTouchStart(440*game_screen.dw,30*game_screen.dh);
 			break;
 		case 70:
 			//f
-			simulateTouchStart(360*screen.dw,160*screen.dh);
+			simulateTouchStart(360*game_screen.dw,160*game_screen.dh);
 			break;
 		case 71:
 			input.grid = true;
@@ -475,7 +476,7 @@ function keyDown(e){
 			break;
 		case 83:
 			//s
-			simulateTouchStart(40*screen.dw,30*screen.dh);
+			simulateTouchStart(40*game_screen.dw,30*game_screen.dh);
 			break;
 		case 32:
 		    effects.ship.medium_particle_explosion(rand_i(0,480),rand_i(0,320))
@@ -487,16 +488,16 @@ function keyDown(e){
 function keyUp(e){
 	switch(e.keyCode){
 		case 38:
-			simulateTouchEnd(120*scren.dw, 160*screen.dh);
+			simulateTouchEnd(120*game_screen.dw, 160*game_screen.dh);
 			break;
 		case 40:
 			//input.down = false;
 			break;
 		case 68:
-			simulateTouchEnd(440*scren.dw,30*screen.dh);
+			simulateTouchEnd(440*game_screen.dw,30*game_screen.dh);
 			break;
 		case 70:
-			simulateTouchEnd(360*scren.dw, 160*screen.dh);
+			simulateTouchEnd(360*game_screen.dw, 160*game_screen.dh);
 			break;
 		case 71:
 			input.grid = false;
@@ -507,7 +508,7 @@ function keyUp(e){
 			game.global_dxdy = 1;
 			break;
 		case 83:
-			simulateTouchEnd(40*scren.dw,30*screen.dh);
+			simulateTouchEnd(40*game_screen.dw,30*game_screen.dh);
 			break;
 		case 32:
 		    simulateTouchEnd(mouse.x,mouse.y);
@@ -582,5 +583,10 @@ function log(arg1,arg2,arg3,arg4,arg5){
 	}
 	args = args.toString();
 	console.log(args)
-	document.getElementById('debug').innerHTML = args;
+	document.getElementById('debug').value += args;
+}
+
+function evalInputData(){
+    var txt = document.getElementById('debuggerInput').value;
+    eval(txt);
 }
