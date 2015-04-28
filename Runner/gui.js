@@ -210,7 +210,7 @@ function handleAssetLoad(arg){
     ctx.fillRect(asset_counter*10 + 120,140,10,20);
     asset_counter++;
     ctx.fillStyle="black"
-    ctx.fillText("loading... "+asset_text, 120,190)
+    ctx.fillText("loading... "+asset_text, 10,asset_counter*20)
     if(asset_counter >= TOTAL_ASSETS){
         loadMenu();
     }
