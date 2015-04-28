@@ -59,10 +59,10 @@ Img.prototype.render = function(){
 }
 function Button(x,y,w,h){
 	buttons.push(this)
-    this.x = x;
-    this.y = y;
-    this.w = w;
-    this.h = h;
+    this.x = x*screen.dw;
+    this.y = y*screen.dh;
+    this.w = w*screen.dw;
+    this.h = h*screen.dh;
     
 	this.onTouch = function(){
 	}
