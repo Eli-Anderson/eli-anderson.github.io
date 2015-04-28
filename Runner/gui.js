@@ -59,10 +59,10 @@ Img.prototype.render = function(){
 }
 function Button(x,y,w,h){
 	buttons.push(this)
-    this.x = x*screen.dw;
-    this.y = y*screen.dh;
-    this.w = w*screen.dw;
-    this.h = h*screen.dh;
+    this.x = x*game_screen.dw;
+    this.y = y*game_screen.dh;
+    this.w = w*game_screen.dw;
+    this.h = h*game_screen.dh;
     
 	this.onTouch = function(){
 	}
@@ -114,11 +114,11 @@ function handleTouchstart(e){
 	e.preventDefault();
     var x = e.changedTouches[0].clientX;
     var y = e.changedTouches[0].clientY;
-	console.log(x,y)
+	log(x,y)
     for(var i=0; i<buttons.length; i++){
     	var b = buttons[i];
-    	if(x < b.x*screen.dw + b.w*screen.dw && x > b.x*screen.dw &&
-		y < b.y*screen.dh + b.h*screen.dh && y > b.y*screen.dh){
+    	if(x < b.x*game_screen.dw + b.w*game_screen.dw && x > b.x*game_screen.dw &&
+		y < b.y*game_screen.dh + b.h*game_screen.dh && y > b.y*game_screen.dh){
     		b.isPressed = true;
     	}
     }
@@ -127,7 +127,8 @@ function handleTouchstart(e){
 function simulateTouchStart(x,y){
     for(var i=0; i<buttons.length; i++){
         var b = buttons[i];
-        if(x < b.x*screen.dw + b.w*screen.dw && x > b.x*screen.dw && y < b.y*screen.dh + b.h*screen.dh && y > b.y*screen.dh){
+        if(x < b.x*game_screen.dw + b.w*game_screen.dw && x > b.x*game_screen.dw &&
+           y < b.y*game_screen.dh + b.h*game_screen.dh && y > b.y*game_screen.dh){
             b.isPressed = true;
         }
     }
@@ -135,7 +136,8 @@ function simulateTouchStart(x,y){
 function simulateTouchEnd(x,y){
     for(var i=0; i<buttons.length; i++){
         var b = buttons[i];
-        if(x < b.x*screen.dw + b.w*screen.dw && x > b.x*screen.dw && y < b.y*screen.dh + b.h*screen.dh && y > b.y*screen.dh){
+        if(x < b.x*game_screen.dw + b.w*game_screen.dw && x > b.x*game_screen.dw &&
+           y < b.y*game_screen.dh + b.h*game_screen.dh && y > b.y*game_screen.dh){
             b.isPressed = false;
             b.onLift();
         }
@@ -146,8 +148,8 @@ function handleTouchend(e){
     var y = e.changedTouches[0].clientY;
     for(var i=0; i<buttons.length; i++){
         var b = buttons[i];
-        if(x < b.x*screen.dw + b.w*screen.dw && x > b.x*screen.dw &&
-		y < b.y*screen.dh + b.h*screen.dh && y > b.y*screen.dh){
+        if(x < b.x*game_screen.dw + b.w*game_screen.dw && x > b.x*game_screen.dw &&
+		y < b.y*game_screen.dh + b.h*game_screen.dh && y > b.y*game_screen.dh){
             b.isPressed = false;
             b.onLift();
         }
@@ -172,7 +174,7 @@ function splashScreen(){
 	ctx.fillStyle = "red";
 	ctx.fillRect(120,140,250,20);
     for(var a in sound.list){
-    	if(screen.mobile && a=="background_music"){continue}
+    	if(game_screen.mobile && a == "background_music"){continue}
         sound.load(sound.list[a]);
     }
 	heart_img = new Image();
@@ -228,7 +230,7 @@ function menu_loop(){
     renderTexts();
     ctx.fillStyle = 'white'
     ctx.font = "12px Georgia"
-    ctx.fillText("Mobile: touch left screen to fly upward, and right screen to fire", 0, 100);
+    ctx.fillText("Mobile: touch left game_screen to fly upward, and right game_screen to fire", 0, 100);
     ctx.fillText("Touch the top left corner to access the inventory, top right corner to access the store", 0, 120);
     ctx.font = "16px Georgia"
     ctx.fillText("PC: Use the UP ARROW to fly upward, and F to fire", 0, 160);
@@ -237,7 +239,7 @@ function menu_loop(){
     ctx.fillText("Touch, click, or hit UP to continue", 0, 300)
     requestAnimationFrame(menu_loop);
 }
-var screen = {
+var game_screen = {
 	mobile: false,
 	width: 480,
 	height: 320,
@@ -246,7 +248,7 @@ var screen = {
 }
 function detectDevice(){
 	if(isMobile.any()){
-		screen.mobile = true;
+		game_screen.mobile = true;
 	}
 	
 	// only change the size of the canvas if the size it's being displayed
@@ -259,24 +261,30 @@ function detectDevice(){
 	 
      canvas.style.width = width;
      canvas.style.height = height;
-	 screen.dw = (width/480);
-	 screen.dh = (height/320);
+     game_screen.width = width;
+     game_screen.height = height;
+	 game_screen.dw = (width/480);
+	 game_screen.dh = (height/320);
    }
    else{
-		screen.dw = (width/480);
-		screen.dh = (height/320);
+        game_screen.width = width;
+        game_screen.height = height;
+		game_screen.dw = (width/480);
+		game_screen.dh = (height/320);
    }
    if(width > 1080 || height > 720){
 		width = 1080;
 		height = 720;
 		
-		screen.dw = (width/canvas.style.width);
-		screen.dh = (height/canvas.style.height);
+		game_screen.dw = (width/canvas.style.width);
+		game_screen.dh = (height/canvas.style.height);
 		
 		canvas.style.width = width;
 		canvas.style.height = height;
-		screen.dw = (width/480);
-		screen.dh = (height/320);
+		game_screen.width = width;
+		game_screen.height = height;
+		game_screen.dw = (width/480);
+		game_screen.dh = (height/320);
    }
 	
 	splashScreen();
