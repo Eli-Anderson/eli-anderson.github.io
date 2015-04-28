@@ -177,25 +177,25 @@ function splashScreen(){
     }
 	heart_img = new Image();
 	heart_img.src = 'heart.png';
-	heart_img.onload = handleAssetLoad();
+	heart_img.onload = handleAssetLoad(heart_img.src);
 	player_img = new Image();
 	player_img.src = "Ship/spritesheet.png";
-	player_img.onload = handleAssetLoad();
+	player_img.onload = handleAssetLoad(player_img.src);
 	asteroid_img = new Image();
 	asteroid_img.src = "a1.png";
-	asteroid_img.onload = handleAssetLoad();
+	asteroid_img.onload = handleAssetLoad(asteroid_img.src);
 	enemy_basic_img = new Image();
 	enemy_basic_img.src = "Ship/stateczek.png";
-	enemy_basic_img.onload = handleAssetLoad();
+	enemy_basic_img.onload = handleAssetLoad(enemy_basic_img.src);
 	projectile_img = new Image();
 	projectile_img.src = "beams.png";
-	projectile_img.onload = handleAssetLoad();
+	projectile_img.onload = handleAssetLoad(projectile_img.src);
 	rocket_img = new Image();
 	rocket_img.src = "icons.png"
-	rocket_img.onload = handleAssetLoad();
+	rocket_img.onload = handleAssetLoad(rocket_img.src);
 	explosion_img = new Image();
 	explosion_img.src = "explosion.png";
-	explosion_img.onload = handleAssetLoad();
+	explosion_img.onload = handleAssetLoad(explosion_img.src);
 	
     ctx.font = "16px Georgia";
     ctx.fillStyle = "black";
