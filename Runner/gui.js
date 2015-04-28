@@ -161,6 +161,7 @@ function loadMenu(){
         menus = [];
         buttons = [];
         texts = [];
+        menu_loop = null;
         init();
     };
 
@@ -202,13 +203,18 @@ function splashScreen(){
 }
 var TOTAL_ASSETS = 25;
 var asset_counter = 0;
-function handleAssetLoad(){
+var asset_text = ""
+function handleAssetLoad(arg){
 	ctx.fillStyle = "green"
+	asset_text = arg;
     ctx.fillRect(asset_counter*10 + 120,140,10,20);
     asset_counter++;
+    ctx.fillStyle="black"
+    ctx.fillText("loading... "+asset_text, 120,160)
     if(asset_counter >= TOTAL_ASSETS){
         loadMenu();
     }
+    
 }
 
 function menu_loop(){
