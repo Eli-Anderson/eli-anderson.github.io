@@ -127,7 +127,7 @@ function handleTouchstart(e){
 function simulateTouchStart(x,y){
     for(var i=0; i<buttons.length; i++){
         var b = buttons[i];
-        if(x < b.x + b.w && x > b.x && y < b.y + b.h && y > b.y){
+        if(x < b.x*screen.dw + b.w*screen.dw && x > b.x*screen.dw && y < b.y*screen.dh + b.h*screen.dh && y > b.y*screen.dh){
             b.isPressed = true;
         }
     }
@@ -135,7 +135,7 @@ function simulateTouchStart(x,y){
 function simulateTouchEnd(x,y){
     for(var i=0; i<buttons.length; i++){
         var b = buttons[i];
-        if(x < b.x + b.w && x > b.x && y < b.y + b.h && y > b.y){
+        if(x < b.x*screen.dw + b.w*screen.dw && x > b.x*screen.dw && y < b.y*screen.dh + b.h*screen.dh && y > b.y*screen.dh){
             b.isPressed = false;
             b.onLift();
         }
