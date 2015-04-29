@@ -4,7 +4,9 @@ var enemy_vars = {
 	framesSinceLastEnemy: 0,
 	frame: 0,
 	framesPerEnemy: 300,
-	options: [Enemy_easy],
+	options: [
+		function(){new Enemy_easy(rand_i(320,455),rand_i(0,295));},
+	],
 
 }
 /*
@@ -25,13 +27,14 @@ function enemyGenerator(){
 	enemy_vars.frame ++;
 	enemy_vars.framesSinceLastEnemy ++;
 	var f = enemy_vars.frame;
-	if(enemy_vars.framesSinceLastEnemy < enemy_vars.framesPerEnemy){ return; }
-	if(f > 300 && f < 1800){
-		new Enemy_easy(rand_i(320,455),rand_i(0,295));
-		enemy_vars.framesSinceLastEnemy = 0;
+	if(f == 1){enemy_vars.options = [function(){new Enemy_easy(rand_i(320,455),rand_i(0,295));},]}
+	if(f == 1800){
+		enemy_vars.options.push(function(){new Enemy_medium(rand_i(320,455),rand_i(0,295));})
 	}
-	else if(f > 1800){
-		new Enemy_medium(rand_i(320,455),rand_i(0,295));
+
+	if(enemy_vars.framesSinceLastEnemy < enemy_vars.framesPerEnemy){ return; }
+	if(f > 300){
+		rand_a(enemy_vars.options)();
 		enemy_vars.framesSinceLastEnemy = 0;
 	}
 }

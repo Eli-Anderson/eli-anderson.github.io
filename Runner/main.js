@@ -125,6 +125,7 @@ var game = {
 	}
 };
 function game_loop(){
+	resizeCanvas()
 	ctx.clearRect(0,0,480,320);
 	game.frame++;
 	game.total_frame++;
@@ -428,6 +429,7 @@ function keyDown(e){
 		case 38:
 		    //up
 			simulateTouchStart(120*game_screen.dw, 160*game_screen.dh);
+			console.log(120*game_screen.dw, 160*game_screen.dh)
 			break;
 		case 40:
 			//input.down = true;
@@ -481,6 +483,17 @@ function keyDown(e){
 		case 32:
 		    effects.ship.medium_particle_explosion(rand_i(0,480),rand_i(0,320))
 		    break;
+		case 192:
+			if(document.getElementById('debug').style.visibility == "hidden"){
+				document.getElementById('debug').style.visibility = "visible"
+				document.getElementById('debuggerInput').style.visibility = "visible"
+				document.getElementById('debuggerButton').style.visibility = "visible"
+			}
+			else{
+				document.getElementById('debug').style.visibility = "hidden"
+				document.getElementById('debuggerInput').style.visibility = "hidden"
+				document.getElementById('debuggerButton').style.visibility = "hidden"
+			}
 		default:
 			console.log(e.keyCode)
 	}

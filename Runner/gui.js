@@ -59,10 +59,10 @@ Img.prototype.render = function(){
 }
 function Button(x,y,w,h){
 	buttons.push(this)
-    this.x = x*game_screen.dw;
-    this.y = y*game_screen.dh;
-    this.w = w*game_screen.dw;
-    this.h = h*game_screen.dh;
+    this.x = x;
+    this.y = y;
+    this.w = w;
+    this.h = h;
     
 	this.onTouch = function(){
 	}
@@ -174,8 +174,13 @@ function splashScreen(){
 	ctx.fillStyle = "red";
 	ctx.fillRect(120,140,250,20);
     for(var a in sound.list){
-    	if(game_screen.mobile && a == "background_music"){continue}
-        sound.load(sound.list[a]);
+        console.log(a)
+    	if(game_screen.mobile && a == "background_music"){
+            TOTAL_ASSETS --;
+            continue
+        }
+            sound.load(sound.list[a]);
+        
     }
 	heart_img = new Image();
 	heart_img.src = 'heart.png';
@@ -221,6 +226,7 @@ function handleAssetLoad(arg){
 }
 
 function menu_loop(){
+    resizeCanvas()
     ctx.clearRect(0,0,480,320);
     ctx.fillStyle='black'
     ctx.fillRect(0,0,480,320);
@@ -236,7 +242,7 @@ function menu_loop(){
     ctx.fillText("PC: Use the UP ARROW to fly upward, and F to fire", 0, 160);
     ctx.fillText("Use S to access the inventory, and D to access the store", 0, 180);
 
-    ctx.fillText("Touch, click, or hit UP to continue", 0, 300)
+    ctx.fillText("Touch, click, or hit UP to continue", 0, 300);
     requestAnimationFrame(menu_loop);
 }
 var game_screen = {
@@ -250,11 +256,15 @@ function detectDevice(){
 	if(isMobile.any()){
 		game_screen.mobile = true;
 	}
+    resizeCanvas();
+    splashScreen();
+}
+function resizeCanvas(){
 	
 	// only change the size of the canvas if the size it's being displayed
    // has changed.
-   var width = window.innerWidth;
-   var height = window.innerHeight;
+   var width = window.screen.availWidth;
+   var height = window.screen.availHeight;
    if (canvas.style.width != width ||
        canvas.style.height != height) {
      // Change the size of the canvas to match the size it's being displayed
@@ -286,8 +296,6 @@ function detectDevice(){
 		game_screen.dw = (width/480);
 		game_screen.dh = (height/320);
    }
-	
-	splashScreen();
 }
 var isMobile = {
     Android: function() {
