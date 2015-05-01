@@ -173,7 +173,7 @@ function splashScreen(){
 	ctx.fillStyle = "red";
 	ctx.fillRect(120,140,250,20);
     for(var a in sound.list){
-        console.log(a)
+        //console.log(a)
     	if(game_screen.mobile && (a == "rocket_explosion")){
             TOTAL_ASSETS --;
             continue

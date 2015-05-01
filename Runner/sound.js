@@ -34,6 +34,7 @@ var sound = {
 		var a = new Howl({
 			urls: arg[0],
 			volume: 0,
+			console.log('loading '+arg[0])
 			onload: function(){
 				handleAssetLoad(arg[0]);
 			},
