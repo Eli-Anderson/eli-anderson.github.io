@@ -9,7 +9,7 @@ function init(){
 	for(var i=0; i<100; i++){
 		var x = rand_i(0,480);
 		var y = rand_i(0,320);
-		var w = rand_i(.25,5);
+		var w = rand_d(.25,5);
 		var h = w;
 		var s = -w;
 		background.stars.push({
