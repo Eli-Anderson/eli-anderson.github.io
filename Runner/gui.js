@@ -263,8 +263,12 @@ function resizeCanvas(){
 	
 	// only change the size of the canvas if the size it's being displayed
    // has changed.
-   var width = window.screen.availWidth;
-   var height = window.screen.availHeight;
+   var body = document.body,
+    html = document.documentElement;
+
+var height = Math.max( body.scrollHeight, body.offsetHeight, 
+                       html.clientHeight, html.scrollHeight, html.offsetHeight );
+var width = height * (3/2);
    if (canvas.style.width != width ||
        canvas.style.height != height) {
      // Change the size of the canvas to match the size it's being displayed
@@ -282,9 +286,11 @@ function resizeCanvas(){
 		game_screen.dw = (width/480);
 		game_screen.dh = (height/320);
    }
-   if(width > 1080 || height > 720){
-		width = 1080;
-		height = 720;
+   if(game_screen.mobile){ return }
+
+
+   if(width > (3/2)*height){
+		width = (3/2)*height;
 		
 		game_screen.dw = (width/canvas.style.width);
 		game_screen.dh = (height/canvas.style.height);
@@ -295,6 +301,19 @@ function resizeCanvas(){
 		game_screen.height = height;
 		game_screen.dw = (width/480);
 		game_screen.dh = (height/320);
+   }
+   else if(height > (2/3)*width){
+        //height = (2/3)*width;
+        
+        game_screen.dw = (width/canvas.style.width);
+        game_screen.dh = (height/canvas.style.height);
+        
+        canvas.style.width = width;
+        canvas.style.height = height;
+        game_screen.width = width;
+        game_screen.height = height;
+        game_screen.dw = (width/480);
+        game_screen.dh = (height/320);
    }
 }
 var isMobile = {

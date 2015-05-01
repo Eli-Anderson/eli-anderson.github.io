@@ -7,9 +7,17 @@ var walls = [];
 function init(){
 	sound.play(sound.list.background_music);
 	for(var i=0; i<100; i++){
+		var x = rand_i(0,480);
+		var y = rand_i(0,320);
+		var w = rand_i(.25,5);
+		var h = w;
+		var s = -w;
 		background.stars.push({
-			x: rand_i(0,480),
-			y: rand_i(0,320),
+			x: x,
+			y: y,
+			w: w,
+			h: h,
+			s: s,
 		})
 	}
 	game.running = true;
@@ -319,10 +327,7 @@ function rand_d(n1,n2){
 	return n1+Math.random()*(n2-n1);
 }
 
-var background_img = new Image();
-background_img.src = "desert_BG.png"
 var background = {
-	img: background_img,
 	x: 0,
 	y: 0,
 	w: 0,
@@ -330,9 +335,10 @@ var background = {
 	stars: [],
 	animate: function(){
 		for(var i=0; i<this.stars.length; i++){
-			this.stars[i].x -= 2;
-			if(this.stars[i].x <= -2){
-				this.stars[i].x = 480
+			this.stars[i].x += this.stars[i].s;
+			if(this.stars[i].x <= this.stars[i].s){
+				this.stars[i].x = 480;
+				this.stars[i].y = rand_i(0,320-this.stars[i].h)
 			}
 		}
 		if(game.awaitingInput && !game.trigger1Fired){
@@ -370,15 +376,15 @@ var background = {
 
 	},
 	render: function(){
-		//ctx.drawImage(background.img,-background.x,0,canvas.width,canvas.height,background.x,background.y,background.w,background.h)
-		//ctx.drawImage(background.img,0,0);
 		ctx.fillStyle='black';
 		ctx.fillRect(0,0,480,320);
-		
+		ctx.beginPath()
 		for(var n=0; n<this.stars.length; n++){
 			ctx.fillStyle='white';
-			ctx.fillRect(this.stars[n].x,this.stars[n].y,2,2)
+			ctx.rect(this.stars[n].x,this.stars[n].y,this.stars[n].w,this.stars[n].h)
 		}
+		ctx.fill()
+		ctx.closePath()
 
 		for(var i=0; i<player.hp; i++){
 			ctx.drawImage(heart_img,5+(i*42)+i*5,5,42,42)
