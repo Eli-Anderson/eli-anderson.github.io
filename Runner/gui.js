@@ -114,7 +114,6 @@ function handleTouchstart(e){
 	e.preventDefault();
     var x = e.changedTouches[0].clientX;
     var y = e.changedTouches[0].clientY;
-	log(x,y)
     for(var i=0; i<buttons.length; i++){
     	var b = buttons[i];
     	if(x < b.x*game_screen.dw + b.w*game_screen.dw && x > b.x*game_screen.dw &&
@@ -261,16 +260,21 @@ function detectDevice(){
 }
 function resizeCanvas(){
 
-   var body = document.body,
-    html = document.documentElement;
-
-var height = Math.min( body.scrollHeight, body.offsetHeight, 
-                       html.clientHeight, html.scrollHeight, html.offsetHeight );
-var width = height * (3/2);
-
-	if(width > window.innerWidth){
+	var body = document.body;
+    var html = document.documentElement;
+	var width,height;
+	if(!game_screen.mobile){
+		height = Math.min( body.scrollHeight, body.offsetHeight, 
+			html.clientHeight, html.scrollHeight, html.offsetHeight );
+		width = height * (3/2);
+		if(width > window.innerWidth){
+			width = window.innerWidth;
+			height = (2/3)*width;
+		}
+	}
+	else{
 		width = window.innerWidth;
-		height = (2/3)*width;
+		height = window.innerHeight;
 	}
 	canvas.style.width = width;
     canvas.style.height = height;

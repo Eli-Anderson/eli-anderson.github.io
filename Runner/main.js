@@ -424,7 +424,6 @@ function handleMousemove(e){
     mouse.y = e.clientY;
 }
 function handleMouseDown(e){
-	console.log(e.clientX,e.clientY);
 	simulateTouchStart(e.clientX,e.clientY);
 }
 function handleMouseUp(e){
@@ -435,7 +434,6 @@ function keyDown(e){
 		case 38:
 		    //up
 			simulateTouchStart(120*game_screen.dw, 160*game_screen.dh);
-			console.log(120*game_screen.dw, 160*game_screen.dh)
 			break;
 		case 40:
 			//input.down = true;
