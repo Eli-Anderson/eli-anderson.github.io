@@ -260,61 +260,26 @@ function detectDevice(){
     splashScreen();
 }
 function resizeCanvas(){
-	
-	// only change the size of the canvas if the size it's being displayed
-   // has changed.
+
    var body = document.body,
     html = document.documentElement;
 
-var height = Math.max( body.scrollHeight, body.offsetHeight, 
+var height = Math.min( body.scrollHeight, body.offsetHeight, 
                        html.clientHeight, html.scrollHeight, html.offsetHeight );
 var width = height * (3/2);
-   if (canvas.style.width != width ||
-       canvas.style.height != height) {
-     // Change the size of the canvas to match the size it's being displayed
-	 
-     canvas.style.width = width;
-     canvas.style.height = height;
-     game_screen.width = width;
-     game_screen.height = height;
-	 game_screen.dw = (width/480);
-	 game_screen.dh = (height/320);
-   }
-   else{
-        game_screen.width = width;
-        game_screen.height = height;
-		game_screen.dw = (width/480);
-		game_screen.dh = (height/320);
-   }
-   if(game_screen.mobile){ return }
 
-
-   if(width > (3/2)*height){
-		width = (3/2)*height;
+	if(width > window.innerWidth){
+		width = window.innerWidth;
+		height = (2/3)*width;
+	}
+	canvas.style.width = width;
+    canvas.style.height = height;
+    game_screen.width = width;
+    game_screen.height = height;
+	game_screen.dw = (width/480);
+	game_screen.dh = (height/320);
 		
-		game_screen.dw = (width/canvas.style.width);
-		game_screen.dh = (height/canvas.style.height);
-		
-		canvas.style.width = width;
-		canvas.style.height = height;
-		game_screen.width = width;
-		game_screen.height = height;
-		game_screen.dw = (width/480);
-		game_screen.dh = (height/320);
-   }
-   else if(height > (2/3)*width){
-        //height = (2/3)*width;
-        
-        game_screen.dw = (width/canvas.style.width);
-        game_screen.dh = (height/canvas.style.height);
-        
-        canvas.style.width = width;
-        canvas.style.height = height;
-        game_screen.width = width;
-        game_screen.height = height;
-        game_screen.dw = (width/480);
-        game_screen.dh = (height/320);
-   }
+   
 }
 var isMobile = {
     Android: function() {
