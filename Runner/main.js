@@ -5,7 +5,7 @@ var orbs = [];
 var walls = [];
 
 function init(){
-	sound.play(sound.list.background_music);
+	if(!game_screen.mobile){sound.play(sound.list.background_music);}
 	for(var i=0; i<100; i++){
 		var x = rand_i(0,480);
 		var y = rand_i(0,320);
