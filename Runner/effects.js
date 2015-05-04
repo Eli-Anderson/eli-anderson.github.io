@@ -192,13 +192,14 @@ var effects = {
 		},
 	},
 	ship: {
-		small_particle_explosion: function (x,y){
-	    	for(var i=0; i<Math.PI/2; i+=Math.PI/5){
+		small_particle_explosion: function (x,y,rgb){
+			var rgb = rgb || [rand_i(160,200),rand_i(160,200),rand_i(160,200)]
+	    	for(var i=0; i<Math.PI/2; i+=Math.PI/10){
 	    		var w = rand_i(2,5);
 	    		var h = rand_i(2,5)
 				var ry = rand_i(-2,2);
 				var rx = rand_i(-2,2);
-	        	new Ship_Particle(x,y,w,h,-6+rx+Math.cos(i),ry+Math.sin(i),[rand_i(160,200),rand_i(160,200),rand_i(160,200)]);
+	        	new Ship_Particle(x,y,w,h,-6+rx+Math.cos(i),ry+Math.sin(i),rgb);
 	    	}
 		},
 		medium_particle_explosion: function(x,y){

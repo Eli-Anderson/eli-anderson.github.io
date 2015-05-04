@@ -171,6 +171,7 @@ var weapons = {
 		purchaseCost: 1,
 		fire: function(){
 			if(this.framesPerShot - this.framesSinceLastShot <= 0 && !game.awaitingInput){
+				effects.ship.small_particle_explosion(player.x+player.w,player.y+player.h/2,[255,255,51]);
 				if(this.ammo <= 0){
 					if(!player.next_weapon()){
 						sound.play(sound.list.out_of_ammo);

@@ -369,7 +369,7 @@ var background = {
 	stars: [],
 	animate: function(){
 		for(var i=0; i<this.stars.length; i++){
-			this.stars[i].x += this.stars[i].s*game.difficulty;
+			this.stars[i].x += this.stars[i].s*(game.difficulty/2);
 			if(this.stars[i].x + this.stars[i].w <= 0){
 				this.stars[i].x = 480;
 				this.stars[i].y = rand_i(0,320-this.stars[i].h)
@@ -511,7 +511,7 @@ function keyDown(e){
 			break;
 		case 75:
 			//k
-			Howler.volume(.1);
+			Howler.volume(0);
 			break;
 		case 83:
 			//s
