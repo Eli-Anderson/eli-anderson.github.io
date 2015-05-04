@@ -29,22 +29,21 @@ var store = {
 			
 			switch(i){
 				case 0:
-					var ability = "speed"
+					var ability = "speed";
 					break;
 				case 1:
-					var ability = "luck"
+					var ability = "luck";
 					break;
 				case 2:
-					var ability = "life"
+					var ability = "life";
 					break;
 			}
-			for(var n=0; n<5; n++){
-				if(store_upgrades[ability] <= n){
-					var menu = new Menu(70 + 25*n, -250, 25, 25, [0,0,0,1]);
-					menu.dy = 17;
-				}
+			for(var n=0; n<store_upgrades[ability]; n++){
+				var menu = new Menu(65 + (i*130) + 20*n, -160, 10, 15, [0,230,0,1]);
+				menu.dy = 17;
+				menu.dx = 0;
 			}
-		};
+		}
 		var text1 = new Text(85,-180,"SPEED","16px Georgia",[0,255,0,1]);
 		var text2 = new Text(218,-180,"LUCK","16px Georgia",[255,255,51,1]);
 		var text3 = new Text(352,-180,"LIFE","16px Georgia",[255,0,0,1]);
@@ -52,21 +51,25 @@ var store = {
 		setTimeout(function(){
 			var button1 = new Button(50,90,120,120);
 			button1.onLift = function(){
-				store_upgrades.speed ++;
-				for(var i in weapons){
-					weapons[i].framesPerShot -= Math.ceil(weapons[i].framesPerShot/7);
-				}
-				store.animate_close();
+			    if(store_upgrades.speed < 5){
+    				store_upgrades.speed ++;
+    				for(var i in weapons){
+    					weapons[i].framesPerShot -= Math.ceil(weapons[i].framesPerShot/7);
+    				}
+    				store.animate_close();
+			    }
 			};
 			var button2 = new Button(180,90,120,120);
 			button2.onLift = function(){
-				store_upgrades.luck ++;
-					player.luck += .25;
-					store.animate_close();
+			    if(store_upgrades.luck < 5){
+    				store_upgrades.luck ++;
+    					player.luck += .25;
+    					store.animate_close();
+			    }
 			};
 			var button3 = new Button(310,90,120,120);
 			button3.onLift = function(){
-				store_upgrades.life ++;
+				//store_upgrades.life ++;
 				player.hp += 3;
 				store.animate_close();
 			};
