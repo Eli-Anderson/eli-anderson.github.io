@@ -59,8 +59,8 @@ Img.prototype.render = function(){
 }
 function Button(x,y,w,h){
 	buttons.push(this)
-    this.x = x + game_screen.padding_left;
-    this.y = y + game_screen.padding_top;
+    this.x = x;
+    this.y = y;
     this.w = w;
     this.h = h;
     
