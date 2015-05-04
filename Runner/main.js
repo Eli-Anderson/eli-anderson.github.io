@@ -468,7 +468,7 @@ function keyDown(e){
 	switch(e.keyCode){
 		case 38:
 		    //up
-			simulateTouchStart(120*game_screen.dw, 160*game_screen.dh);
+			simulateTouchStart(120*game_screen.dw + game_screen.padding_left, 160*game_screen.dh + game_screen.padding_top);
 			break;
 		case 40:
 			//input.down = true;
@@ -496,7 +496,7 @@ function keyDown(e){
 			break;
 		case 70:
 			//f
-			simulateTouchStart(360*game_screen.dw,160*game_screen.dh);
+			simulateTouchStart(360*game_screen.dw + game_screen.padding_left,160*game_screen.dh + game_screen.padding_top);
 			break;
 		case 71:
 			input.grid = true;
@@ -538,7 +538,7 @@ function keyDown(e){
 function keyUp(e){
 	switch(e.keyCode){
 		case 38:
-			simulateTouchEnd(120*game_screen.dw, 160*game_screen.dh);
+			simulateTouchEnd(120*game_screen.dw + game_screen.padding_left, 160*game_screen.dh + game_screen.padding_top);
 			break;
 		case 40:
 			//input.down = false;
@@ -547,7 +547,7 @@ function keyUp(e){
 			simulateTouchEnd(440*game_screen.dw,30*game_screen.dh);
 			break;
 		case 70:
-			simulateTouchEnd(360*game_screen.dw, 160*game_screen.dh);
+			simulateTouchEnd(360*game_screen.dw + game_screen.padding_left, 160*game_screen.dh + game_screen.padding_top);
 			break;
 		case 71:
 			input.grid = false;

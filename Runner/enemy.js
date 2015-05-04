@@ -51,6 +51,7 @@ Enemy.prototype.gotHit = function(dmg){
 		//drop orbs or upgrades
 		//rand_a(this.drops)()
 		del(this,enemies);
+		effects.ship.large_particle_explosion(this.x,this.y);
 	}
 }
 
@@ -246,6 +247,8 @@ var waves = {
 		if(Math.random() <= player.luck){
 			amt = rand_i(game.difficulty,3*game.difficulty);
 			new HealthUpgrade(x,y,amt);
+			sound.play(sound.list.lucky);
+			
 		}
 		else{
 			amt = rand_i(game.difficulty,2*game.difficulty);

@@ -19,6 +19,7 @@ var sound = {
 		purchase: [["sfx7.wav"]],
 		out_of_ammo: [["sfx11.wav"]],
 		background_music: [["Clearside - Assimilator.wav"],.5,true],
+		lucky: [["Pickup_02.wav"]]
 
 	},
 

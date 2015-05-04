@@ -59,8 +59,8 @@ Img.prototype.render = function(){
 }
 function Button(x,y,w,h){
 	buttons.push(this)
-    this.x = x;
-    this.y = y;
+    this.x = x + game_screen.padding_left;
+    this.y = y + game_screen.padding_top;
     this.w = w;
     this.h = h;
     
@@ -260,6 +260,8 @@ var game_screen = {
 	mobile: false,
 	width: 480,
 	height: 320,
+	padding_top: 0,
+	padding_left: 0,
 	dw: 1,
 	dh: 1,
 }
@@ -274,14 +276,20 @@ function resizeCanvas(){
 
 	var body = document.body;
     var html = document.documentElement;
-	var width,height;
+	var width,height,padding_left,padding_top;
 	if(!game_screen.mobile){
+		
+		
 		height = Math.min( body.scrollHeight, body.offsetHeight, 
-			html.clientHeight, html.scrollHeight, html.offsetHeight );
+			html.clientHeight, html.scrollHeight, html.offsetHeight ) - 3;
 		width = height * (3/2);
+		padding_left = (window.innerWidth - width)/2;
+		padding_top = 0;
 		if(width > window.innerWidth){
-			width = window.innerWidth;
+			width = window.innerWidth - 3;
 			height = (2/3)*width;
+			padding_left = 0;
+			padding_top = (window.innerHeight - height)/2
 		}
 	}
 	else{
@@ -290,6 +298,10 @@ function resizeCanvas(){
 	}
 	canvas.style.width = width;
     canvas.style.height = height;
+	canvas.style.left = padding_left;
+	canvas.style.top = padding_top;
+	game_screen.padding_left = padding_left;
+	game_screen.padding_top = padding_top;
     game_screen.width = width;
     game_screen.height = height;
 	game_screen.dw = (width/480);

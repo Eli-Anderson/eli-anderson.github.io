@@ -10,11 +10,15 @@ function Projectile(x,y,dx,dy,targets){
 	this.onScreen = true;
 }
 Projectile.prototype.animate = function(){
+	if(game.frame % 1 == 0){
+		effects.ship.small_particle_explosion(this.x,this.y,[0,255,0])
+	}
 	this.dx *= game.global_dxdy;
 	this.dy *= game.global_dxdy;
 	if(this.targets[0] === undefined){
 		if(isColliding_rr(this,this.targets)){
 			this.onHit(this.targets);
+			effects.ship.large_particle_explosion(this.x,this.y,[0,255,0])
 		}
 	}
 	else{
@@ -22,6 +26,7 @@ Projectile.prototype.animate = function(){
 			var targ = this.targets[i];
 			if(isColliding_rr(this,targ)){
 				this.onHit(targ);
+				effects.ship.medium_particle_explosion(this.x,this.y,[0,255,0])
 			}
 		}
 	}
