@@ -52,6 +52,7 @@ var store = {
 		setTimeout(function(){
 			var button1 = new Button(50,90,120,120);
 			button1.onLift = function(){
+				store_upgrades.speed ++;
 				for(var i in weapons){
 					weapons[i].framesPerShot -= Math.ceil(weapons[i].framesPerShot/7);
 				}
@@ -59,11 +60,13 @@ var store = {
 			};
 			var button2 = new Button(180,90,120,120);
 			button2.onLift = function(){
+				store_upgrades.luck ++;
 					player.luck += .25;
 					store.animate_close();
 			};
 			var button3 = new Button(310,90,120,120);
 			button3.onLift = function(){
+				store_upgrades.life ++;
 				player.hp += 3;
 				store.animate_close();
 			};
