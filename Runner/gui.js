@@ -124,8 +124,8 @@ Text.prototype.render = function(){
 
 function handleTouchstart(e){
 	e.preventDefault();
-    var x = e.changedTouches[0].clientX;
-    var y = e.changedTouches[0].clientY;
+    var x = e.changedTouches[0].clientX - game_screen.padding_left;
+    var y = e.changedTouches[0].clientY - game_screen.padding_top;
     for(var i=0; i<buttons.length; i++){
     	var b = buttons[i];
     	if(x < b.x*game_screen.dw + b.w*game_screen.dw && x > b.x*game_screen.dw &&
@@ -136,6 +136,8 @@ function handleTouchstart(e){
     
 }
 function simulateTouchStart(x,y){
+    x -= game_screen.padding_left;
+    y -= game_screen.padding_top;
     for(var i=0; i<buttons.length; i++){
         var b = buttons[i];
         if(x < b.x*game_screen.dw + b.w*game_screen.dw && x > b.x*game_screen.dw &&
@@ -145,6 +147,8 @@ function simulateTouchStart(x,y){
     }
 }
 function simulateTouchEnd(x,y){
+    x -= game_screen.padding_left;
+    y -= game_screen.padding_top;
     for(var i=0; i<buttons.length; i++){
         var b = buttons[i];
         if(x < b.x*game_screen.dw + b.w*game_screen.dw && x > b.x*game_screen.dw &&
@@ -188,7 +192,7 @@ function splashScreen(){
         //console.log(a)
     	if(a == "rocket_explosion"){
             TOTAL_ASSETS --;
-            continue
+            continue;
         }
             sound.load(sound.list[a]);
         
@@ -280,7 +284,7 @@ function resizeCanvas(){
 	if(!game_screen.mobile){
 		
 		
-		height = Math.min( body.scrollHeight, body.offsetHeight, 
+		height = Math.min( body.scrollHeight, body.offsetHeight,
 			html.clientHeight, html.scrollHeight, html.offsetHeight ) - 3;
 		width = height * (3/2);
 		padding_left = (window.innerWidth - width)/2;
