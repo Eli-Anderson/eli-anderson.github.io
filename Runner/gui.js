@@ -86,6 +86,12 @@ function Menu(x,y,w,h,rgba){
     this.w = w;
     this.h = h;
     this.rgba = "rgba("+rgba[0]+","+rgba[1]+","+rgba[2]+","+rgba[3]+")";
+    this.animate = function(){
+        this.y += this.dy;
+        this.x += this.dx;
+        this.dy *= 0.95;
+        this.dx *= 0.95;
+    }
 }
 Menu.prototype.render = function(){
 	ctx.fillStyle = this.rgba;
@@ -101,6 +107,12 @@ function Text(x,y,txt,font,rgba){
 	this.txt = txt;
 	this.font = font;
 	this.rgba = "rgba("+rgba[0]+","+rgba[1]+","+rgba[2]+","+rgba[3]+")";
+    this.animate = function(){
+        this.x += this.dx;
+        this.y += this.dy;
+        this.dx *= .95;
+        this.dy *= .95;
+    }
 }
 Text.prototype.render = function(){
 	ctx.fillStyle = this.rgba;

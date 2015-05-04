@@ -34,7 +34,7 @@ function Wall(x,y){
 	this.frameW = 120;
 	this.frameH = 120;
 	this.frameCounter = 0;
-
+	this.framesSinceLast = Infinity;
 	this.onScreen = true;
 
 	for(var i=0; i<orbs.length; i++){
@@ -53,18 +53,36 @@ function Wall(x,y){
 	};
 	this.dc = rand_a([-1,1]);
 	this.spin = function(){
-		if(this.frameCounter >= 0 && this.frameCounter <= 15){
-			this.frameCounter += this.dc;
+		var f = this.frameCounter;
+		if(this.dc == -1){
+			if(f > 0 && f <= 15){
+				this.frameCounter += this.dc;
+			}
+			else{
+				this.frameCounter = 15;
+			}
+			
 		}
-		else if(this.frameCounter < 0){
-			this.frameCounter = 15;
+		else{
+			if(f >= 0 && f < 15){
+				this.frameCounter += this.dc;
+			}
+			else{
+				this.frameCounter = 0;
+			}
 		}
-		else{this.frameCounter = 0}
 	}
 }
 Wall.prototype.touched = function(){
 	//sounds.play(sounds.hitWall)
-	player.gotHit(player.hp);
+	if(player.shield > 0){
+		this.gotHit();
+		effects.asteroid.medium_particle_explosion(this.x,this.y);
+		player.shield --;
+	}
+	else{
+		player.gotHit(player.hp);
+	}
 }
 Wall.prototype.animate = function(){
 	if(Math.abs(this.dx + this.ddx) <= 6){
@@ -82,9 +100,11 @@ Wall.prototype.animate = function(){
 
 Wall.prototype.render = function(){
 	if(this.onScreen){
+		this.framesSinceLast ++;
 		//ctx.drawImage(asteroid_img,this.x-60,this.y-60)
-		if(game.frame % 5 == 0){
+		if(this.framesSinceLast >= 5){
 			this.spin();
+			this.framesSinceLast = 0;
 		}
 			switch(this.frameCounter){
 				case 0:

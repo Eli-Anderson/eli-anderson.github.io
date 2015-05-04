@@ -13,6 +13,8 @@ var player = {
 	framesSinceLastShot: 0,
 	framesPerShot: 60,
 	hp: 3,
+	shield: 0,
+	luck: 0.03,
 	onScreen: true,
 	
 	frameX: 410,
@@ -35,6 +37,11 @@ var player = {
 	},
 	
 	animate: function(){
+		if(game.frame % 20 == 0){
+			if(this.hp < 3){
+				effects.ship.smoke_trail(this.x+this.w/2,this.y+this.h/2,0.3*this.hp)
+			}
+		}
 		this.weapon.framesSinceLastShot ++;
 	    if(game.awaitingInput){
 	        return;
@@ -67,16 +74,27 @@ var player = {
 		};
 		player.weapon_array = [];
 		for(var w in weapons){
-			w = eval("weapons."+w);
+			w = weapons[w];
 			if(w.ammo > 0){
 				player.weapon_array.push(w);
 			}
 		}
-		document.getElementById('debug').innerHTML = player.weapon_array;
+		//document.getElementById('debug').innerHTML = player.weapon_array;
 	},
 	render: function(){
 		if(this.onScreen){
+			if(this.shield > 0){
+				ctx.strokeStyle = 'blue';
+				ctx.lineWidth = 4
+				ctx.beginPath()
+				ctx.moveTo(this.x+this.w/2,this.y-10);
+				ctx.lineTo(this.x+this.w,this.y+this.h/2)
+				ctx.lineTo(this.x+this.w/2,this.y+this.h+10)
+				ctx.stroke()
+				ctx.closePath();
+			}
 			ctx.drawImage(player_img,this.frameX,this.frameY,this.frameW,this.frameH,this.x,this.y,this.w,this.h);
+
 		}
 	},
 	willCollide: function(obj){
@@ -124,13 +142,19 @@ var player = {
 		this.weapon.fire();
 	},
 	gotHit: function(dmg){
-		this.hp -= dmg;
-		if(this.hp <= 0){
-			this.gameOver();
-			new Explosion(this.x+this.w/2,this.y+this.h/2,50,50)
+		if(this.shield <= 0){
+
+			this.hp -= dmg;
+			if(this.hp <= 0){
+				this.gameOver();
+				new Explosion(this.x+this.w/2,this.y+this.h/2,50,50)
+			}
+			else{
+				sound.play(sound.list.player_hit);
+			}
 		}
 		else{
-			sound.play(sound.list.player_hit);
+			this.shield --;
 		}
 	},
 	gameOver: function(){
@@ -143,6 +167,8 @@ var player = {
 		setTimeout(function(){
 			animLoseScreen();
 		}, 1500)
+		clearInterval(wave_completion_check_interval);
+		clearTimeout(send_next_wave_timeout);
 	},
 	weapon: weapons._default,
 	weapon_array: [],

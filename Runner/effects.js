@@ -147,7 +147,7 @@ Asteroid_Particle.prototype.render = function(){
 	ctx.drawImage(asteroid_img,this.frameX,this.frameY,this.frameW,this.frameH,this.x-this.w/2,this.y-this.h/2,this.w,this.h);
 	ctx.restore();
 }
-function Ship_Particle(x,y,w,h,dx,dy,rgba){
+function Ship_Particle(x,y,w,h,dx,dy,rgb){
 	particles.push(this);
 	this.x = x;
 	this.y = y;
@@ -156,7 +156,7 @@ function Ship_Particle(x,y,w,h,dx,dy,rgba){
 	this.dx = dx;
 	this.dy = dy;
 	this.alpha = 1;
-	this.rgb = "rgba("+rgba[0]+","+rgba[1]+","+rgba[2];
+	this.rgb = "rgba("+rgb[0]+","+rgb[1]+","+rgb[2];
 }
 Ship_Particle.prototype.animate = function(){
 	this.x += this.dx;
@@ -209,6 +209,17 @@ var effects = {
 				var rx = rand_i(-2,2);
 	        	new Ship_Particle(x,y,w,h,-6+rx+Math.cos(i),ry+Math.sin(i),[rand_i(160,200),rand_i(160,200),rand_i(160,200)]);
 	    	}
+		},
+		smoke_trail: function(x,y,darkness){
+			//darkness should be a number between 0 (black) and 1 (white)
+			var rgb = [Math.round(darkness*255), Math.round(darkness*255), Math.round(darkness*255)]
+			for(var i=0; i<Math.PI*2; i+=Math.PI/3){
+				var w = rand_i(5,9);
+				var h = rand_i(5,9);
+				var ry = rand_i(-2,2);
+				var rx = rand_i(-2,2);
+	        	new Ship_Particle(x,y,w,h,-6+rx+Math.cos(i),ry+Math.sin(i),rgb);
+	        }
 		},
 	}
 }

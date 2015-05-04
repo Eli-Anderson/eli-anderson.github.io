@@ -40,7 +40,7 @@ var sound = {
 			},
 			onerror: function(){
 				console.error("Sound asset failed to load");
-				alert("Sound asset"+ arg[0] +"failed to load");
+				alert("Sound asset "+ arg[0] +" failed to load");
 			}
 		});
 

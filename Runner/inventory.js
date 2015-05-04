@@ -114,27 +114,7 @@ var inventory = {
 		buttons = [];
 		setTimeout(function(){
 			menus = [];
-			button_left = new Button(0,0,240,320);
-			button_left.onTouch = function(){
-				input.up = true;
-			}
-			button_left.onLift = function(){
-				input.up = false;
-			}
-			button_right = new Button(240,80,240,320);
-			button_right.onTouch = function(){
-				player.fire();
-			}
-			store_button = new Button(400,0,80,60);
-			store_button.onLift = function(){
-				game.pause();
-				store.animate_open();
-			};
-			inventory_button = new Button(0,0,80,60);
-			inventory_button.onLift = function(){
-				game.pause();
-				inventory.animate_open();
-			};
+			setGameButtons();
 			text_score = new Text(-100,30,player.points,"32px Georgia",[255,255,255,1])
 			text_score.dx = 50;
 			text_score.dy = 0;

@@ -1,5 +1,32 @@
 var unpause_timeout;
 var countdown_timeout;
+
+
+var store_upgrades = {
+	shield: {
+		purchaseCost: 15,
+		purchased: function(){
+			player.shield ++;
+		}
+	},
+	health: {
+		purchaseCost: 10,
+		purchased: function(){
+			player.hp ++;
+		}
+	},
+	rate_of_fire: {
+		purchaseCost: 5,
+		purchased: function(){
+			this.purchaseCost ++;
+			for(var i in weapons){
+				weapons[i].framesPerShot -= Math.ceil(weapons[i].framesPerShot/10)
+			}
+		}
+	}
+}
+
+
 var store = {
 	open: function(){
 
@@ -7,115 +34,56 @@ var store = {
 	animate_open: function(){
 		clearTimeout(unpause_timeout);
 		clearTimeout(countdown_timeout);
+		game.pause()
 		Howler.volume(.5);
-		menus = [];
+		menus   = [];
 		buttons = [];
-		texts = [];
-		var menu1 = new Menu(20,-320,440,280,[180,180,180,1]);
-		menu1.dx = 0;
-		menu1.dy = 17;
-		menu1.animate = function(){
-			this.x += this.dx;
-			this.y += this.dy;
-			this.dx *= 0.95;
-			this.dy *= 0.95;
+		texts   = [];
+
+		for(var i=0; i<3; i++){
+			var image_background = new Menu(50+ (i*130),-250,120,120,[220,220,220,.7]);
+			image_background.dx  = 0;
+			image_background.dy  = 17;
 		};
-
-		for(var i=1; i<5; i++){
-			var menu2 = new Menu(60*i + 40*(i-1) - 10,-280,80,80,[255,255,255,1]);
-			menu2.dx = 0;
-			menu2.dy = 17;
-			menu2.animate = function(){
-				this.x += this.dx;
-				this.y += this.dy;
-				this.dx *= 0.95;
-				this.dy *= 0.95;
+		var text1 = new Text(85,-180,"SPEED","16px Georgia",[0,255,0,1]);
+		var text2 = new Text(218,-180,"LUCK","16px Georgia",[255,255,51,1]);
+		var text3 = new Text(352,-180,"LIFE","16px Georgia",[255,0,0,1]);
+		text1.dy = text2.dy = text3.dy = 17;
+		setTimeout(function(){
+			var button1 = new Button(50,90,120,120);
+			button1.onLift = function(){
+				for(var i in weapons){
+					weapons[i].framesPerShot -= Math.ceil(weapons[i].framesPerShot/7);
+				}
+				store.animate_close();
 			};
-			var topRowButton = new Button(60*i + 40*(i-1) - 10,60,80,80)
-			topRowButton.n = (i-1);
-			topRowButton.onLift = function(){
-				store.purchase(store.items[this.n]);
-			}
-
-
-			var menu3 = new Menu(60*i + 40*(i-1) - 10,-180,80,80,[255,255,255,1]);
-			menu3.dx = 0;
-			menu3.dy = 17;
-			menu3.animate = function(){
-				this.x += this.dx;
-				this.y += this.dy;
-				this.dx *= 0.95;
-				this.dy *= 0.95;
+			var button2 = new Button(180,90,120,120);
+			button2.onLift = function(){
+					player.luck += .25;
+					store.animate_close();
 			};
-			var bottomRowButton = new Button(60*i + 40*(i-1) - 10,160,80,80)
-			bottomRowButton.n = (i-1+4);
-			bottomRowButton.onLift = function(){
-				store.purchase(store.items[this.n]);
-			}
-		};
-		var menu_back = new Menu(20,-90,120,50,[255,255,255,1]);
-			menu_back.dx = 0;
-			menu_back.dy = 17;
-			menu_back.animate = function(){
-				this.x += this.dx;
-				this.y += this.dy;
-				this.dx *= 0.95;
-				this.dy *= 0.95;
+			var button3 = new Button(310,90,120,120);
+			button3.onLift = function(){
+				player.hp += 3;
+				store.animate_close();
 			};
-		var back = new Button(20,250,120,50);
-		back.onLift = function(){
-			//exit store
-			store.animate_close();
-		}
-		var menu_next = new Menu(340,-90,120,50,[255,255,255,1]);
-			menu_next.dx = 0;
-			menu_next.dy = 17;
-			menu_next.animate = function(){
-				this.x += this.dx;
-				this.y += this.dy;
-				this.dx *= 0.95;
-				this.dy *= 0.95;
-			};
-		var nextPage = new Button(340,250,120,50);
-		nextPage.onLift = function(){
-			//flip to next page
-			console.error("To be updated...");
-		}
+		},1000)
 	},
 	animate_close: function(){
 		for(var i=0; i<menus.length; i++){
 			menus[i].dy = -17;
 		}
 		buttons = [];
+		texts = [];
 		setTimeout(function(){
 			menus = [];
-			button_left = new Button(0,0,240,320);
-			button_left.onTouch = function(){
-				input.up = true;
-			}
-			button_left.onLift = function(){
-				input.up = false;
-			}
-			button_right = new Button(240,80,240,320);
-			button_right.onTouch = function(){
-				player.fire();
-			}
-			store_button = new Button(400,0,80,60);
-			store_button.onLift = function(){
-				game.pause();
-				store.animate_open();
-			}
-			inventory_button = new Button(0,0,80,60);
-			inventory_button.onLift = function(){
-				game.pause();
-				inventory.animate_open();
-			};
-			text_score = new Text(-100,30,player.points,"32px Georgia",[255,255,255,1])
+			setGameButtons();
+			text_score    = new Text(-100,30,player.points,"32px Georgia",[255,255,255,1])
 			text_score.dx = 50;
 			text_score.dy = 0;
 			text_score.animate = function(){
-				this.x += this.dx;
-				this.y += this.dy;
+				this.x  += this.dx;
+				this.y  += this.dy;
 				this.dx *= 0.9;
 				this.dy *= 0.9;
 			};
@@ -125,15 +93,21 @@ var store = {
 		countdown_timeout = setTimeout(function(){sound.play(sound.list.countdown)},0);
 		countdown_timeout = setTimeout(function(){sound.play(sound.list.countdown)},1000);
 		countdown_timeout = setTimeout(function(){sound.play(sound.list.countdown)},2000);
-		unpause_timeout = setTimeout(function(){game.unpause();},3000);
+		unpause_timeout   = setTimeout(function(){game.unpause();},3000);
 	},
 
-	items: [weapons._default,weapons._rocket,weapons._plasma,"d","e","f","g","h"],
+	items: [
+		weapons._default,
+		weapons._rocket,
+		weapons._plasma,
+		store_upgrades.health,
+		store_upgrades.shield,
+	],
 	purchase: function(item){
 		//console.error("Purchased item "+item);
 		if(player.points >= item.purchaseCost){
-			item.ammo ++;
-			player.points -= item.purchaseCost;
+			item.purchased();
+			player.points      -= item.purchaseCost;
 			player.spentPoints += item.purchaseCost;
 			sound.play(sound.list.purchase);
 		}
@@ -141,5 +115,4 @@ var store = {
 			sound.play(sound.list.err);
 		}
 	}
-
 }

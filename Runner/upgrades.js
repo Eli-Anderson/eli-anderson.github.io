@@ -4,6 +4,7 @@ var upgradeGen = {
 	framesPer: rand_i(480,600),
 }
 function upgradeGenerator(){
+	/*
 	upgradeGen.frame ++;
 	if(upgradeGen.frame >= upgradeGen.framesPer){
 		rand_a([
@@ -12,6 +13,7 @@ function upgradeGenerator(){
 		upgradeGen.frame = 0;
 		upgradeGen.framesPer = rand_i(480,600);
 	}
+	*/
 }
 
 function Upgrade(x,y){
@@ -63,10 +65,31 @@ function HealthUpgrade(x,y,amt){
 HealthUpgrade.prototype = Object.create(Upgrade.prototype);
 HealthUpgrade.prototype.constructor = HealthUpgrade;
 
+function ShieldUpgrade(x,y,amt){
+	Upgrade.call(this,x,y);
+	this.strength = amt;
+	this.img = heart_img;
+	this.imgW = this.img.width;
+	this.imgH = this.img.height;
+	this.imgFrameX = 0;
+	this.imgFrameY = 0;
+	this.w = 20;
+	this.h = 20;
+
+	this.onCollide = function(){
+		player.shield += this.strength;
+		del(this,upgrades);
+		sound.play(sound.list.heart_pickup);
+	}
+}
+
+ShieldUpgrade.prototype = Object.create(Upgrade.prototype);
+ShieldUpgrade.prototype.constructor = ShieldUpgrade;
+
 
 function RocketLauncherUpgrade(x,y,amt){
 	Upgrade.call(this,x,y);
-	this.duration = amt;
+	this.ammo = amt;
 	this.img = rocket_img;
 	this.imgW = 16;
 	this.imgH = 16;
@@ -75,7 +98,7 @@ function RocketLauncherUpgrade(x,y,amt){
 	this.w = 20;
 	this.h = 20;
 	this.onCollide = function(){
-		weapons._rocket.ammo = this.duration;
+		weapons._rocket.ammo += this.ammo;
 		weapons._rocket.framesSinceLastShot = 120;
 		player.weapon = weapons._rocket;
 		del(this,upgrades);
@@ -91,7 +114,7 @@ var weapons = {
 	_plasma: {
 		framesPerShot: 120,
 		framesSinceLastShot: 120,
-		ammo: 3,
+		ammo: 0,
 		purchaseCost: 7,
 		fire: function(){
 			if(this.framesPerShot - this.framesSinceLastShot <= 0 && !game.awaitingInput){
@@ -109,12 +132,15 @@ var weapons = {
 				}
 			}
 		},
+		purchased: function(){
+			this.ammo ++;
+		},
 	},
 
 	_rocket: {
-		framesPerShot: 120,
-		framesSinceLastShot: 120,
-		ammo: 3,
+		framesPerShot: 90,
+		framesSinceLastShot: 90,
+		ammo: 0,
 		purchaseCost: 3,
 		fire: function(){
 			if(this.framesPerShot - this.framesSinceLastShot <= 0 && !game.awaitingInput){
@@ -133,12 +159,15 @@ var weapons = {
 			}
 			
 		},
+		purchased: function(){
+			this.ammo ++;
+		},
 	},
 
 	_default: {
-		framesPerShot: 10,
+		framesPerShot: 20,
 		framesSinceLastShot: 60,
-		ammo: 10,
+		ammo: Infinity,
 		purchaseCost: 1,
 		fire: function(){
 			if(this.framesPerShot - this.framesSinceLastShot <= 0 && !game.awaitingInput){
@@ -157,5 +186,11 @@ var weapons = {
 				}
 			}
 		},
+		purchased: function(){
+			this.ammo ++;
+		},
 	},
-}
+};
+
+
+

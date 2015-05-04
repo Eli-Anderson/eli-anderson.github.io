@@ -5,7 +5,8 @@ var orbs = [];
 var walls = [];
 
 function init(){
-	if(!game_screen.mobile){sound.play(sound.list.background_music);}
+	//if(!game_screen.mobile){sound.play(sound.list.background_music);}
+	sound.play(sound.list.background_music);
 	for(var i=0; i<100; i++){
 		var x = rand_i(0,480);
 		var y = rand_i(0,320);
@@ -32,16 +33,7 @@ function init(){
 	button_right.onTouch = function(){
 		player.fire();
 	}
-	store_button = new Button(400,0,80,60);
-	store_button.onLift = function(){
-		game.pause();
-		store.animate_open();
-	}
-	inventory_button = new Button(0,0,80,60);
-	inventory_button.onLift = function(){
-		game.pause();
-		inventory.animate_open();
-	};
+	
 	text_score = new Text(-100,30,player.points,"32px Georgia",[255,255,255,1])
 	text_score.dx = 50;
 	text_score.dy = 0;
@@ -55,11 +47,14 @@ function init(){
 }
 var game = {
 	frame: 0,
+	running_frame: 0,
 	total_frame: 0,
 	running: false,
 	trigger1Fired: false,
 	awaitingInput: true,
 	global_dxdy: 1,
+	current_wave: 1,
+	difficulty: 1,
 	
 	restart: function(){
 		player.onScreen = true;
@@ -68,6 +63,8 @@ var game = {
 
 		enemy_vars.frame = 0;
 		enemy_vars.framesSinceLastEnemy = 0;
+		game.current_wave = 1;
+		game.difficulty = 1;
 
 		button_left = new Button(0,80,240,320);
 		button_left.onTouch = function(){
@@ -80,16 +77,7 @@ var game = {
 		button_right.onTouch = function(){
 			player.fire();
 		}
-		store_button = new Button(400,0,80,60);
-		store_button.onLift = function(){
-			game.pause();
-			store.animate_open();
-		};
-		inventory_button = new Button(0,0,80,60);
-		inventory_button.onLift = function(){
-			game.pause();
-			inventory.animate_open();
-		};
+		
 
 	    player.y = 155-player.h/2;
 	    player.dy = 0;
@@ -99,7 +87,9 @@ var game = {
 		player.points = 0;
 		player.spentPoints = 0;
 
-	    weapons._default.ammo = 10;
+	    weapons._default.framesPerShot = 20;
+	    weapons._rocket.framesPerShot = 90;
+	    weapons._plasma.framesPerShot = 120;
 	    weapons._rocket.ammo = 0;
 	    weapons._plasma.ammo = 0;
 
@@ -133,6 +123,7 @@ var game = {
 	}
 };
 function game_loop(){
+	//if(input.muted){Howler.mute()}
 	resizeCanvas()
 	ctx.clearRect(0,0,480,320);
 	game.frame++;
@@ -140,6 +131,7 @@ function game_loop(){
 	getButtonInput();
 	animateEffects();
 	if(game.running){
+		game.running_frame ++;
 		player.animate();
 		animateEnemies();
 		animateProjectiles();
@@ -172,8 +164,8 @@ function game_loop(){
 	renderTexts();
 
 	if(input.grid){
-		ctx.strokeStyle='white'
 		for(var x=0; x<480; x+=10){
+			ctx.strokeStyle='white';
 			ctx.beginPath();
 			ctx.moveTo(x,0);
 			ctx.lineTo(x,320);
@@ -181,12 +173,32 @@ function game_loop(){
 			ctx.stroke();
 		};
 		for(var y=0; y<320; y+=10){
+			ctx.strokeStyle='white';
 			ctx.beginPath();
 			ctx.moveTo(0,y);
 			ctx.lineTo(480,y);
 			ctx.closePath();
 			ctx.stroke();
 		}
+		ctx.strokeStyle = "red";
+		ctx.lineWidth = 1;
+		ctx.beginPath();
+		ctx.moveTo(120,0);
+		ctx.lineTo(120,320);
+		ctx.moveTo(240,0);
+		ctx.lineTo(240,320);
+		ctx.moveTo(360,0);
+		ctx.lineTo(360,320);
+		
+		ctx.moveTo(0,80);
+		ctx.lineTo(480,80);
+		ctx.moveTo(0,160);
+		ctx.lineTo(480,160);
+		ctx.moveTo(0,240);
+		ctx.lineTo(480,240);
+
+		ctx.stroke();
+		ctx.closePath();
 	}
 	requestAnimationFrame(game_loop);
 }
@@ -254,7 +266,28 @@ function renderEffects(){
 		arr[i].render();
 	}
 }
+function setGameButtons(){
+	button_left = new Button(0,0,240,320);
+	button_left.onTouch = function(){
+		input.up = true;
+	}
+	button_left.onLift = function(){
+		input.up = false;
+	}
+	button_right = new Button(240,80,240,320);
+	button_right.onTouch = function(){
+		player.fire();
+	}
+}
 
+function animate_wave_completed(){
+	var t = new Text(100,0,"Wave "+((game.current_wave-1)+(waves.number_of_waves*(game.difficulty-1)))+" completed","32px Georgia",[255,255,255,1]);
+	t.dy = 5;
+	t.animate = function(){
+		t.y += t.dy;
+	}
+	setTimeout(function(){del(t,texts)}, 1500)
+}
 
 function animLoseScreen(){
 	text_score.dx = 20;
@@ -270,9 +303,10 @@ function animLoseScreen(){
 		menu1.x += menu1.dx;
 	};
 	var points = player.points + player.spentPoints;
+	var wave = ((game.current_wave-1)+(waves.number_of_waves*(game.difficulty-1)))
 	text1 = new Text(495,80,"Game Over","48px Georgia",[255,255,255,1]);
-	text2 = new Text(580,140,"Score","32px Georgia",[255,255,255,1]);
-	text3 = new Text(610-(points.toString().length-1)*10,170,points,"38px Georgia",[255,255,255,1])
+	text2 = new Text(580,140,"Wave","32px Georgia",[255,255,255,1]);
+	text3 = new Text(610-(wave.toString().length-1)*10,170,wave,"38px Georgia",[255,255,255,1])
 	setTimeout(function(){
 		text1.dx = -42;
 		text1.dy = 0;
@@ -335,8 +369,8 @@ var background = {
 	stars: [],
 	animate: function(){
 		for(var i=0; i<this.stars.length; i++){
-			this.stars[i].x += this.stars[i].s;
-			if(this.stars[i].x <= this.stars[i].s){
+			this.stars[i].x += this.stars[i].s*game.difficulty;
+			if(this.stars[i].x + this.stars[i].w <= 0){
 				this.stars[i].x = 480;
 				this.stars[i].y = rand_i(0,320-this.stars[i].h)
 			}
@@ -380,11 +414,11 @@ var background = {
 		ctx.fillRect(0,0,480,320);
 		ctx.beginPath()
 		for(var n=0; n<this.stars.length; n++){
-			ctx.fillStyle='white';
 			ctx.rect(this.stars[n].x,this.stars[n].y,this.stars[n].w,this.stars[n].h)
 		}
+		ctx.fillStyle='white';
 		ctx.fill()
-		ctx.closePath()
+		//ctx.closePath()
 
 		for(var i=0; i<player.hp; i++){
 			ctx.drawImage(heart_img,5+(i*42)+i*5,5,42,42)
@@ -408,6 +442,7 @@ var input = {
 	up: false,
 	down: true,
 	grid: false,
+	muted: false,
 };
 
 document.addEventListener('keydown',keyDown);
@@ -468,13 +503,11 @@ function keyDown(e){
 			break;
 		case 72:
 			//h
-			var asdf = new Enemy_easy(rand_i(320,455),rand_i(0,295));
-			//asdf.magnet = true;
+			player.shield += 5;
 			break;
 		case 74:
 			//j
-			new Enemy_medium(rand_i(320,455),rand_i(0,295));
-			player.hp = 999;
+			store.animate_open();
 			break;
 		case 75:
 			//k
@@ -561,6 +594,8 @@ function rand_a(arr){
 	var r = rand_i(0,arr.length);
 	return arr[r];
 }
+
+
 
 function isColliding_rc(r,c_arr){
 	for(var i=0; i<c_arr.length; i++){
