@@ -3,27 +3,9 @@ var countdown_timeout;
 
 
 var store_upgrades = {
-	shield: {
-		purchaseCost: 15,
-		purchased: function(){
-			player.shield ++;
-		}
-	},
-	health: {
-		purchaseCost: 10,
-		purchased: function(){
-			player.hp ++;
-		}
-	},
-	rate_of_fire: {
-		purchaseCost: 5,
-		purchased: function(){
-			this.purchaseCost ++;
-			for(var i in weapons){
-				weapons[i].framesPerShot -= Math.ceil(weapons[i].framesPerShot/10)
-			}
-		}
-	}
+	speed: 0,
+	luck: 0,
+	life: 0,
 }
 
 
@@ -44,6 +26,24 @@ var store = {
 			var image_background = new Menu(50+ (i*130),-250,120,120,[220,220,220,.7]);
 			image_background.dx  = 0;
 			image_background.dy  = 17;
+			
+			switch(i){
+				case 0:
+					var ability = "speed"
+					break;
+				case 1:
+					var ability = "luck"
+					break;
+				case 2:
+					var ability = "life"
+					break;
+			}
+			for(var n=0; n<5; n++){
+				if(store[ability] <= n){
+					var menu = new Menu(70 + 25*n, -250, 25, 25, [0,0,0,1]);
+					menu.dy = 17;
+				}
+			}
 		};
 		var text1 = new Text(85,-180,"SPEED","16px Georgia",[0,255,0,1]);
 		var text2 = new Text(218,-180,"LUCK","16px Georgia",[255,255,51,1]);
