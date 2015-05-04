@@ -174,7 +174,7 @@ function loadMenu(){
         menus = [];
         buttons = [];
         texts = [];
-        menu_loop = null;
+        menu_loop = function(){};
         init();
     };
 
@@ -219,7 +219,7 @@ function splashScreen(){
     ctx.fillStyle = "black";
     ctx.fillText("Created by Eli Anderson", 310, 300);
 }
-var TOTAL_ASSETS = 25;
+var TOTAL_ASSETS = 26;
 var asset_counter = 0;
 var asset_text = ""
 function handleAssetLoad(arg){
