@@ -39,7 +39,7 @@ var store = {
 					break;
 			}
 			for(var n=0; n<5; n++){
-				if(store[ability] <= n){
+				if(store_upgrades[ability] <= n){
 					var menu = new Menu(70 + 25*n, -250, 25, 25, [0,0,0,1]);
 					menu.dy = 17;
 				}
