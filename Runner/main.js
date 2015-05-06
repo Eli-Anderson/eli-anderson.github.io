@@ -156,6 +156,7 @@ function game_loop(){
 	player.render();
 	renderProjectiles();
 	renderEffects();
+	background.render_hearts();
 	animateMenus();
 	animateTexts();
 	animateImages();
@@ -367,9 +368,10 @@ var background = {
 	w: 0,
 	h: 0,
 	stars: [],
+	dx: 1,
 	animate: function(){
 		for(var i=0; i<this.stars.length; i++){
-			this.stars[i].x += this.stars[i].s*(game.difficulty/2);
+			this.stars[i].x += this.stars[i].s*(this.dx);
 			if(this.stars[i].x + this.stars[i].w <= 0){
 				this.stars[i].x = 480;
 				this.stars[i].y = rand_i(0,320-this.stars[i].h)
@@ -390,7 +392,7 @@ var background = {
 					text4.dy *= 0.9;
 					text4.y += text4.dy;
 					if(game.total_frame % 11 === 0){
-						text4.dy += .5*Math.sin(game.frame)
+						text4.dy += 0.5*Math.sin(game.frame)
 					}
 				}
 				button2 = new Button(0,80,480,320);
@@ -418,12 +420,13 @@ var background = {
 		}
 		ctx.fillStyle='white';
 		ctx.fill()
-		//ctx.closePath()
-
-		for(var i=0; i<player.hp; i++){
+	},
+	
+	render_hearts: function(){
+	    for(var i=0; i<player.hp; i++){
 			ctx.drawImage(heart_img,5+(i*42)+i*5,5,42,42)
 		}
-	},
+	}
 
 }
 
@@ -503,7 +506,8 @@ function keyDown(e){
 			break;
 		case 72:
 			//h
-			player.shield += 5;
+			effects.ship.medium_particle_explosion(300,200,[0,0,255],[160,160,160])
+
 			break;
 		case 74:
 			//j
@@ -522,14 +526,16 @@ function keyDown(e){
 		    break;
 		case 192:
 			if(document.getElementById('debug').style.visibility == "hidden"){
-				document.getElementById('debug').style.visibility = "visible"
-				document.getElementById('debuggerInput').style.visibility = "visible"
-				document.getElementById('debuggerButton').style.visibility = "visible"
+				document.getElementById('debug').style.visibility = "visible";
+				document.getElementById('debuggerInput').style.visibility = "visible";
+				document.getElementById('debuggerButton').style.visibility = "visible";
+				game.pause();
 			}
 			else{
-				document.getElementById('debug').style.visibility = "hidden"
-				document.getElementById('debuggerInput').style.visibility = "hidden"
-				document.getElementById('debuggerButton').style.visibility = "hidden"
+				document.getElementById('debug').style.visibility = "hidden";
+				document.getElementById('debuggerInput').style.visibility = "hidden";
+				document.getElementById('debuggerButton').style.visibility = "hidden";
+				game.unpause();
 			}
 		default:
 			console.log(e.keyCode)
