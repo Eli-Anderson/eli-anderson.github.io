@@ -37,7 +37,8 @@ var player = {
 	},
 	
 	animate: function(){
-		if(game.frame % 20 == 0){
+	    text_score.txt = this.points;
+		if(game.frame % 20 === 0){
 			if(this.hp < 3){
 				effects.ship.smoke_trail(this.x+this.w/2,this.y+this.h/2,0.3*this.hp)
 			}
@@ -63,15 +64,15 @@ var player = {
 		
 		this.ddy *= 0.95;
 
-		if((this.y+this.h < 0 || this.y > 320) && game.frame % 60 == 0){
+		if((this.y+this.h < 0 || this.y > 320) && game.frame % 60 === 0){
 			this.gotHit(1);
-		};
-		if(game.frame % 1 == 0){
+		}
+		if(game.frame % 1 === 0){
 			var s = Math.round(this.dy).toString()
 			this.frameX = this.sprite[s].x;
 			this.frameW = this.sprite[s].w;
 			this.frameH = this.sprite[s].h;
-		};
+		}
 		player.weapon_array = [];
 		for(var w in weapons){
 			w = weapons[w];
@@ -100,7 +101,7 @@ var player = {
 	willCollide: function(obj){
 		var p = player;
 		var c = obj;
-		if(c.w != undefined){
+		if(c.w !== undefined){
 			if(p.x+p.w > c.x &&
 				p.x < c.x+c.w &&
 				p.y+p.h > c.y &&
@@ -116,7 +117,7 @@ var player = {
 		    if (distX > (this.w/2 + c.r)) { return false; }
 		    if (distY > (this.h/2 + c.r)) { return false; }
 
-		    if (distX <= (this.w/2)) { return true; } 
+		    if (distX <= (this.w/2)) { return true; }
 		    if (distY <= (this.h/2)) { return true; }
 
 		    var dx=distX-this.w/2;
@@ -128,6 +129,14 @@ var player = {
 		for(var i=0; i<orbs.length; i++){
 			if(this.willCollide(orbs[i]) && orbs[i].touchable){
 				orbs[i].touched();
+				if(player.points % 50 === 0){
+				    var inter = setInterval(function(){
+				        if(!game.paused){
+				            store.animate_open();
+				            clearInterval(inter);
+				        }
+				    }, 50)
+				}
 			}
 		}
 	},
@@ -147,7 +156,8 @@ var player = {
 			this.hp -= dmg;
 			if(this.hp <= 0){
 				this.gameOver();
-				new Explosion(this.x+this.w/2,this.y+this.h/2,50,50)
+				new Explosion(this.x+this.w/2,this.y+this.h/2,50,50);
+				effects.ship.medium_particle_explosion(this.x+this.w/2,this.y+this.h/2,[0,0,255],[160,160,160])
 			}
 			else{
 				sound.play(sound.list.player_hit);
@@ -173,7 +183,7 @@ var player = {
 	weapon: weapons._default,
 	weapon_array: [],
 	next_weapon: function(){
-		if(player.weapon_array[0] == undefined){return 0}
+		if(player.weapon_array[0] === undefined){return 0}
 		player.weapon = player.weapon_array[0];
 		return 1;
 	},
