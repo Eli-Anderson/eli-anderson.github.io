@@ -10,7 +10,7 @@ function Projectile(x,y,dx,dy,targets){
 	this.onScreen = true;
 }
 Projectile.prototype.animate = function(){
-	if(game.frame % 1 == 0){
+	if(game.frame % 5 === 0){
 		effects.ship.small_particle_explosion(this.x,this.y,[0,255,0])
 	}
 	this.dx *= game.global_dxdy;
