@@ -161,15 +161,15 @@ function Ship_Particle(x,y,w,h,dx,dy,rgb){
 Ship_Particle.prototype.animate = function(){
 	this.x += this.dx;
 	this.y += this.dy;
-	this.dx *= .95;
-	this.dy *= .95;
-	this.alpha *= .95;
-	if(this.alpha < .01){
-		del(this, particles)
+	this.dx *= 0.95;
+	this.dy *= 0.95;
+	this.alpha *= 0.95;
+	if(this.alpha < 0.01){
+		del(this, particles);
 	}
-}
+};
 Ship_Particle.prototype.render = function(){
-	ctx.fillStyle=this.rgb + ","+this.alpha+")";
+	ctx.fillStyle=this.rgb + "," +this.alpha+")";
 	ctx.fillRect(this.x,this.y,this.w,this.h);
 }
 var effects = {
@@ -192,24 +192,26 @@ var effects = {
 		},
 	},
 	ship: {
-		small_particle_explosion: function (x,y,rgb){
-			var rgb = rgb || [rand_i(160,200),rand_i(160,200),rand_i(160,200)]
+		small_particle_explosion: function (x,y,rgb1,rgb2){
 	    	for(var i=0; i<Math.PI/2; i+=Math.PI/10){
+	    	    var rgb1 = rgb1 || [rand_i(160,200),rand_i(160,200),rand_i(160,200)]
+	    	    var rgb2 = rgb2 || [rand_i(160,200),rand_i(160,200),rand_i(160,200)]
 	    		var w = rand_i(2,5);
 	    		var h = rand_i(2,5)
 				var ry = rand_i(-2,2);
 				var rx = rand_i(-2,2);
-	        	new Ship_Particle(x,y,w,h,-6+rx+Math.cos(i),ry+Math.sin(i),rgb);
+	        	new Ship_Particle(x,y,w,h,-6+rx+Math.cos(i),ry+Math.sin(i),rand_a([rgb1,rgb2]));
 	    	}
 		},
-		medium_particle_explosion: function(x,y,rgb){
-			var rgb = rgb || [rand_i(160,200),rand_i(160,200),rand_i(160,200)]
+		medium_particle_explosion: function(x,y,rgb1,rgb2){
 			for(var i=0; i<Math.PI*2; i+=Math.PI/3){
+			    var rgb1 = rgb1 || [rand_i(160,200),rand_i(160,200),rand_i(160,200)]
+	    	    var rgb2 = rgb2 || [rand_i(160,200),rand_i(160,200),rand_i(160,200)]
 				var w = rand_i(5,9);
 				var h = rand_i(5,9);
 				var ry = rand_i(-2,2);
 				var rx = rand_i(-2,2);
-	        	new Ship_Particle(x,y,w,h,-6+rx+Math.cos(i),ry+Math.sin(i),rgb);
+	        	new Ship_Particle(x,y,w,h,-6+rx+Math.cos(i),ry+Math.sin(i),rand_a([rgb1,rgb2]));
 	    	}
 		},
 		large_particle_explosion: function(x,y,rgb){
