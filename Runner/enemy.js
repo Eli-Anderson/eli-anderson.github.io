@@ -220,14 +220,15 @@ var waves = {
 	],
 	next_wave_frame: 0,
 	send_next_wave: function(){
-		if(waves[game.current_wave] == undefined){
+		if(waves[game.current_wave] === undefined){
 			game.current_wave = 1;
 			game.difficulty ++;
+			background.dx = Math.sqrt(game.difficulty);
 		}
 		var interval = setInterval(function(){
 			if(game.running_frame - waves.next_wave_frame >= 360){
-				waves[game.current_wave].init()
-				clearInterval(interval)
+				waves[game.current_wave].init();
+				clearInterval(interval);
 			}
 		},5);
 	},
