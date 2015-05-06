@@ -49,7 +49,6 @@ function Orb(x,y,p){
 Orb.prototype.touched = function(){
 	del(this,orbs);
 	player.points += this.points;
-	text_score.txt += this.points;
 	sound.play(sound.list.orb_pickup,2);
 }
 Orb.prototype.animate = function(){
