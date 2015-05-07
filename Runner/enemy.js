@@ -1,7 +1,20 @@
 var enemies = [];
 
-var enemy_vars = {
-	
+var enemy_weapons = {
+	basic: {
+		framesPerShot: 90,
+		fire: function(x,y){
+			new Projectile_basic(x,y,-1,0,player);
+			//sound.play(sound.list.default_fire);
+		},
+	},
+	rocket: {
+		framesPerShot: 90,
+		fire: function(x,y){
+			new Projectile_rocket(x,y,-1,0,player);
+			//sound.play(sound.list.rocket_fire);
+		},
+	},
 }
 /*
   seconds  -- frames
@@ -20,6 +33,14 @@ var enemy_vars = {
 function enemyGenerator(){
 	if(game.frame == 300){
 		waves[1].init();
+		wave_time.dy = -5;
+		wave_time.txt = game.current_wave * game.difficulty + 10;
+		wave_timer = setInterval(function(){
+			wave_time.txt --;
+			if(wave_time.txt === 0){
+				player.gameOver;
+			}
+		}, 1000)
 	}
 }
 
@@ -147,13 +168,14 @@ function Enemy_easy(x,y){
 Enemy_easy.prototype = Object.create(Enemy.prototype);
 Enemy_easy.prototype.constructor = Enemy_easy;
 
-function Enemy_static(x,y,hp){
+function Enemy_static(x,y,hp,weapon){
 	Enemy.call(this,x,y);
 	this.img = enemy_basic_img;
 	this.w = 25;
 	this.h = 25;
 
 	this.framesPerShot = 90;
+	this.weapon = enemy_weapons[weapon] || enemy_weapons.basic;
 	this.hp = hp;
 	var that = this;
 	this.drops = [
@@ -167,19 +189,19 @@ function Enemy_static(x,y,hp){
 		if((game.frame - this.frame) % this.framesPerShot === 0 && !game.awaitingInput){this.fire()}
 	};
 	this.fire = function(){
-		new Projectile_basic(this.x,this.y,-1,0,player);
+		this.weapon.fire(this.x,this.y+this.h/2);
 	};
 }
 
 Enemy_static.prototype = Object.create(Enemy.prototype);
 Enemy_static.prototype.constructor = Enemy_static;
 
-function Enemy_oscillating(x,y,hp){
+function Enemy_oscillating(x,y,hp,weapon){
 	Enemy.call(this,x,y);
 	this.img = enemy_basic_img;
 	this.w = 25;
 	this.h = 25;
-
+	this.weapon = enemy_weapons[weapon] || enemy_weapons.basic;
 	this.framesPerShot = 90;
 	this.hp = hp;
 	var that = this;
@@ -199,7 +221,7 @@ function Enemy_oscillating(x,y,hp){
 		}
 	};
 	this.fire = function(){
-		new Projectile_basic(this.x,this.y,-1,0,player);
+		this.weapon.fire(this.x,this.y+this.h/2);
 	};
 }
 
@@ -208,6 +230,7 @@ Enemy_oscillating.prototype.constructor = Enemy_oscillating;
 
 
 var send_next_wave_timeout,wave_completion_check_interval,wave_upgrade_timeout;
+
 var waves = {
 	number_of_waves: 6,
 	possible_positions: [
@@ -225,6 +248,16 @@ var waves = {
 			game.difficulty ++;
 			background.dx = Math.sqrt(game.difficulty);
 		}
+		wave_time.txt = game.current_wave * game.difficulty + 10;
+		wave_time.dy = -5;
+		wave_timer = setInterval(function(){
+			wave_time.txt --;
+			if(wave_time.txt === 0){
+				player.gameOver;
+				wave_time.dy = 5;
+			}
+		}, 1000)
+
 		var interval = setInterval(function(){
 			if(game.running_frame - waves.next_wave_frame >= 360){
 				waves[game.current_wave].init();
@@ -243,10 +276,10 @@ var waves = {
 	},
 	send_drops: function(){
 		var x = 500;
-		var y = rand_i(0,300);
+		var y = player.y + rand_i(-50,50);
 		var amt;
 		if(Math.random() <= player.luck){
-			amt = rand_i(game.difficulty,3*game.difficulty);
+			amt = 2*game.difficulty;
 			new HealthUpgrade(x,y,amt);
 			sound.play(sound.list.lucky);
 			
@@ -264,6 +297,8 @@ var waves = {
 		if(enemies[0] == undefined){
 			waves[game.current_wave].completed = true;
 			clearInterval(wave_completion_check_interval);
+			clearInterval(wave_timer);
+			wave_time.dy = 5;
 			game.current_wave ++;
 			waves.next_wave_frame = game.running_frame;
 			waves.send_next_wave();

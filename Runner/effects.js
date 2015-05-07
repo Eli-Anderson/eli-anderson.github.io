@@ -195,7 +195,7 @@ var effects = {
 		small_particle_explosion: function (x,y,rgb1,rgb2){
 	    	for(var i=0; i<Math.PI/2; i+=Math.PI/10){
 	    	    var rgb1 = rgb1 || [rand_i(160,200),rand_i(160,200),rand_i(160,200)]
-	    	    var rgb2 = rgb2 || [rand_i(160,200),rand_i(160,200),rand_i(160,200)]
+	    	    var rgb2 = rgb2 || rgb1
 	    		var w = rand_i(2,5);
 	    		var h = rand_i(2,5)
 				var ry = rand_i(-2,2);
@@ -206,7 +206,7 @@ var effects = {
 		medium_particle_explosion: function(x,y,rgb1,rgb2){
 			for(var i=0; i<Math.PI*2; i+=Math.PI/3){
 			    var rgb1 = rgb1 || [rand_i(160,200),rand_i(160,200),rand_i(160,200)]
-	    	    var rgb2 = rgb2 || [rand_i(160,200),rand_i(160,200),rand_i(160,200)]
+	    	    var rgb2 = rgb2 || rgb1
 				var w = rand_i(5,9);
 				var h = rand_i(5,9);
 				var ry = rand_i(-2,2);

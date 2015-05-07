@@ -3,7 +3,6 @@ var ctx = canvas.getContext('2d')
 
 var orbs = [];
 var walls = [];
-
 function init(){
 	//if(!game_screen.mobile){sound.play(sound.list.background_music);}
 	sound.play(sound.list.background_music);
@@ -21,6 +20,7 @@ function init(){
 			s: s,
 		})
 	}
+	wave_time = new Text(200, 360, "0", "32px Georgia", [255,255,255,1]);
 	game.running = true;
 	button_left = new Button(0,80,240,320);
 	button_left.onTouch = function(){
@@ -60,9 +60,6 @@ var game = {
 		player.onScreen = true;
 		game.frame = 0;
 		game.global_dxdy = 1;
-
-		enemy_vars.frame = 0;
-		enemy_vars.framesSinceLastEnemy = 0;
 		game.current_wave = 1;
 		game.difficulty = 1;
 

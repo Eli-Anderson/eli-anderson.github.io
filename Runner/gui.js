@@ -104,7 +104,7 @@ function Text(x,y,txt,font,rgba){
 	this.y = y;
     this.dx = 0;
     this.dy = 0;
-	this.txt = txt;
+	this.txt = txt.toString();
 	this.font = font;
 	this.rgba = "rgba("+rgba[0]+","+rgba[1]+","+rgba[2]+","+rgba[3]+")";
     this.animate = function(){
