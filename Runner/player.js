@@ -175,6 +175,7 @@ var player = {
 		button_right = null;
 		game.global_dxdy = 0;
 		clearInterval(wave_timer);
+		wave_time.dy = 5
 		setTimeout(function(){
 			animLoseScreen();
 		}, 1500)
