@@ -262,7 +262,7 @@ var waves = {
 				wave_timer = setInterval(function(){
 					wave_time.txt --;
 					if(wave_time.txt === 0){
-						player.gameOver;
+						player.gameOver();
 						wave_time.dy = 5;
 						clearInterval(wave_timer);
 					}
