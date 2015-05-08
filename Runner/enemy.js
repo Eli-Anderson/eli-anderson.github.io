@@ -39,6 +39,8 @@ function enemyGenerator(){
 			wave_time.txt --;
 			if(wave_time.txt === 0){
 				player.gameOver;
+				clearInterval(wave_timer);
+				wave_time.dy = 5;
 			}
 		}, 1000)
 	}
@@ -248,20 +250,23 @@ var waves = {
 			game.difficulty ++;
 			background.dx = Math.sqrt(game.difficulty);
 		}
-		wave_time.txt = game.current_wave * game.difficulty + 10;
-		wave_time.dy = -5;
-		wave_timer = setInterval(function(){
-			wave_time.txt --;
-			if(wave_time.txt === 0){
-				player.gameOver;
-				wave_time.dy = 5;
-			}
-		}, 1000)
+		
 
 		var interval = setInterval(function(){
 			if(game.running_frame - waves.next_wave_frame >= 360){
 				waves[game.current_wave].init();
 				clearInterval(interval);
+				
+				wave_time.txt = game.current_wave * game.difficulty + 10;
+				wave_time.dy = -5;
+				wave_timer = setInterval(function(){
+					wave_time.txt --;
+					if(wave_time.txt === 0){
+						player.gameOver;
+						wave_time.dy = 5;
+						clearInterval(wave_timer);
+					}
+				}, 1000)
 			}
 		},5);
 	},
