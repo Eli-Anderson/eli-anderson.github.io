@@ -129,7 +129,7 @@ function handleTouchstart(e){
     for(var i=0; i<buttons.length; i++){
     	var b = buttons[i];
     	if(x < b.x*game_screen.dw + b.w*game_screen.dw && x > b.x*game_screen.dw &&
-		y < b.y*game_screen.dh + b.h*game_screen.dh && y > b.y*game_screen.dh){
+		   y < b.y*game_screen.dh + b.h*game_screen.dh && y > b.y*game_screen.dh){
     		b.isPressed = true;
     	}
     }
@@ -164,7 +164,7 @@ function handleTouchend(e){
     for(var i=0; i<buttons.length; i++){
         var b = buttons[i];
         if(x < b.x*game_screen.dw + b.w*game_screen.dw && x > b.x*game_screen.dw &&
-		y < b.y*game_screen.dh + b.h*game_screen.dh && y > b.y*game_screen.dh){
+		   y < b.y*game_screen.dh + b.h*game_screen.dh && y > b.y*game_screen.dh){
             b.isPressed = false;
             b.onLift();
         }
@@ -302,10 +302,10 @@ function resizeCanvas(){
 	}
 	canvas.style.width = width;
     canvas.style.height = height;
-	canvas.style.left = padding_left;
-	canvas.style.top = padding_top;
-	game_screen.padding_left = padding_left;
-	game_screen.padding_top = padding_top;
+	canvas.style.left = padding_left || 0;
+	canvas.style.top = padding_top || 0;
+	game_screen.padding_left = padding_left || 0;
+	game_screen.padding_top = padding_top || 0;
     game_screen.width = width;
     game_screen.height = height;
 	game_screen.dw = (width/480);
