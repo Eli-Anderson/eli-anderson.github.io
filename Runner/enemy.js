@@ -31,21 +31,15 @@ var enemy_weapons = {
 
 */
 function enemyGenerator(){
-	if(game.frame == 300){
+	if(game.running_frame == 300){
 		waves[1].init();
 		wave_time.dy = -5;
 		wave_time.txt = game.current_wave * game.difficulty + 10;
-		wave_timer = setInterval(function(){
-			wave_time.txt --;
-			if(wave_time.txt === 0){
-				player.gameOver();
-				wave_time.dy = 5;
-			}
-		}, 1000)
+		wave_timer.start();
 	}
 }
 
-function Enemy(x,y){
+function Enemy(x, y){
 	enemies.push(this);
 	this.x = x;
 	this.y = y;
@@ -77,7 +71,7 @@ Enemy.prototype.gotHit = function(dmg){
 	}
 }
 
-function Enemy_medium(x,y){
+function Enemy_medium(x, y){
 	Enemy.call(this,x,y);
 	this.img = enemy_basic_img;
 	this.w = 20;
@@ -129,7 +123,7 @@ function Enemy_medium(x,y){
 Enemy_medium.prototype = Object.create(Enemy.prototype);
 Enemy_medium.prototype.constructor = Enemy_medium;
 
-function Enemy_easy(x,y){
+function Enemy_easy(x, y){
 	Enemy.call(this,x,y);
 	this.img = enemy_basic_img;
 	this.w = 25;
@@ -175,6 +169,8 @@ function Enemy_static(x,y,hp,weapon){
 	this.w = 25;
 	this.h = 25;
 
+	this.startX = x;
+
 	this.framesPerShot = 90;
 	this.weapon = enemy_weapons[weapon] || enemy_weapons.basic;
 	this.hp = hp;
@@ -187,6 +183,9 @@ function Enemy_static(x,y,hp,weapon){
 	this.sound = sound.list.enemy_easy_hit;
 	
 	this.animate = function(){
+		if(this.startX - this.x < 130){
+			this.x --;
+		}
 		if((game.frame - this.frame) % this.framesPerShot === 0 && !game.awaitingInput){this.fire()}
 	};
 	this.fire = function(){
@@ -197,11 +196,14 @@ function Enemy_static(x,y,hp,weapon){
 Enemy_static.prototype = Object.create(Enemy.prototype);
 Enemy_static.prototype.constructor = Enemy_static;
 
-function Enemy_oscillating(x,y,hp,weapon){
+function Enemy_oscillating(x, y, hp, weapon){
 	Enemy.call(this,x,y);
 	this.img = enemy_basic_img;
 	this.w = 25;
 	this.h = 25;
+
+	this.startX = x;
+
 	this.weapon = enemy_weapons[weapon] || enemy_weapons.basic;
 	this.framesPerShot = 90;
 	this.hp = hp;
@@ -214,6 +216,9 @@ function Enemy_oscillating(x,y,hp,weapon){
 	this.sound = sound.list.enemy_easy_hit;
 	this.counter = 0;
 	this.animate = function(){
+		if(this.startX - this.x < 130){
+			this.x --;
+		}
 		if((game.frame - this.frame) % this.framesPerShot === 0 && !game.awaitingInput){this.fire()};
 		this.dy = 1.5*Math.cos(this.counter);
 		this.y += this.dy;
@@ -235,12 +240,12 @@ var send_next_wave_timeout,wave_completion_check_interval,wave_upgrade_timeout;
 var waves = {
 	number_of_waves: 6,
 	possible_positions: [
-		[350,20 ], [400,20 ], [450,20 ],
-		[350,70 ], [400,70 ], [450,70 ],
-		[350,120], [400,120], [450,120],
-		[350,170], [400,170], [450,170],
-		[350,220], [400,220], [450,220],
-		[350,270], [400,270], [450,270],
+		[480,20 ], [530,20 ], [580,20 ],
+		[480,70 ], [530,70 ], [580,70 ],
+		[480,120], [530,120], [580,120],
+		[480,170], [530,170], [580,170],
+		[480,220], [530,220], [580,220],
+		[480,270], [530,270], [580,270],
 	],
 	next_wave_frame: 0,
 	send_next_wave: function(){
@@ -248,25 +253,11 @@ var waves = {
 			game.current_wave = 1;
 			game.difficulty ++;
 			background.dx = Math.sqrt(game.difficulty);
-		}
-		
 
-		var interval = setInterval(function(){
-			if(game.running_frame - waves.next_wave_frame >= 360){
-				waves[game.current_wave].init();
-				clearInterval(interval);
-				
-				wave_time.txt = game.current_wave * game.difficulty + 10;
-				wave_time.dy = -5;
-				wave_timer = setInterval(function(){
-					wave_time.txt --;
-					if(wave_time.txt === 0){
-						player.gameOver();
-						wave_time.dy = 5;
-					}
-				}, 1000)
-			}
-		},5);
+		}
+		wave_time.txt = game.current_wave * game.difficulty + 10;
+
+		wave_check_if_frames_passed.start();
 	},
 	random_position: function(){
 		var r = rand_a(waves.possible_positions);
@@ -300,18 +291,18 @@ var waves = {
 		if(enemies[0] == undefined){
 			waves[game.current_wave].completed = true;
 			clearInterval(wave_completion_check_interval);
-			clearInterval(wave_timer);
+			wave_timer.stop();
 			wave_time.dy = 5;
 			game.current_wave ++;
 			waves.next_wave_frame = game.running_frame;
 			waves.send_next_wave();
 			waves.possible_positions = [
-				[350,20 ], [400,20 ], [450,20 ],
-				[350,70 ], [400,70 ], [450,70 ],
-				[350,120], [400,120], [450,120],
-				[350,170], [400,170], [450,170],
-				[350,220], [400,220], [450,220],
-				[350,270], [400,270], [450,270],
+				[480,20 ], [530,20 ], [580,20 ],
+				[480,70 ], [530,70 ], [580,70 ],
+				[480,120], [530,120], [580,120],
+				[480,170], [530,170], [580,170],
+				[480,220], [530,220], [580,220],
+				[480,270], [530,270], [580,270],
 			];
 			animate_wave_completed();
 			waves.send_drops();

@@ -4,6 +4,29 @@ var ctx = canvas.getContext('2d')
 var orbs = [];
 var walls = [];
 function init(){
+	wave_timer = new Timer();
+	wave_timer.func = function(){
+		wave_time.txt --;
+		if(wave_time.txt <= 3){
+			sound.play(sound.list.countdown);
+		}
+		if(wave_time.txt === 0){
+			player.gameOver();
+			wave_time.dy = 5;
+		};
+	}
+	wave_check_if_frames_passed = new Timer();
+	wave_check_if_frames_passed.dt = 5;
+	wave_check_if_frames_passed.func = function(){
+		if(game.running_frame - waves.next_wave_frame >= 300){
+			waves[game.current_wave].init();
+			wave_check_if_frames_passed.stop();
+			
+			
+			wave_time.dy = -5;
+			wave_timer.start();
+		}
+	}
 	//if(!game_screen.mobile){sound.play(sound.list.background_music);}
 	sound.play(sound.list.background_music);
 	for(var i=0; i<100; i++){
@@ -20,7 +43,7 @@ function init(){
 			s: s,
 		})
 	}
-	wave_time = new Text(200, 360, "0", "32px Georgia", [255,255,255,1]);
+	wave_time = new Text(200, 390, "0", "32px Georgia", [255,255,255,1]);
 	game.running = true;
 	button_left = new Button(0,80,240,320);
 	button_left.onTouch = function(){
@@ -59,6 +82,7 @@ var game = {
 	restart: function(){
 		player.onScreen = true;
 		game.frame = 0;
+		game.running_frame = 0;
 		game.global_dxdy = 1;
 		game.current_wave = 1;
 		game.difficulty = 1;
@@ -289,7 +313,7 @@ function animate_wave_completed(){
 
 function animLoseScreen(){
 	text_score.dx = 20;
-	setTimeout(function(){text_score = null},200)
+	setTimeout(function(){del(text_score, texts)},200)
 
 	menu1 = new Menu(60,-280,360,240,[0,0,0,1]);
 	menu1.dy = 34;
@@ -489,6 +513,7 @@ function keyDown(e){
 			break;
 		case 52:
 			//4
+			asdf.stop();
 			break;
 		case 68:
 			//d
@@ -627,6 +652,25 @@ function isColliding_rr(r1,r2){
 	return false;
 }
 
+
+function Timer(){
+	this.dt = 1000;
+	this.running = false;
+	this.func = function(){
+
+	};
+
+	this.start = function(){
+		if(this.running){return}
+		this.running = true;
+		this.interval = setInterval(this.func, this.dt)
+	};
+
+	this.stop = function(){
+		this.running = false;
+		clearInterval(this.interval);
+	};
+}
 
 
 function log(arg1,arg2,arg3,arg4,arg5){

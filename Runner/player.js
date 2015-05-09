@@ -1,4 +1,8 @@
-
+var offscreen_timer = new Timer();
+offscreen_timer.dt = 1000;
+offscreen_timer.func = function(){
+	player.gotHit(1);
+}
 var player = {
 	x: 40,
 	w: 30,
@@ -64,9 +68,10 @@ var player = {
 		
 		this.ddy *= 0.95;
 
-		if((this.y+this.h < 0 || this.y > 320) && game.frame % 60 === 0){
-			this.gotHit(1);
+		if((this.y+this.h < 0 || this.y > 320)){
+			offscreen_timer.start()
 		}
+		else{offscreen_timer.stop()}
 		if(game.frame % 1 === 0){
 			var s = Math.round(this.dy).toString()
 			this.frameX = this.sprite[s].x;
@@ -174,7 +179,9 @@ var player = {
 		button_left = null;
 		button_right = null;
 		game.global_dxdy = 0;
-		clearInterval(wave_timer);
+		wave_timer.stop();
+		offscreen_timer.stop();
+		wave_check_if_frames_passed.stop();
 		wave_time.dy = 5
 		setTimeout(function(){
 			animLoseScreen();

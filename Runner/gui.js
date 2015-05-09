@@ -159,8 +159,8 @@ function simulateTouchEnd(x,y){
     }
 }
 function handleTouchend(e){
-    var x = e.changedTouches[0].clientX;
-    var y = e.changedTouches[0].clientY;
+    var x = e.changedTouches[0].clientX - game_screen.padding_left;
+    var y = e.changedTouches[0].clientY - game_screen.padding_top;
     for(var i=0; i<buttons.length; i++){
         var b = buttons[i];
         if(x < b.x*game_screen.dw + b.w*game_screen.dw && x > b.x*game_screen.dw &&

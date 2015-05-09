@@ -1,0 +1,929 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"send",
+				"send_next_wave"
+			],
+			[
+				"Ene",
+				"Enemy_static"
+			],
+			[
+				"next",
+				"next_page"
+			],
+			[
+				"store",
+				"store_upgrades"
+			],
+			[
+				"game",
+				"game_screen"
+			],
+			[
+				"weapon",
+				"weapon_array"
+			],
+			[
+				"T",
+				"TOTAL_ASSETS"
+			],
+			[
+				"r",
+				"rgba"
+			],
+			[
+				"unpaus",
+				"unpause_timeout"
+			],
+			[
+				"countd",
+				"countdown_timeout"
+			],
+			[
+				"unpau",
+				"unpause_timeout"
+			],
+			[
+				"menu",
+				"menu_loop"
+			],
+			[
+				"_",
+				"_default"
+			],
+			[
+				"enem",
+				"enemy_vars"
+			],
+			[
+				"purcha",
+				"purchaseCost"
+			],
+			[
+				"frames",
+				"framesSinceLastShot"
+			],
+			[
+				"anima",
+				"animate_close"
+			],
+			[
+				"projec",
+				"projectile_img"
+			],
+			[
+				"isColl",
+				"isColliding_rc"
+			],
+			[
+				"frame",
+				"frameCounter"
+			],
+			[
+				"Projec",
+				"Projectile_basic"
+			],
+			[
+				"backg",
+				"background_img"
+			],
+			[
+				"render",
+				"renderTexts"
+			],
+			[
+				"wall",
+				"wall_vars"
+			],
+			[
+				"coin",
+				"coin_vars"
+			],
+			[
+				"obsta",
+				"obstacles"
+			],
+			[
+				"obstacle",
+				"obstacle_array"
+			],
+			[
+				"animate",
+				"animateParticles"
+			],
+			[
+				"draw",
+				"drawParticles"
+			],
+			[
+				"delete",
+				"deleteObject"
+			],
+			[
+				"targ",
+				"target_type"
+			],
+			[
+				"h_",
+				"h_traslation_x"
+			],
+			[
+				"h_t",
+				"h_traslation_x"
+			],
+			[
+				"p0",
+				"p0_x"
+			],
+			[
+				"entity",
+				"entity_lines"
+			],
+			[
+				"entit",
+				"entities"
+			],
+			[
+				"enti",
+				"entities"
+			],
+			[
+				"x",
+				"x_translation"
+			],
+			[
+				"enit",
+				"entity_vertices"
+			],
+			[
+				"res",
+				"res2_dy"
+			],
+			[
+				"res1",
+				"res1_dy"
+			],
+			[
+				"ligh",
+				"LightSource"
+			],
+			[
+				"vert",
+				"vert_hyp"
+			],
+			[
+				"n",
+				"n"
+			],
+			[
+				"sx",
+				"sx"
+			],
+			[
+				"y",
+				"y_translation"
+			],
+			[
+				"handleClick",
+				"handleClickUpMain"
+			],
+			[
+				"clear",
+				"clearCanvases"
+			],
+			[
+				"deb",
+				"debug_vars"
+			],
+			[
+				"debug",
+				"debug_light"
+			],
+			[
+				"debug_",
+				"debug_trigger"
+			],
+			[
+				"hud",
+				"hud_canvas"
+			],
+			[
+				"coll",
+				"collideRight"
+			],
+			[
+				"fill",
+				"fillStyle"
+			],
+			[
+				"proto",
+				"prototype"
+			],
+			[
+				"can",
+				"canvasCollisions"
+			],
+			[
+				"get",
+				"getTouching"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "new.html",
+			"settings":
+			{
+				"buffer_size": 1459,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "gui.js",
+			"settings":
+			{
+				"buffer_size": 8837,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "main.js",
+			"settings":
+			{
+				"buffer_size": 13898,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "player.js",
+			"settings":
+			{
+				"buffer_size": 3943,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "sound.js",
+			"settings":
+			{
+				"buffer_size": 1151,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "upgrades.js",
+			"settings":
+			{
+				"buffer_size": 4328,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "wall.js",
+			"settings":
+			{
+				"buffer_size": 3412,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "projectile.js",
+			"settings":
+			{
+				"buffer_size": 4592,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "store.js",
+			"settings":
+			{
+				"buffer_size": 3059,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "effects.js",
+			"settings":
+			{
+				"buffer_size": 5566,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "orb.js",
+			"settings":
+			{
+				"buffer_size": 1731,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "inventory.js",
+			"settings":
+			{
+				"buffer_size": 3904,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "cache.appcache",
+			"settings":
+			{
+				"buffer_size": 495,
+				"line_ending": "Unix"
+			}
+		}
+	],
+	"build_system": "",
+	"command_palette":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"console":
+	{
+		"height": 0.0
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/Users/Zachary/ultrasnap.github.io/Runner/enemy.js",
+		"/Users/Zachary/Desktop/misc_functions.js",
+		"/Users/Zachary/ultrasnap.github.io/Runner/runner.appcache",
+		"/Users/Zachary/ultrasnap.github.io/Project Darkness/game.js",
+		"/Users/Zachary/Desktop/ultrasnap.github.io-3D-test/Project Darkness/game.js",
+		"/Users/Zachary/Desktop/game.js",
+		"/Users/Zachary/Desktop/index.html",
+		"/Users/Zachary/Desktop/unscrambler.html",
+		"/Users/Zachary/Desktop/Solver.js",
+		"/Users/Zachary/Desktop/untitled folder/main.js",
+		"/Users/Zachary/Desktop/untitled folder/index.html",
+		"/Users/Zachary/ultrasnap.github.io/Project Darkness/game.html",
+		"/Users/Zachary/ultrasnap.github.io/Project Darkness/map.js",
+		"/Users/Zachary/ultrasnap.github.io/Project Darkness/main.js",
+		"/Users/Zachary/ultrasnap.github.io/Project Darkness/Level Editor.html",
+		"/Users/Zachary/ultrasnap.github.io/game_files/Shooter/main.js",
+		"/Users/Zachary/Desktop/game.html",
+		"/Users/Zachary/ultrasnap.github.io/game_files/Shooter/game.html",
+		"/Users/Zachary/Desktop/Map generator.html",
+		"/Users/Zachary/Desktop/gen.js",
+		"/Users/Zachary/Desktop/new.js",
+		"/Users/Zachary/ultrasnap.github.io/game_files/RPG/game.js",
+		"/Users/Zachary/Desktop/test.html",
+		"/Users/Zachary/Desktop/newgame.js"
+	],
+	"find":
+	{
+		"height": 35.0
+	},
+	"find_in_files":
+	{
+		"height": 93.0,
+		"where_history":
+		[
+			"<open files>"
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": true,
+		"find_history":
+		[
+			"wave_time.dy",
+			"10 ",
+			"10",
+			"wave_time",
+			"wave_timer",
+			"wave_time",
+			"wave_time =",
+			"time.",
+			"time ",
+			"wave_time ",
+			"text_score",
+			"game.restart(",
+			"new Text(",
+			"player.points",
+			"setTime",
+			"mute",
+			"volume",
+			"frameCounter",
+			"player.totalPoints",
+			"Particle",
+			"medium_particle_explosion",
+			"small_particle_explosion",
+			"Projectileweapons.",
+			"_plasma",
+			"_rocket",
+			"_default",
+			"sound.play",
+			"store",
+			"shotsLeft",
+			"Coin",
+			"coins",
+			"coin",
+			"small_particle_explosion",
+			"isColliding",
+			"this.hp",
+			"player.",
+			"BasicEnemy",
+			"Projectile",
+			"BasicBullet",
+			"sound.play(",
+			"player.",
+			".animate = ",
+			"del",
+			"new Text",
+			"rgb",
+			"awaitingInput",
+			"init",
+			"will",
+			"target",
+			"rand_d",
+			"rand_i",
+			"rand(",
+			"140",
+			"frames",
+			"frame",
+			"Menu",
+			"menu",
+			"camera.z",
+			"player1",
+			"obstacle_",
+			"Bullet",
+			"bullet",
+			"player1",
+			"delete",
+			"lines",
+			"debug",
+			"map",
+			"lightSour",
+			"castR",
+			"mouse.ang",
+			"mouse.",
+			"mouse.an",
+			"log",
+			"grd",
+			"flashlight.x",
+			"light1",
+			"angle",
+			"entities["
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+			"asteroid.medium_particle_explosion",
+			"asteroid.small_particle_explosion",
+			"Projectile",
+			"weapons._plasma",
+			"weapons._rocket",
+			"weapons._default",
+			"ammo",
+			"Orb",
+			"orbs",
+			"orb"
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 2,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "new.html",
+					"settings":
+					{
+						"buffer_size": 1459,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "gui.js",
+					"settings":
+					{
+						"buffer_size": 8837,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2100,
+								2100
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 1607.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "main.js",
+					"settings":
+					{
+						"buffer_size": 13898,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								519,
+								519
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 83.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "player.js",
+					"settings":
+					{
+						"buffer_size": 3943,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								711,
+								711
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 1835.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "sound.js",
+					"settings":
+					{
+						"buffer_size": 1151,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								269,
+								269
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "upgrades.js",
+					"settings":
+					{
+						"buffer_size": 4328,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								3121,
+								3121
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 2273.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "wall.js",
+					"settings":
+					{
+						"buffer_size": 3412,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1177,
+								1177
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 7,
+					"file": "projectile.js",
+					"settings":
+					{
+						"buffer_size": 4592,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								193,
+								193
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 42.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 8,
+					"file": "store.js",
+					"settings":
+					{
+						"buffer_size": 3059,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								896,
+								896
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 486.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 9,
+					"file": "effects.js",
+					"settings":
+					{
+						"buffer_size": 5566,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								4223,
+								4223
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 3049.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 10,
+					"file": "orb.js",
+					"settings":
+					{
+						"buffer_size": 1731,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								581,
+								581
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 11,
+					"file": "inventory.js",
+					"settings":
+					{
+						"buffer_size": 3904,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								3157,
+								3157
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 12,
+					"file": "cache.appcache",
+					"settings":
+					{
+						"buffer_size": 495,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								29,
+								29
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 0.0
+	},
+	"input":
+	{
+		"height": 33.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"replace":
+	{
+		"height": 0.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 150.0,
+	"status_bar_visible": true
+}
