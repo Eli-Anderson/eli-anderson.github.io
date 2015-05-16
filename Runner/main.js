@@ -29,6 +29,7 @@ function init(){
 	wave_check_if_frames_passed = new Timer();
 	wave_check_if_frames_passed.dt = 5;
 	wave_check_if_frames_passed.func = function(){
+
 		if(game.running_frame - waves.next_wave_frame >= 300){
 			waves[game.current_wave].init();
 			if(game.difficulty > 1){
@@ -37,11 +38,6 @@ function init(){
 				}
 			}
 			wave_check_if_frames_passed.stop();
-			
-			
-			wave_time.dy = -5;
-			wave_timer.start();
-		}
 	}
 	//if(!game_screen.mobile){sound.play(sound.list.background_music);}
 	sound.play(sound.list.background_music);
