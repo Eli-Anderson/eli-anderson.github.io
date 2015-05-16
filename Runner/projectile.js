@@ -1,5 +1,8 @@
 var projectiles = [];
 
+
+
+
 function Projectile(x,y,dx,dy,targets){
 	projectiles.push(this);
 	this.x = x;
@@ -173,6 +176,85 @@ function Projectile_plasma(x,y,dx,dy,targets){
 			var y2 = enemies[i].y + enemies[i].h/2;
 			if((x2-x1)*(x2-x1)+(y2-y1)*(y2-y1) < Math.pow(this.explSize,2)){
 				enemies.splice(i,1);
+			}
+		}
+	}
+}
+
+
+
+Projectile_laser.prototype = Object.create(Projectile.prototype);
+Projectile_laser.prototype.constructor = Projectile_laser;
+
+function Projectile_laser(x,y,angle,targets){
+	var that = this;
+	setTimeout(function(){del(that,projectiles)}, 2000)
+	Projectile.call(this,x,y,0,0,targets);
+	this.h = 20;
+	this.angle = angle;
+	this.dmg = 2;
+	this.spd = 14;
+	this.sound = sound.list.plasma_fire;
+	this.explSize = 100;
+	this.last_hit_frame = 0;
+
+	this.frameX = 83;
+	this.frameY = 12;
+	this.frameW = 18;
+	this.frameH = 20;
+
+	this.onHit = function(receiver){
+		receiver.gotHit(this.dmg);
+		del(this,projectiles);
+		sound.play(this.sound);
+		for(var i=0; i<enemies.length; i++){
+			var x1 = this.x + this.w/2;
+			var y1 = this.y + this.h/2;
+			var x2 = enemies[i].x + enemies[i].w/2;
+			var y2 = enemies[i].y + enemies[i].h/2;
+			if((x2-x1)*(x2-x1)+(y2-y1)*(y2-y1) < Math.pow(this.explSize,2)){
+				enemies[i].gotHit(this.dmg);
+			}
+		}
+		new Explosion(this.x,this.y,this.explSize,this.explSize);
+	};
+
+	this.hitsWall = function(n){
+		new Explosion(this.x,this.y,this.explSize,this.explSize);
+		effects.asteroid.medium_particle_explosion(walls[n].x+walls[n].r/2,walls[n].y+walls[n].r/2);
+		walls.splice(n,1);
+		//del(this,projectiles);
+		sound.play(this.sound);
+		for(var i=0; i<enemies.length; i++){
+			var x1 = this.x + this.w/2;
+			var y1 = this.y + this.h/2;
+			var x2 = enemies[i].x + enemies[i].w/2;
+			var y2 = enemies[i].y + enemies[i].h/2;
+			if((x2-x1)*(x2-x1)+(y2-y1)*(y2-y1) < Math.pow(this.explSize,2)){
+				enemies.splice(i,1);
+			}
+		}
+	};
+
+	this.render = function(){
+		ctx.lineWidth = this.h;
+		ctx.strokeStyle = "red";
+		ctx.beginPath();
+		ctx.moveTo(this.x,this.y);
+		ctx.lineTo(this.x + 480*Math.cos(this.angle),this.y + 480*Math.sin(this.angle));
+		ctx.stroke();
+		ctx.closePath();
+	};
+	this.animate = function(){
+		var dx = (player.x+player.w/2)-this.x;
+		var dy = (this.y)-(player.y+player.h/2);
+		var hyp = Math.sqrt((Math.pow(dy,2)) + Math.pow(dx,2))
+		var angle_to_player = Math.PI+Math.asin(dy/hyp)
+
+		if(this.angle - angle_to_player <= Math.PI/48 && this.angle - angle_to_player >= -Math.PI/48){
+			if(game.frame - this.last_hit_frame >= 30){
+				player.gotHit(1);
+				this.last_hit_frame = game.frame;
 			}
 		}
 	}

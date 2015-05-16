@@ -15,6 +15,20 @@ var enemy_weapons = {
 			//sound.play(sound.list.rocket_fire);
 		},
 	},
+	homing_missile: {
+		framesPerShot: 120,
+		fire: function(x,y){
+			new Projectile_homing_missile(x,y,-1,0,player);
+			//sound.play(sound.list.rocket_fire);
+		},
+	},
+	laser: {
+		framesPerShot: 120,
+		fire: function(x,y,angle){
+			new Projectile_laser(x,y,angle,player);
+			//sound.play(sound.list.rocket_fire);
+		},
+	}
 }
 /*
   seconds  -- frames
@@ -71,99 +85,7 @@ Enemy.prototype.gotHit = function(dmg){
 	}
 }
 
-function Enemy_medium(x, y){
-	Enemy.call(this,x,y);
-	this.img = enemy_basic_img;
-	this.w = 20;
-	this.h = 20;
-
-	this.maxVel = 3;
-	this.framesPerShot = 90;
-	this.hp = 3;
-	var that = this;
-	this.drops = [
-		function(){new HealthUpgrade(that.x,that.y,rand_i(1,3))},
-		function(){new RocketLauncherUpgrade(that.x,that.y,3)},
-		function(){new Orb(that.x,that.y,rand_i(5,10))},
-	];
-
-	this.ddy = 0;
-
-	this.sound = sound.list.enemy_medium_hit;
-	
-	this.animate = function(){
-		if(game.frame % 20 == 0){
-			if(this.hp < 3){
-				effects.ship.smoke_trail(this.x,this.y,0.3*this.hp)
-			}
-		}
-		if(this.y < player.y){this.ddy = rand_i(0,2)}
-		else{this.ddy = rand_i(-2,0);}
-		if(Math.abs(this.dy) < this.maxVel){
-			this.dy += this.ddy;
-		}
-		this.dy *= game.global_dxdy;
-		this.dx *= game.global_dxdy;
-		
-		this.y += this.dy;
-		this.dy *= 0.99;
-		this.ddy *= 0.5;
-		
-		if((game.frame - this.frame) % this.framesPerShot === 0 && !game.awaitingInput){this.fire()}
-	};
-	this.fire = function(){
-		var dx = player.x - this.x;
-		var dy = player.y - this.y;
-		var dist = Math.sqrt(dx*dx+dy*dy);
-		dx/=dist;
-		dy/=dist;
-		new Projectile_basic(this.x,this.y,-1,0,player);
-	};
-}
-Enemy_medium.prototype = Object.create(Enemy.prototype);
-Enemy_medium.prototype.constructor = Enemy_medium;
-
-function Enemy_easy(x, y){
-	Enemy.call(this,x,y);
-	this.img = enemy_basic_img;
-	this.w = 25;
-	this.h = 25;
-
-	this.maxVel = 3;
-	this.framesPerShot = 90;
-	this.hp = 1;
-	var that = this;
-	this.drops = [
-		function(){new HealthUpgrade(that.x,that.y,1)},
-		function(){new RocketLauncherUpgrade(that.x,that.y,1)},
-		function(){new Orb(that.x,that.y,rand_i(1,3))},
-	]
-	this.counter = 0;
-	this.dy = 0;
-	this.dx = 0;
-	this.friction = 0.99;
-	this.sound = sound.list.enemy_easy_hit;
-	
-	this.animate = function(){
-		this.dy = 4*Math.cos(this.counter);
-		
-		this.dy *= game.global_dxdy;
-		this.dx *= game.global_dxdy;
-		
-		this.y += this.dy;
-		
-		if((game.frame - this.frame) % this.framesPerShot === 0 && !game.awaitingInput){this.fire()}
-		this.counter += Math.PI/128;
-	};
-	this.fire = function(){
-		new Projectile_basic(this.x,this.y,-1,0,player);
-	};
-}
-
-Enemy_easy.prototype = Object.create(Enemy.prototype);
-Enemy_easy.prototype.constructor = Enemy_easy;
-
-function Enemy_static(x,y,hp,weapon){
+function Enemy_static(x, y, hp, weapon){
 	Enemy.call(this,x,y);
 	this.img = enemy_basic_img;
 	this.w = 25;
@@ -171,7 +93,7 @@ function Enemy_static(x,y,hp,weapon){
 
 	this.startX = x;
 
-	this.framesPerShot = 90;
+	this.framesPerShot = 90 + rand_i(-15*game.difficulty,15);
 	this.weapon = enemy_weapons[weapon] || enemy_weapons.basic;
 	this.hp = hp;
 	var that = this;
@@ -205,7 +127,7 @@ function Enemy_oscillating(x, y, hp, weapon){
 	this.startX = x;
 
 	this.weapon = enemy_weapons[weapon] || enemy_weapons.basic;
-	this.framesPerShot = 90;
+	this.framesPerShot = 90 + rand_i(-15*game.difficulty,15);
 	this.hp = hp;
 	var that = this;
 	this.drops = [
@@ -234,11 +156,76 @@ function Enemy_oscillating(x, y, hp, weapon){
 Enemy_oscillating.prototype = Object.create(Enemy.prototype);
 Enemy_oscillating.prototype.constructor = Enemy_oscillating;
 
+function Enemy_boss(x, y, hp){
+	Enemy.call(this,x,y);
+	this.img = enemy_basic_img;
+	this.w = 125;
+	this.h = 125;
+
+	this.startX = x;
+
+	this.weapon = enemy_weapons.laser;
+	this.framesPerShot = 240 + rand_i(-15*game.difficulty,15);
+	this.hp = hp;
+	this.angle_to_player = Math.PI;
+	this.laser_angle = Math.PI;
+	var that = this;
+	this.drops = [
+		function(){new HealthUpgrade(that.x,that.y,1)},
+		function(){new RocketLauncherUpgrade(that.x,that.y,1)},
+		function(){new Orb(that.x,that.y,rand_i(1,3))},
+	]
+	this.sound = sound.list.enemy_easy_hit;
+	this.counter = 0;
+	this.animate = function(){
+		if(this.startX - this.x < 130){
+			this.x -= 0.5;
+		}
+		if((game.frame - this.frame) % this.framesPerShot === 0 && !game.awaitingInput){this.fire()};
+		//this.dy = 1.5*Math.cos(this.counter);
+		//this.y += this.dy;
+		if(game.frame % 10 == 0){
+			this.counter += Math.PI/16;
+		};
+		var dx = (player.x+player.w/2)-this.x;
+		var dy = (this.y+this.h/2)-(player.y+player.h/2);
+		var hyp = Math.sqrt((Math.pow(dy,2)) + Math.pow(dx,2))
+		this.angle_to_player = Math.PI+Math.asin(dy/hyp)
+	}
+	this.render = function(){
+		if(this.onScreen){
+		//ctx.fillRect(this.x,this.y,this.w,this.h);
+		ctx.drawImage(this.img,this.x,this.y,this.w,this.h)
+	}
+		ctx.lineWidth = 1;
+		ctx.strokeStyle = "red"
+		ctx.beginPath();
+		ctx.moveTo(this.x,this.y+this.h/2);
+		ctx.lineTo(this.x + 480*Math.cos(this.laser_angle),this.y+this.h/2 + 480*Math.sin(this.laser_angle));
+		ctx.stroke();
+		ctx.closePath();
+	};
+	this.fire = function(){
+		this.aim();
+		var that = this;
+		setTimeout(function(){
+			that.weapon.fire(that.x,that.y+that.h/2,that.laser_angle);
+			that.laser_angle = undefined;
+		}, 1000);
+	};
+	this.aim = function(){
+		log(this.angle_to_player)
+		this.laser_angle = this.angle_to_player;
+	}
+}
+
+Enemy_boss.prototype = Object.create(Enemy.prototype);
+Enemy_boss.prototype.constructor = Enemy_boss;
 
 var send_next_wave_timeout,wave_completion_check_interval,wave_upgrade_timeout;
 
 var waves = {
-	number_of_waves: 6,
+	number_of_waves: 7,
 	possible_positions: [
 		[480,20 ], [530,20 ], [580,20 ],
 		[480,70 ], [530,70 ], [580,70 ],
@@ -256,7 +243,9 @@ var waves = {
 
 		}
 		wave_time.txt = game.current_wave * game.difficulty + 10;
-
+		if(game.current_wave === 7){
+			wave_time.txt = 999;
+		}
 		wave_check_if_frames_passed.start();
 	},
 	random_position: function(){
@@ -393,4 +382,9 @@ var waves = {
 		},
 		completed: false,
 	},
+	7: {
+		init: function(){
+			new Enemy_boss(480, 85, 25)
+		}
+	}
 }

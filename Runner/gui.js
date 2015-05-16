@@ -171,7 +171,7 @@ function handleTouchend(e){
     }
 }
 
-function loadMenu(){
+function open_main_menu(){
     
 	var b = new Button(0,0,480,320);
     b.onLift = function(){
@@ -181,11 +181,10 @@ function loadMenu(){
         menu_loop = function(){};
         init();
     };
-
-
-    menu_loop();
+    new Text(112,200,"Touch to continue","32px Georgia",[255,255,255,1])
 }
 function splashScreen(){
+    menu_loop()
 	ctx.fillStyle = "red";
 	ctx.fillRect(120,140,250,20);
     for(var a in sound.list){
@@ -226,18 +225,40 @@ function splashScreen(){
 var TOTAL_ASSETS = 26;
 var asset_counter = 0;
 var asset_text = ""
+
+var load_bar = {
+    loaded_color: "green",
+    loading_color: "red",
+    change: 0,
+    dimensions: {
+        x: 120,
+        y: 140,
+        w: 0,
+        h: 20,
+    },
+    fill: function(){
+        if(this.change > 0){
+            this.dimensions.w += 5;
+            this.change -= 5;
+        }
+    },
+    render: function(){
+        var r = this.dimensions;
+        ctx.fillStyle = this.loading_color;
+        ctx.fillRect(r.x,r.y,240,r.h);
+        ctx.fillStyle = this.loaded_color;
+        ctx.fillRect(r.x,r.y,r.w,r.h);
+    },
+}
+
 function handleAssetLoad(arg){
-	ctx.fillStyle = "green"
 	asset_text = arg;
-    ctx.fillRect(asset_counter*10 + 120,140,10,20);
+
+    load_bar.change += 240/TOTAL_ASSETS;
     asset_counter++;
-    ctx.font = "12px Georgia"
-    ctx.fillStyle="black"
-    ctx.fillText("loading... "+asset_text, 10,asset_counter*12)
     if(asset_counter >= TOTAL_ASSETS){
-        loadMenu();
+        open_main_menu();
     }
-    
 }
 
 function menu_loop(){
@@ -247,17 +268,10 @@ function menu_loop(){
     ctx.fillRect(0,0,480,320);
     animateMenus();
     animateTexts();
+    load_bar.fill();
     renderMenus();
+    load_bar.render();
     renderTexts();
-    ctx.fillStyle = 'white'
-    ctx.font = "12px Georgia"
-    ctx.fillText("Mobile: touch left game_screen to fly upward, and right game_screen to fire", 0, 100);
-    ctx.fillText("Touch the top left corner to access the inventory, top right corner to access the store", 0, 120);
-    ctx.font = "16px Georgia"
-    ctx.fillText("PC: Use the UP ARROW to fly upward, and F to fire", 0, 160);
-    ctx.fillText("Use S to access the inventory, and D to access the store", 0, 180);
-
-    ctx.fillText("Touch, click, or hit UP to continue", 0, 300);
     requestAnimationFrame(menu_loop);
 }
 var game_screen = {
@@ -310,8 +324,6 @@ function resizeCanvas(){
     game_screen.height = height;
 	game_screen.dw = (width/480);
 	game_screen.dh = (height/320);
-		
-   
 }
 var isMobile = {
     Android: function() {

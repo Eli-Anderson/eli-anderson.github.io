@@ -4,6 +4,26 @@
 		"selected_items":
 		[
 			[
+				"frame",
+				"last_hit_frame"
+			],
+			[
+				"angle",
+				"angle_to_player"
+			],
+			[
+				"laser",
+				"laser_angle"
+			],
+			[
+				"screen",
+				"screen_shake_timer"
+			],
+			[
+				"running",
+				"running_frame"
+			],
+			[
 				"send",
 				"send_next_wave"
 			],
@@ -78,10 +98,6 @@
 			[
 				"isColl",
 				"isColliding_rc"
-			],
-			[
-				"frame",
-				"frameCounter"
 			],
 			[
 				"Projec",
@@ -247,7 +263,7 @@
 			"file": "gui.js",
 			"settings":
 			{
-				"buffer_size": 8837,
+				"buffer_size": 8872,
 				"line_ending": "Unix"
 			}
 		},
@@ -255,7 +271,7 @@
 			"file": "main.js",
 			"settings":
 			{
-				"buffer_size": 13898,
+				"buffer_size": 15929,
 				"line_ending": "Windows"
 			}
 		},
@@ -263,7 +279,7 @@
 			"file": "player.js",
 			"settings":
 			{
-				"buffer_size": 3943,
+				"buffer_size": 4594,
 				"line_ending": "Unix"
 			}
 		},
@@ -279,7 +295,7 @@
 			"file": "upgrades.js",
 			"settings":
 			{
-				"buffer_size": 4328,
+				"buffer_size": 4357,
 				"line_ending": "Unix"
 			}
 		},
@@ -295,7 +311,15 @@
 			"file": "projectile.js",
 			"settings":
 			{
-				"buffer_size": 4592,
+				"buffer_size": 6827,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "enemy.js",
+			"settings":
+			{
+				"buffer_size": 10457,
 				"line_ending": "Unix"
 			}
 		},
@@ -311,7 +335,7 @@
 			"file": "effects.js",
 			"settings":
 			{
-				"buffer_size": 5566,
+				"buffer_size": 5983,
 				"line_ending": "Unix"
 			}
 		},
@@ -335,7 +359,7 @@
 			"file": "cache.appcache",
 			"settings":
 			{
-				"buffer_size": 495,
+				"buffer_size": 496,
 				"line_ending": "Unix"
 			}
 		}
@@ -406,6 +430,14 @@
 		"case_sensitive": true,
 		"find_history":
 		[
+			"loadMenu",
+			"menu_loop()",
+			"3",
+			"360",
+			"waves[1]",
+			"waves.send_next",
+			"wave_time.txt",
+			"wave_timer",
 			"wave_time.dy",
 			"10 ",
 			"10",
@@ -511,7 +543,7 @@
 	"groups":
 	[
 		{
-			"selected": 2,
+			"selected": 8,
 			"sheets":
 			[
 				{
@@ -536,7 +568,7 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 211.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -546,15 +578,15 @@
 					"file": "gui.js",
 					"settings":
 					{
-						"buffer_size": 8837,
+						"buffer_size": 8872,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								2100,
-								2100
+								4428,
+								4428
 							]
 						],
 						"settings":
@@ -564,7 +596,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 1607.0,
+						"translation.y": 2786.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -574,15 +606,15 @@
 					"file": "main.js",
 					"settings":
 					{
-						"buffer_size": 13898,
+						"buffer_size": 15929,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								519,
-								519
+								129,
+								129
 							]
 						],
 						"settings":
@@ -591,7 +623,7 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 83.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -601,15 +633,15 @@
 					"file": "player.js",
 					"settings":
 					{
-						"buffer_size": 3943,
+						"buffer_size": 4594,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								711,
-								711
+								117,
+								117
 							]
 						],
 						"settings":
@@ -618,7 +650,7 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 1835.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -635,8 +667,8 @@
 						"selection":
 						[
 							[
-								269,
-								269
+								551,
+								551
 							]
 						],
 						"settings":
@@ -655,15 +687,15 @@
 					"file": "upgrades.js",
 					"settings":
 					{
-						"buffer_size": 4328,
+						"buffer_size": 4357,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								3121,
-								3121
+								3848,
+								3848
 							]
 						],
 						"settings":
@@ -672,7 +704,7 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 2273.0,
+						"translation.y": 2744.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -709,15 +741,15 @@
 					"file": "projectile.js",
 					"settings":
 					{
-						"buffer_size": 4592,
+						"buffer_size": 6827,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								193,
-								193
+								6775,
+								6775
 							]
 						],
 						"settings":
@@ -726,13 +758,40 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 42.0,
+						"translation.y": 3798.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 8,
+					"file": "enemy.js",
+					"settings":
+					{
+						"buffer_size": 10457,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								6016,
+								6016
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 3712.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 9,
 					"file": "store.js",
 					"settings":
 					{
@@ -753,25 +812,25 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 486.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
-					"buffer": 9,
+					"buffer": 10,
 					"file": "effects.js",
 					"settings":
 					{
-						"buffer_size": 5566,
+						"buffer_size": 5983,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								4223,
-								4223
+								3200,
+								3200
 							]
 						],
 						"settings":
@@ -780,13 +839,13 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 3049.0,
+						"translation.y": 2534.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
-					"buffer": 10,
+					"buffer": 11,
 					"file": "orb.js",
 					"settings":
 					{
@@ -813,7 +872,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 11,
+					"buffer": 12,
 					"file": "inventory.js",
 					"settings":
 					{
@@ -840,19 +899,19 @@
 					"type": "text"
 				},
 				{
-					"buffer": 12,
+					"buffer": 13,
 					"file": "cache.appcache",
 					"settings":
 					{
-						"buffer_size": 495,
+						"buffer_size": 496,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								29,
-								29
+								0,
+								0
 							]
 						],
 						"settings":

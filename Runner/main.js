@@ -4,6 +4,17 @@ var ctx = canvas.getContext('2d')
 var orbs = [];
 var walls = [];
 function init(){
+	screen_shake_timer = new Timer();
+	screen_shake_timer.func = function(){
+		var x = rand_i(1,5)*Math.cos(effects.shake_dt);
+		var y = rand_i(1,5)*Math.sin(effects.shake_dt);
+		effects.shake_dt *= (.9 * rand_a([-1,1]));
+		
+		ctx.translate(x,y);
+		effects.shake_x += x;
+		effects.shake_y += y;
+	}
+	screen_shake_timer.dt = 100;
 	wave_timer = new Timer();
 	wave_timer.func = function(){
 		wave_time.txt --;
@@ -20,6 +31,11 @@ function init(){
 	wave_check_if_frames_passed.func = function(){
 		if(game.running_frame - waves.next_wave_frame >= 300){
 			waves[game.current_wave].init();
+			if(game.difficulty > 1){
+				for(var i=0; i<enemies.length; i++){
+					enemies[i].weapon = rand_a([enemy_weapons.basic,enemy_weapons.rocket]);
+				}
+			}
 			wave_check_if_frames_passed.stop();
 			
 			
@@ -107,6 +123,10 @@ var game = {
 	    player.totalPoints += player.points;
 		player.points = 0;
 		player.spentPoints = 0;
+		player.frameX = 410;
+		player.frameY = 0;
+		player.frameW = 80;
+		player.frameH = 87;
 
 	    weapons._default.framesPerShot = 20;
 	    weapons._rocket.framesPerShot = 90;
@@ -138,15 +158,23 @@ var game = {
 	},
 	pause: function(){
 		game.running = false;
+		for(var i=0; i<timers.length; i++){
+			timers[i].pause();
+		}
 	},
 	unpause: function(){
 		game.running = true;
+		for(var i=0; i<timers.length; i++){
+			timers[i].start();
+			//need to fix: should not start ALL timers,
+			//only those who were on prior to pause...
+		}
 	}
 };
 function game_loop(){
 	//if(input.muted){Howler.mute()}
 	resizeCanvas()
-	ctx.clearRect(0,0,480,320);
+	ctx.clearRect(-20,-20,500,340);
 	game.frame++;
 	game.total_frame++;
 	getButtonInput();
@@ -513,11 +541,11 @@ function keyDown(e){
 			break;
 		case 52:
 			//4
-			asdf.stop();
+			new Enemy_boss(500,100,5,"rocket")
 			break;
 		case 68:
 			//d
-			simulateTouchStart(440*game_screen.dw,30*game_screen.dh);
+			new Projectile_laser(player.x,player.y,Math.PI/6,enemies)
 			break;
 		case 70:
 			//f
@@ -528,8 +556,8 @@ function keyDown(e){
 			break;
 		case 72:
 			//h
-			effects.ship.medium_particle_explosion(300,200,[0,0,255],[160,160,160])
-
+			//effects.ship.large_particle_explosion(300,200,[0,0,255],[160,160,160])
+			effects.screen_shake();
 			break;
 		case 74:
 			//j
@@ -652,10 +680,12 @@ function isColliding_rr(r1,r2){
 	return false;
 }
 
-
+var timers = [];
 function Timer(){
+	timers.push(this);
 	this.dt = 1000;
 	this.running = false;
+	this.count = 0;
 	this.func = function(){
 
 	};
@@ -663,10 +693,21 @@ function Timer(){
 	this.start = function(){
 		if(this.running){return}
 		this.running = true;
-		this.interval = setInterval(this.func, this.dt)
+		this.interval = setInterval(this.function_holder, 100)
+	};
+	var that = this;
+	this.function_holder = function(){
+		that.count += 100;
+		if(that.count % that.dt === 0){that.func()}
 	};
 
+	this.pause = function(){
+		clearInterval(this.interval)
+		this.running = false;
+	}
+
 	this.stop = function(){
+		this.count = 0;
 		this.running = false;
 		clearInterval(this.interval);
 	};

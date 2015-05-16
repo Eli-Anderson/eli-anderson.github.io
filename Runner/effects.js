@@ -164,7 +164,7 @@ Ship_Particle.prototype.animate = function(){
 	this.dx *= 0.95;
 	this.dy *= 0.95;
 	this.alpha *= 0.95;
-	if(this.alpha < 0.01){
+	if(this.alpha < 0.1){
 		del(this, particles);
 	}
 };
@@ -193,36 +193,40 @@ var effects = {
 	},
 	ship: {
 		small_particle_explosion: function (x,y,rgb1,rgb2){
-	    	for(var i=0; i<Math.PI/2; i+=Math.PI/10){
+	    	for(var i=0; i<Math.PI*2; i+=Math.PI/10){
 	    	    var rgb1 = rgb1 || [rand_i(160,200),rand_i(160,200),rand_i(160,200)]
 	    	    var rgb2 = rgb2 || rgb1
-	    		var w = rand_i(2,5);
-	    		var h = rand_i(2,5)
+	    		var w = 1;
+	    		var h = 1;
 				var ry = rand_i(-2,2);
 				var rx = rand_i(-2,2);
 	        	new Ship_Particle(x,y,w,h,-6+rx+Math.cos(i),ry+Math.sin(i),rand_a([rgb1,rgb2]));
 	    	}
 		},
 		medium_particle_explosion: function(x,y,rgb1,rgb2){
-			for(var i=0; i<Math.PI*2; i+=Math.PI/3){
+			for(var i=0; i<Math.PI*2; i+=Math.PI/100){
 			    var rgb1 = rgb1 || [rand_i(160,200),rand_i(160,200),rand_i(160,200)]
 	    	    var rgb2 = rgb2 || rgb1
-				var w = rand_i(5,9);
-				var h = rand_i(5,9);
-				var ry = rand_i(-2,2);
-				var rx = rand_i(-2,2);
+				var w = 1;
+				var h = 1;
+				var ry = rand_i(-3,3);
+				var rx = rand_i(-3,3);
 	        	new Ship_Particle(x,y,w,h,-6+rx+Math.cos(i),ry+Math.sin(i),rand_a([rgb1,rgb2]));
 	    	}
 		},
 		large_particle_explosion: function(x,y,rgb){
 			var rgb = rgb || [rand_i(160,200),rand_i(160,200),rand_i(160,200)]
-	    	for(var i=0; i<Math.PI/2; i+=Math.PI/100){
-	    		var w = rand_i(2,5);
-	    		var h = rand_i(2,5)
-				var ry = rand_i(-5,5);
-				var rx = rand_i(-5,5);
-	        	new Ship_Particle(x,y,w,h,-6+rx+Math.cos(i),ry+Math.sin(i),rgb);
-				console.log(i)
+	    	for(var i=0; i<Math.PI*2; i+=Math.PI/250){
+	    		var w = rand_d(.1,3);
+	    		var h = rand_d(.1,3);
+				//var ry = rand_i(-5,5);
+				//var rx = rand_i(-5,5);
+				var r = rand_d(0,6);
+
+				var rx = r*Math.cos(i);
+				var ry = r*Math.sin(i);
+
+	        	new Ship_Particle(x,y,w,h,rx,ry,rgb);
 	    	}
 		},
 		smoke_trail: function(x,y,darkness){
@@ -236,5 +240,26 @@ var effects = {
 	        	new Ship_Particle(x,y,w,h,-6+rx+Math.cos(i),ry+Math.sin(i),rgb);
 	        }
 		},
-	}
+	},
+	screen_shake: function(n){
+		ctx.translate(-n,0);
+		setTimeout(function(){
+			ctx.translate(n,-n);
+		}, 100)
+		setTimeout(function(){
+			ctx.translate(0,2*n);
+		}, 200)
+		setTimeout(function(){
+			ctx.translate(n,-n);
+		}, 300)
+		setTimeout(function(){
+			ctx.translate(-n,0);
+		}, 400)
+		setTimeout(function(){
+			ctx.translate(n,-n);
+		}, 500)
+		setTimeout(function(){
+			ctx.translate(-n,n);
+		}, 600)
+	},
 }

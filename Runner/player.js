@@ -161,11 +161,13 @@ var player = {
 			this.hp -= dmg;
 			if(this.hp <= 0){
 				this.gameOver();
+				effects.screen_shake(12);
 				new Explosion(this.x+this.w/2,this.y+this.h/2,50,50);
 				effects.ship.medium_particle_explosion(this.x+this.w/2,this.y+this.h/2,[0,0,255],[160,160,160])
 			}
 			else{
 				sound.play(sound.list.player_hit);
+				effects.screen_shake(3);
 			}
 		}
 		else{
