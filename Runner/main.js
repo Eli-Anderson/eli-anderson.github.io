@@ -38,6 +38,7 @@ function init(){
 				}
 			}
 			wave_check_if_frames_passed.stop();
+		}
 	}
 	//if(!game_screen.mobile){sound.play(sound.list.background_music);}
 	sound.play(sound.list.background_music);
