@@ -279,6 +279,8 @@ function Projectile_static(x,y,dx,dy,targets){
 	this.onHit = function(receiver){
 		//receiver.gotHit(this.dmg);
 		receiver.stunned = true;
+		receiver.stun_timer.stop();
+		receiver.stun_timer.start();
 		del(this,projectiles);
 		sound.play(this.sound);
 		new Explosion(this.x,this.y,this.explSize,this.explSize);
