@@ -259,3 +259,41 @@ function Projectile_laser(x,y,angle,targets){
 		}
 	}
 }
+Projectile_static.prototype = Object.create(Projectile.prototype);
+Projectile_static.prototype.constructor = Projectile_static;
+
+function Projectilestatic(x,y,dx,dy,targets){
+	Projectile.call(this,x,y,dx,dy,targets);
+	this.w = 10;
+	this.h = 10;
+	this.dmg = 1;
+	this.spd = 10;
+	this.sound = sound.list.default_fire;
+	this.explSize = 15;
+
+	this.frameX = 5;
+	this.frameY = 8;
+	this.frameW = 18;
+	this.frameH = 20;
+
+	this.onHit = function(receiver){
+		//receiver.gotHit(this.dmg);
+		receiver.ddy = rand_a([-5,5])
+		del(this,projectiles);
+		sound.play(this.sound);
+		new Explosion(this.x,this.y,this.explSize,this.explSize);
+		effects.ship.small_particle_explosion(this.x,this.y);
+	};
+
+	this.hitsWall = function(n){
+		var x1 = this.x + this.w/2;
+		var y1 = this.y + this.h/2;
+		var x2 = walls[n].x;
+		var y2 = walls[n].y;
+		var angle = Math.atan((y2-y1)/(x2-x1));
+		walls[n].dx += Math.cos(angle);
+		walls[n].dy += Math.sin(angle);
+		effects.asteroid.small_particle_explosion(this.x+this.w/2,this.y+this.h/2);
+		del(this, projectiles);
+	}
+}
