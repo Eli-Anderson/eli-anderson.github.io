@@ -313,9 +313,9 @@ var waves = {
 		init: function(){
 			var r = rand_i(3,14);
 			var p = waves.possible_positions;
-			new Enemy_static(p[r-3][0],p[r-3][1],game.difficulty);
-			new Enemy_static(p[r][0],p[r][1],game.difficulty)
-			new Enemy_static(p[r+3][0],p[r+3][1],game.difficulty);
+			new Enemy_static(p[r-3][0],p[r-3][1],game.difficulty,"shock");
+			new Enemy_static(p[r][0],p[r][1],game.difficulty,"shock")
+			new Enemy_static(p[r+3][0],p[r+3][1],game.difficulty,"shock");
 			wave_completion_check_interval = setInterval(waves.check_if_completed,250);
 		},
 		completed: false,
