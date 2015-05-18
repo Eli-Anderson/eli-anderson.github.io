@@ -262,7 +262,7 @@ function Projectile_laser(x,y,angle,targets){
 Projectile_static.prototype = Object.create(Projectile.prototype);
 Projectile_static.prototype.constructor = Projectile_static;
 
-function Projectilestatic(x,y,dx,dy,targets){
+function Projectile_static(x,y,dx,dy,targets){
 	Projectile.call(this,x,y,dx,dy,targets);
 	this.w = 10;
 	this.h = 10;
