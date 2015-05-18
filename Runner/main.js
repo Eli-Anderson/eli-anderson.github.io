@@ -9,7 +9,7 @@ function init(){
 		player.stunned = false;
 		player.stun_timer.stop();
 	}
-	player.stun_timer.dt = 1500;
+	player.stun_timer.dt = 1000;
 	screen_shake_timer = new Timer();
 	screen_shake_timer.func = function(){
 		var x = rand_i(1,5)*Math.cos(effects.shake_dt);
