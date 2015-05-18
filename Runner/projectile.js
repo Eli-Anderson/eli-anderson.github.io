@@ -278,7 +278,7 @@ function Projectile_static(x,y,dx,dy,targets){
 
 	this.onHit = function(receiver){
 		//receiver.gotHit(this.dmg);
-		receiver.dy = rand_a([-5,5])
+		receiver.stunned = true;
 		del(this,projectiles);
 		sound.play(this.sound);
 		new Explosion(this.x,this.y,this.explSize,this.explSize);
