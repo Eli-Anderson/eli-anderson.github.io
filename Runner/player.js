@@ -21,10 +21,13 @@ var player = {
 	luck: 0.03,
 	onScreen: true,
 	
+	stunned: false,
+	
 	frameX: 410,
 	frameY: 0,
 	frameW: 80,
 	frameH: 87,
+	
 	
 	sprite: {
 		"-5": {x: 0, y:0, w: 82, h: 80},
@@ -52,7 +55,7 @@ var player = {
 	        return;
 	    }
 		if(Math.abs(this.dy) < 0.01){this.dy = 0}
-		if(input.up){
+		if(input.up && !this.stunned){
 			this.ddy = -0.25;
 		}
 		else if(input.down){
@@ -85,7 +88,7 @@ var player = {
 				player.weapon_array.push(w);
 			}
 		}
-		//document.getElementById('debug').innerHTML = player.weapon_array;
+		
 	},
 	render: function(){
 		if(this.onScreen){
