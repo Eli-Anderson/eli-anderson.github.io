@@ -28,7 +28,14 @@ var enemy_weapons = {
 			new Projectile_laser(x,y,angle,player);
 			//sound.play(sound.list.rocket_fire);
 		},
-	}
+	},
+	shock: {
+		framesPerShot: 90,
+		fire: function(x,y){
+			new Projectile_static(x,y,-1,0,player);
+			//sound.play(sound.list.default_fire);
+		},
+	},
 }
 /*
   seconds  -- frames
