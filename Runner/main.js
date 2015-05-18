@@ -4,6 +4,12 @@ var ctx = canvas.getContext('2d')
 var orbs = [];
 var walls = [];
 function init(){
+	player.stun_timer = new Timer();
+	player.stun_timer.func = function(){
+		player.stunned = false;
+		player.stun_timer.stop();
+	}
+	player.stun_timer.dt = 1500;
 	screen_shake_timer = new Timer();
 	screen_shake_timer.func = function(){
 		var x = rand_i(1,5)*Math.cos(effects.shake_dt);
