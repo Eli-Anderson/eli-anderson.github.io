@@ -8,9 +8,9 @@ var buffer_canvas = document.getElementById('buffer');
 var buffer = buffer_canvas.getContext('2d');
 var width = 16;
 var rightKey,leftKey,upKey,downKey;
-var entities = [];
-var entity_vertices = [];
-var entity_lines = [[Infinity,Infinity,Infinity,Infinity]];
+var tiles = [];
+var tile_vertices = [];
+var tile_lines = [[Infinity,Infinity,Infinity,Infinity]];
 var verticyMap = [];
 var lights = [];
 var enemies = [];
@@ -24,9 +24,9 @@ var floors = [0,1]
 //
 function preload(){
 	count = 0;
-	tiles = new Image();
-	tiles.onload=handleLoad();
-	tiles.src = 'tiles.png'
+	tiles_img = new Image();
+	tiles_img.onload=handleLoad();
+	tiles_img.src = 'tiles.png'
 }
 function handleLoad(){
 	count++
@@ -98,7 +98,9 @@ function game_reset(){
 function animate_hud_damage(){
 	var a = player.hp / 10;
 	hud.fillStyle = 'rgba(200,0,0,'+a+')'
-	hud.fillRect(0,0,1200,600)
+	hud.fillRect(0,0,1200,600);
+
+	//SHAKE SCREEN
 }
 function animate_hud_death(){
 	hud.fillStyle = 'rgba(200,0,0,.6)';
@@ -110,16 +112,18 @@ function animate_hud_death(){
 Player.prototype.draw = function(){
 	ctx.fillStyle='orange';
 	ctx.fillRect(this.x,this.y,this.w,this.h);
-};
-
-Player.prototype.animate = function(){
-	if(player.hp <= 0)this.death()
 
 	hud.fillStyle = 'white';
 	hud.beginPath();
 	hud.arc(mouse.x,mouse.y,2,0,2*Math.PI);
 	hud.closePath();
 	hud.fill();
+};
+
+Player.prototype.animate = function(){
+	if(player.hp <= 0){this.death()}
+
+	
 
 
 	if(this.x + x_translation > 1200-camera.edge){moveCamera(-1*this.speed,0);this.velx-=this.speed}
@@ -136,9 +140,11 @@ Player.prototype.animate = function(){
 	else if(upKey){this.vely = -this.speed}
 	else{this.vely = 0}
 
-	if(!willCollide(this.x,this.y,this.w,this.h,this.velx,0,entities)&&!willCollide(this.x,this.y,this.w,this.h,this.velx,0,enemies))this.x += this.velx;
-	else{this.velx = 0}
-	if(!willCollide(this.x,this.y,this.w,this.h,0,this.vely,entities)&&!willCollide(this.x,this.y,this.w,this.h,0,this.vely,enemies))this.y += this.vely;
+	if(!willCollide(this.x,this.y,this.w,this.h,this.velx,0,tiles) && 
+		!willCollide(this.x,this.y,this.w,this.h,this.velx,0,enemies)){this.x += this.velx;}
+	else{this.velx = 0;}
+	if(!willCollide(this.x,this.y,this.w,this.h,0,this.vely,tiles) && 
+		!willCollide(this.x,this.y,this.w,this.h,0,this.vely,enemies)){this.y += this.vely;}
 	else{this.vely = 0}
 
 
@@ -201,9 +207,9 @@ Enemy.prototype.animate = function (){
     this.vely *= .9;
 	if(hyp <= this.aggroRange){
         if(this.type === 'rat'){
-	        if(!willCollide(this.x,this.y,this.w,this.h,this.velx,0,entities)&&!willCollide(this.x,this.y,this.w,this.h,this.velx,0,player))this.x += this.velx;
+	        if(!willCollide(this.x,this.y,this.w,this.h,this.velx,0,tiles)&&!willCollide(this.x,this.y,this.w,this.h,this.velx,0,player))this.x += this.velx;
 			else{this.velx = 0}
-			if(!willCollide(this.x,this.y,this.w,this.h,0,this.vely,entities)&&!willCollide(this.x,this.y,this.w,this.h,0,this.vely,player))this.y += this.vely;
+			if(!willCollide(this.x,this.y,this.w,this.h,0,this.vely,tiles)&&!willCollide(this.x,this.y,this.w,this.h,0,this.vely,player))this.y += this.vely;
 			else{this.vely = 0}
 	        if(!this.fired && hyp <= this.attackRange){
 	            this.attack(player);
@@ -244,14 +250,14 @@ function Projectile(x,y,w,h,dx,dy,spd,dmg){
 	this.h = h;
 	this.dx = dx;
 	this.dy = dy;
-<<<<<<< HEAD
+
 	this.speed = spd;
 	this.damage = dmg;
 }
 Projectile.prototype.animate = function(){
-	if(!willCollide(this.x,this.y,this.w,this.h,this.dx*this.speed,0,entities))this.x += this.dx*this.speed;
+	if(!willCollide(this.x,this.y,this.w,this.h,this.dx*this.speed,0,tiles))this.x += this.dx*this.speed;
 	else{deleteObject(this);delete this}
-	if(!willCollide(this.x,this.y,this.w,this.h,0,this.dy*this.speed,entities))this.y += this.dy*this.speed;
+	if(!willCollide(this.x,this.y,this.w,this.h,0,this.dy*this.speed,tiles))this.y += this.dy*this.speed;
 	else{deleteObject(this);delete this}
 
 	if(willCollide(this.x,this.y,this.w,this.h,this.dx*this.speed,0,player)){
@@ -274,31 +280,18 @@ Projectile.prototype.hit = function(target){
 //
 //
 //
-function willCollide(x,y,w,h,dx,dy,array){
-	for(var i=0; i<array.length; i++){
-		var e = array[i];
-		if(x < e.x + e.w &&
-		x + w > e.x &&
-		y < e.y + e.h &&
-		y + h > e.y
-		){
-			return true;
-		}
-	}
-	return false;
-}
 //
 //
 //
 //
 
-function Entity(x,y,w,h,n){
-	entities.push(this);
+function Tile(x,y,w,h,img){
+	tiles.push(this);
 	this.x = x;
 	this.y = y;
 	this.w = w;
 	this.h = h;
-	this.img = n;
+	this.img = img;
 	var a = false;
 	var b = false;
 	var c = false;
@@ -309,78 +302,78 @@ function Entity(x,y,w,h,n){
 	var h = false;
 	var an,bn,cn,dn;
 	var ai,bi,ci,di;
-	for(var i=0; i<entity_vertices.length; i++){
+	for(var i=0; i<tile_vertices.length; i++){
 		
-		if(entity_vertices[i][0]==this.x && entity_vertices[i][1]==this.y){
+		if(tile_vertices[i][0]==this.x && tile_vertices[i][1]==this.y){
 			a = true;
 			an = i;
 		}
-		else if(entity_vertices[i][0]==this.x && entity_vertices[i][1]==this.y+this.h){
+		else if(tile_vertices[i][0]==this.x && tile_vertices[i][1]==this.y+this.h){
 			b = true;
 			bn = i;
 		}
-		else if(entity_vertices[i][0]==this.x+this.w && entity_vertices[i][1]==this.y+this.h){
+		else if(tile_vertices[i][0]==this.x+this.w && tile_vertices[i][1]==this.y+this.h){
 			c = true;
 			cn = i;
 		}
-		else if(entity_vertices[i][0]==this.x+this.w && entity_vertices[i][1]==this.y){
+		else if(tile_vertices[i][0]==this.x+this.w && tile_vertices[i][1]==this.y){
 			d = true;
 			dn = i;
 		}
 	}
-	if(!a){entity_vertices.push([this.x,this.y]);}
-	else{entity_vertices.splice(an,1)}
-	if(!b){entity_vertices.push([this.x,this.y+this.h]);}
-	else{entity_vertices.splice(bn,1)}
-	if(!c){entity_vertices.push([this.x+this.w,this.y+this.h]);}
-	else{entity_vertices.splice(cn,1)}
-	if(!d){entity_vertices.push([this.x+this.w,this.y]);}
-	else{entity_vertices.splice(dn,1)}
+	if(!a){tile_vertices.push([this.x,this.y]);}
+	else{tile_vertices.splice(an,1)}
+	if(!b){tile_vertices.push([this.x,this.y+this.h]);}
+	else{tile_vertices.splice(bn,1)}
+	if(!c){tile_vertices.push([this.x+this.w,this.y+this.h]);}
+	else{tile_vertices.splice(cn,1)}
+	if(!d){tile_vertices.push([this.x+this.w,this.y]);}
+	else{tile_vertices.splice(dn,1)}
 	//
 	//
-	for(var n=0; n<entity_lines.length; n++){
+	for(var n=0; n<tile_lines.length; n++){
 		//top
-		if(entity_lines[n][0]==this.x && entity_lines[n][1]==this.y && entity_lines[n][2]==this.x+this.w && entity_lines[n][3]==this.y){
+		if(tile_lines[n][0]==this.x && tile_lines[n][1]==this.y && tile_lines[n][2]==this.x+this.w && tile_lines[n][3]==this.y){
 			e = true;
 			ai = n;
-			entity_lines.splice(n,1)
+			tile_lines.splice(n,1)
 			continue;
 		}
 		//right
-		else if(entity_lines[n][0]==this.x+this.w && entity_lines[n][1]==this.y && entity_lines[n][2]==this.x+this.w && entity_lines[n][3]==this.y+this.h){
+		else if(tile_lines[n][0]==this.x+this.w && tile_lines[n][1]==this.y && tile_lines[n][2]==this.x+this.w && tile_lines[n][3]==this.y+this.h){
 			f = true;
 			bi = n;
-			entity_lines.splice(n,1)
+			tile_lines.splice(n,1)
 			continue;
 		}
 		//bottom
-		else if(entity_lines[n][0]==this.x && entity_lines[n][1]==this.y+this.h && entity_lines[n][2]==this.x+this.w && entity_lines[n][3]==this.y+this.h){
+		else if(tile_lines[n][0]==this.x && tile_lines[n][1]==this.y+this.h && tile_lines[n][2]==this.x+this.w && tile_lines[n][3]==this.y+this.h){
 			g = true;
 			ci = n;
-			entity_lines.splice(n,1)
+			tile_lines.splice(n,1)
 			continue;
 		}
 		//left
-		else if(entity_lines[n][0]==this.x && entity_lines[n][1]==this.y && entity_lines[n][2]==this.x && entity_lines[n][3]==this.y+this.h){
+		else if(tile_lines[n][0]==this.x && tile_lines[n][1]==this.y && tile_lines[n][2]==this.x && tile_lines[n][3]==this.y+this.h){
 			h = true;
 			di = n;
-			entity_lines.splice(n,1)
+			tile_lines.splice(n,1)
 			continue;
 		}
 		
 		
 	}
-	if(!e){entity_lines.push([this.x,this.y,this.x+this.w,this.y,this.img]);}
-	//else{entity_lines.splice(ai,1)}
-	if(!f){entity_lines.push([this.x+this.w,this.y,this.x+this.w,this.y+this.h,this.img]);}
-	//else{entity_lines.splice(bi,1)}
-	if(!g){entity_lines.push([this.x,this.y+this.h,this.x+this.w,this.y+this.h,this.img]);}
-	//else{entity_lines.splice(ci,1)}
-	if(!h){entity_lines.push([this.x,this.y,this.x,this.y+this.h,this.img]);}
-	//else{entity_lines.splice(di,1)}
+	if(!e){tile_lines.push([this.x,this.y,this.x+this.w,this.y,this.img]);}
+	//else{tile_lines.splice(ai,1)}
+	if(!f){tile_lines.push([this.x+this.w,this.y,this.x+this.w,this.y+this.h,this.img]);}
+	//else{tile_lines.splice(bi,1)}
+	if(!g){tile_lines.push([this.x,this.y+this.h,this.x+this.w,this.y+this.h,this.img]);}
+	//else{tile_lines.splice(ci,1)}
+	if(!h){tile_lines.push([this.x,this.y,this.x,this.y+this.h,this.img]);}
+	//else{tile_lines.splice(di,1)}
 
 }
-Entity.prototype.draw = function(){
+Tile.prototype.draw = function(){
 	ctx.fillStyle='red';
 	ctx.fillRect(this.x,this.y,this.w,this.h);
 };
@@ -421,11 +414,11 @@ function drawBuffer(){
 	    	var x1 = 32*x;
 	    	var y1 = 32*y;
 	    	if(floors.indexOf(map[y][x]) == -1){
-	    		new Entity(x1,y1,32,32,map[y][x]);
+	    		new Tile(x1,y1,32,32,map[y][x]);
 	    	}
-	        buffer.drawImage(tiles,(map[y][x]%(tiles.width/width))*width,(map[y][x]-(map[y][x]%(tiles.width/width)))/(tiles.width/width)*width,width,width,x1,y1,32,32);
+	        buffer.drawImage(tiles_img,(map[y][x]%(tiles_img.width/width))*width,(map[y][x]-(map[y][x]%(tiles_img.width/width)))/(tiles_img.width/width)*width,width,width,x1,y1,32,32);
 	        //if(y%2 == 0 && x%2 == 0){
-				entity_vertices.push([x*32,y*32])
+				tile_vertices.push([x*32,y*32])
 	        //}
 	    }
 	}
@@ -491,8 +484,8 @@ function overlayShadow(){
 }
 
 function deleteObject(target){
-	for(var a=0; a<entities.length; a++){
-		if(entities[a] == target)entities.splice(a,1)
+	for(var a=0; a<tiles.length; a++){
+		if(tiles[a] == target)tiles.splice(a,1)
 	}
 	for(var b=0; b<enemies.length; b++){
 		if(enemies[b] == target)enemies.splice(b,1)
@@ -503,8 +496,8 @@ function deleteObject(target){
 }
 
 function drawEntities(){
-	for(var i=0; i<entities.length; i++){
-		entities[i].draw();
+	for(var i=0; i<tiles.length; i++){
+		tiles[i].draw();
 	}
 }
 function drawLightSources(){
@@ -617,15 +610,15 @@ function debug(){
 	}
 	else if(debug_vars.trigger2){
 		hud.beginPath();
-		for(var i=0; i<entity_lines.length; i++){
-			hud.moveTo(entity_lines[i][0]+x_translation,entity_lines[i][1]+y_translation)
-			hud.lineTo(entity_lines[i][2]+x_translation,entity_lines[i][3]+y_translation)
+		for(var i=0; i<tile_lines.length; i++){
+			hud.moveTo(tile_lines[i][0]+x_translation,tile_lines[i][1]+y_translation)
+			hud.lineTo(tile_lines[i][2]+x_translation,tile_lines[i][3]+y_translation)
 		}
 		hud.strokeStyle='yellow'
 		hud.stroke();
 		hud.fillStyle='red'
-		for(var n=0; n<entity_vertices.length; n++){
-			hud.fillRect(entity_vertices[n][0]+x_translation,entity_vertices[n][1]+y_translation,3,3)
+		for(var n=0; n<tile_vertices.length; n++){
+			hud.fillRect(tile_vertices[n][0]+x_translation,tile_vertices[n][1]+y_translation,3,3)
 		}
 	}
 	else if(debug_vars.trigger3){
@@ -761,8 +754,8 @@ function castRays(x,y,r,so,eo,rgb,obj){
 	    //}
 	    endpoints.push([Math.round(r*Math.cos(so)+sx),Math.round(r*Math.sin(so)+sy),so]);
 	    endpoints.push([Math.round(r*Math.cos(eo)+sx),Math.round(r*Math.sin(eo)+sy),eo]);
-	    for(var a=0; a<entity_vertices.length; a++){
-	    	var vert = {x: Math.round(entity_vertices[a][0]),y: Math.round(entity_vertices[a][1])};
+	    for(var a=0; a<tile_vertices.length; a++){
+	    	var vert = {x: Math.round(tile_vertices[a][0]),y: Math.round(tile_vertices[a][1])};
 	    	var angle = Math.atan2(vert.y-sy,vert.x-sx);
 	    	var vert_hyp = Math.sqrt((sx-vert.x)*(sx-vert.x)+(sy-vert.y)*(sy-vert.y))
 	    	if(angle <= eo && angle >= so && vert_hyp < 1.5*r
@@ -779,8 +772,8 @@ function castRays(x,y,r,so,eo,rgb,obj){
 		    var res1 = [0,0];
 		    var res2 = [Infinity,Infinity];
 		    var result = [0,0];
-		    for(var i=0; i<entity_lines.length; i++){
-		    	res1 = getLineIntersection(sx,sy,ex,ey,entity_lines[i][0],entity_lines[i][1],entity_lines[i][2],entity_lines[i][3]);
+		    for(var i=0; i<tile_lines.length; i++){
+		    	res1 = getLineIntersection(sx,sy,ex,ey,tile_lines[i][0],tile_lines[i][1],tile_lines[i][2],tile_lines[i][3]);
 		    	var res1_dx = res1[0]-sx;
 		    	var res1_dy = res1[1]-sy;
 		    	var hyp1 = Math.sqrt((res1_dx*res1_dx) + (res1_dy*res1_dy));
@@ -790,7 +783,7 @@ function castRays(x,y,r,so,eo,rgb,obj){
 		    	if(hyp1 < hyp2){
 		    		result = res1;
 					res2 = res1;
-					res3 = entity_lines[i][4];
+					res3 = tile_lines[i][4];
 		    	}
 		    	else{
 					result = result;
@@ -875,10 +868,10 @@ function init(){
     };
     setTimeout(drawBuffer,10)
 	setTimeout(loop,10)
-	entity_vertices.push([0,0],[map[0].length*32,0],[map[0].length*32,map.length*32],[0,map.length*32])
+	tile_vertices.push([0,0],[map[0].length*32,0],[map[0].length*32,map.length*32],[0,map.length*32])
 }
 function loop(){
-<<<<<<< HEAD
+
 	if(!paused){
 		frame++;
 		clearCanvases()
