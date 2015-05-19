@@ -104,9 +104,12 @@ function Text(x,y,txt,font,rgba){
 	this.y = y;
     this.dx = 0;
     this.dy = 0;
-	this.txt = txt.toString();
-	this.font = font;
-	this.rgba = "rgba("+rgba[0]+","+rgba[1]+","+rgba[2]+","+rgba[3]+")";
+	this.txt = txt.toString() || "NA";
+	this.font = font || "32px Georgia";
+    if(!rgba){this.rgba = "rgba(255,255,255,1)"}
+    else{
+	   this.rgba = "rgba("+rgba[0]+","+rgba[1]+","+rgba[2]+","+rgba[3]+")";
+    }
     this.animate = function(){
         this.x += this.dx;
         this.y += this.dy;
@@ -181,6 +184,8 @@ function open_main_menu(){
         menu_loop = function(){};
         init();
     };
+    new Text(10,25,"UP ARROW to fly up, F to fire","18px Georgia")
+    new Text(10,60,"click to select upgrades when prompted","18px Georgia")
     new Text(112,200,"Touch to continue","32px Georgia",[255,255,255,1])
 }
 function splashScreen(){
@@ -219,7 +224,7 @@ function splashScreen(){
 	explosion_img.onload = handleAssetLoad(explosion_img.src);
 	
     ctx.font = "16px Georgia";
-    ctx.fillStyle = "black";
+    ctx.fillStyle = "white";
     ctx.fillText("Created by Eli Anderson", 310, 300);
 }
 var TOTAL_ASSETS = 26;

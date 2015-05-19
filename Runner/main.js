@@ -24,12 +24,18 @@ function init(){
 	wave_timer = new Timer();
 	wave_timer.func = function(){
 		wave_time.txt --;
-		if(wave_time.txt <= 3){
+		if(wave_time.txt <= 3 && wave_time.txt >= 0){
 			sound.play(sound.list.countdown);
 		}
 		if(wave_time.txt === 0){
-			player.gameOver();
-			wave_time.dy = 5;
+			setTimeout(function(){
+				if(wave_timer.running){
+					player.gameOver();
+					wave_time.dy = 5;
+					wave_time.txt = 0;
+					wave_timer.stop();
+				}
+			},1000)
 		};
 	}
 	wave_check_if_frames_passed = new Timer();

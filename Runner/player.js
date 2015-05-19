@@ -103,6 +103,18 @@ var player = {
 				ctx.closePath();
 			}
 			ctx.drawImage(player_img,this.frameX,this.frameY,this.frameW,this.frameH,this.x,this.y,this.w,this.h);
+			if(this.stunned){
+				ctx.strokeStyle = "blue";
+				ctx.lineWidth = .5;
+				ctx.beginPath();
+				for(var i=0; i<10; i++){
+					ctx.moveTo(this.x+this.w/2,this.y+this.h/2);
+					ctx.lineTo(rand_i(this.x,this.x+this.w),rand_i(this.y,this.y+this.h));
+					ctx.lineTo(rand_i(this.x,this.x+this.w),rand_i(this.y,this.y+this.h));
+					ctx.lineTo(rand_i(this.x,this.x+this.w),rand_i(this.y,this.y+this.h));
+				}
+				ctx.stroke();
+			}
 
 		}
 	},
