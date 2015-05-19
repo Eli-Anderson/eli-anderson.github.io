@@ -23,8 +23,15 @@ var scene = {
 		})
 		for(var i=0; i<this.objects.length; i++){
 			obj = this.objects[i];
+			obj.rotate = obj.rotate || 0;
 			ctx.fillStyle = "rgba("+obj.rgba[0]+","+obj.rgba[1]+","+obj.rgba[2]+","+obj.rgba[3]+")";
+			ctx.save();
+			if(obj.rotate){
+				ctx.translate(obj.x,obj.y);
+			}
+			ctx.rotate(obj.rotate*Math.PI/180);
 			ctx.fillRect(obj.x,obj.y,obj.w,obj.h);
+			ctx.restore();
 		}
 	},
 
@@ -85,7 +92,7 @@ function Player(x,y,hp){
 	this.rgba = [0,0,0,1];
 	this.hp = hp;
 
-	this.horizontal_speed = 1;
+	this.horizontal_speed = .5;
 	
 
 	this.animate = function(){
@@ -106,9 +113,19 @@ function Player(x,y,hp){
 			this.y += this.vel_y;
 			this.isOnGround = false;
 		}
-		else{this.isOnGround = true;}
+		else{
+			this.isOnGround = true;
+			this.accel_y = 0;
+			this.vel_y = 0;
+		}
 		this.vel_x += this.accel_x;
-		if(!this.check_collision_x()){this.x += this.vel_x}
+		if(!this.check_collision_x()){
+			this.x += this.vel_x
+		}
+		else{
+			this.accel_x = 0;
+			this.vel_x = 0;
+		}
 
 		this.vel_x *= .90;
 		this.vel_y *= .90;
@@ -121,6 +138,35 @@ function Player(x,y,hp){
 			this.vel_y = -20;
 		}
 	}
+}
+
+function Zombie(x,y){
+	Physics_Object.call(this);
+	
+	this.x = x;
+	this.y = y;
+	
+	this.rgba = [0,120,0,1]
+	
+	this.body = {
+		rgba: [0,120,0,1],
+		rotation: 0,
+		x: this.x,
+		y: this.y,
+		w: 30,
+		h: 20,
+	}
+	this.arm = {
+		rgba: [0,120,0,1],
+		rotation: 180,
+		x: this.x,
+		y: this.y+30/2,
+		w: 15,
+		h: 5,
+	}
+	this.parts = [
+	this.body, this.arm, 
+	]
 }
 
 
