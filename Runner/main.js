@@ -32,7 +32,7 @@ function init(){
 				if(wave_timer.running){
 					player.gameOver();
 					wave_time.dy = 5;
-					wave_time.txt = 0;
+					//wave_time.txt = 0;
 					wave_timer.stop();
 				}
 			},1000)
@@ -50,6 +50,8 @@ function init(){
 				}
 			}
 			wave_check_if_frames_passed.stop();
+			wave_time.dy = -5;
+			wave_timer.start();
 		}
 	}
 	//if(!game_screen.mobile){sound.play(sound.list.background_music);}
@@ -588,13 +590,13 @@ function keyDown(e){
 				document.getElementById('debug').style.visibility = "visible";
 				document.getElementById('debuggerInput').style.visibility = "visible";
 				document.getElementById('debuggerButton').style.visibility = "visible";
-				game.pause();
+				game.running = false;
 			}
 			else{
 				document.getElementById('debug').style.visibility = "hidden";
 				document.getElementById('debuggerInput').style.visibility = "hidden";
 				document.getElementById('debuggerButton').style.visibility = "hidden";
-				game.unpause();
+				game.running = true;
 			}
 		default:
 			console.log(e.keyCode)
