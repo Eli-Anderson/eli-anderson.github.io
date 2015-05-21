@@ -24,14 +24,14 @@ function resizeCanvas(){
 		
 		height = Math.min( body.scrollHeight, body.offsetHeight,
 		html.clientHeight, html.scrollHeight, html.offsetHeight ) - 3;
-		width = height * (3/2);
-		padding_left = (window.innerWidth - width)/2;
+		width = Math.floor(height * (3/2));
+		padding_left = Math.floor((window.innerWidth - width)/2);
 		padding_top = 0;
 		if(width > window.innerWidth){
 			width = window.innerWidth - 3;
-			height = (2/3)*width;
+			height = Math.floor((2/3)*width);
 			padding_left = 0;
-			padding_top = (window.innerHeight - height)/2
+			padding_top = Math.floor((window.innerHeight - height)/2);
 		}
 	}
 	else{
