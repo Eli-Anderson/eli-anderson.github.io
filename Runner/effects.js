@@ -19,7 +19,7 @@ function Explosion(x,y,w,h){
 }
 
 Explosion.prototype.animate = function(){
-	if(game.frame % 1 == 0){
+	if(game.frame % 1 === 0){
 		this.frameX = (this.frameCounter % 9) * 100;
 		this.frameY = Math.floor(this.frameCounter / 9) * 100;
 		this.frameCounter ++;

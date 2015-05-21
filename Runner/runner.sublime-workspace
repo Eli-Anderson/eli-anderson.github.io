@@ -252,114 +252,10 @@
 	"buffers":
 	[
 		{
-			"file": "new.html",
-			"settings":
-			{
-				"buffer_size": 1459,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "gui.js",
-			"settings":
-			{
-				"buffer_size": 8872,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "main.js",
-			"settings":
-			{
-				"buffer_size": 15929,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "player.js",
-			"settings":
-			{
-				"buffer_size": 4594,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "sound.js",
-			"settings":
-			{
-				"buffer_size": 1151,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "upgrades.js",
-			"settings":
-			{
-				"buffer_size": 4357,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "wall.js",
-			"settings":
-			{
-				"buffer_size": 3412,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "projectile.js",
-			"settings":
-			{
-				"buffer_size": 6827,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "enemy.js",
-			"settings":
-			{
-				"buffer_size": 10457,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "store.js",
-			"settings":
-			{
-				"buffer_size": 3059,
-				"line_ending": "Unix"
-			}
-		},
-		{
 			"file": "effects.js",
 			"settings":
 			{
-				"buffer_size": 5983,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "orb.js",
-			"settings":
-			{
-				"buffer_size": 1731,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "inventory.js",
-			"settings":
-			{
-				"buffer_size": 3904,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "cache.appcache",
-			"settings":
-			{
-				"buffer_size": 496,
+				"buffer_size": 5984,
 				"line_ending": "Unix"
 			}
 		}
@@ -388,7 +284,22 @@
 	},
 	"file_history":
 	[
+		"/Users/Zachary/ultrasnap.github.io/Runner/cache.appcache",
+		"/Users/Zachary/ultrasnap.github.io/Runner/inventory.js",
+		"/Users/Zachary/ultrasnap.github.io/Runner/orb.js",
+		"/Users/Zachary/ultrasnap.github.io/Runner/effects.js",
+		"/Users/Zachary/ultrasnap.github.io/Runner/store.js",
+		"/Users/Zachary/ultrasnap.github.io/Runner/projectile.js",
+		"/Users/Zachary/ultrasnap.github.io/Runner/wall.js",
+		"/Users/Zachary/ultrasnap.github.io/Runner/upgrades.js",
+		"/Users/Zachary/ultrasnap.github.io/Runner/sound.js",
+		"/Users/Zachary/ultrasnap.github.io/Runner/player.js",
+		"/Users/Zachary/ultrasnap.github.io/Runner/main.js",
 		"/Users/Zachary/ultrasnap.github.io/Runner/enemy.js",
+		"/Users/Zachary/ultrasnap.github.io/zombies/js/debug.js",
+		"/Users/Zachary/ultrasnap.github.io/zombies/js/engine.js",
+		"/Users/Zachary/ultrasnap.github.io/Runner/gui.js",
+		"/Users/Zachary/ultrasnap.github.io/Runner/new.html",
 		"/Users/Zachary/Desktop/misc_functions.js",
 		"/Users/Zachary/ultrasnap.github.io/Runner/runner.appcache",
 		"/Users/Zachary/ultrasnap.github.io/Project Darkness/game.js",
@@ -419,7 +330,7 @@
 	},
 	"find_in_files":
 	{
-		"height": 93.0,
+		"height": 0.0,
 		"where_history":
 		[
 			"<open files>"
@@ -430,6 +341,10 @@
 		"case_sensitive": true,
 		"find_history":
 		[
+			"wave_timer.start",
+			"<<<",
+			">>>",
+			"<<<",
 			"loadMenu",
 			"menu_loop()",
 			"3",
@@ -543,380 +458,29 @@
 	"groups":
 	[
 		{
-			"selected": 8,
+			"selected": 0,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "new.html",
-					"settings":
-					{
-						"buffer_size": 1459,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/HTML/HTML.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 211.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 1,
-					"file": "gui.js",
-					"settings":
-					{
-						"buffer_size": 8872,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								4428,
-								4428
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 2786.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 2,
-					"file": "main.js",
-					"settings":
-					{
-						"buffer_size": 15929,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								129,
-								129
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 3,
-					"file": "player.js",
-					"settings":
-					{
-						"buffer_size": 4594,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								117,
-								117
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 4,
-					"file": "sound.js",
-					"settings":
-					{
-						"buffer_size": 1151,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								551,
-								551
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 5,
-					"file": "upgrades.js",
-					"settings":
-					{
-						"buffer_size": 4357,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								3848,
-								3848
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 2744.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 6,
-					"file": "wall.js",
-					"settings":
-					{
-						"buffer_size": 3412,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1177,
-								1177
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 7,
-					"file": "projectile.js",
-					"settings":
-					{
-						"buffer_size": 6827,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								6775,
-								6775
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 3798.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 8,
-					"file": "enemy.js",
-					"settings":
-					{
-						"buffer_size": 10457,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								6016,
-								6016
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 3712.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 9,
-					"file": "store.js",
-					"settings":
-					{
-						"buffer_size": 3059,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								896,
-								896
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 10,
 					"file": "effects.js",
 					"settings":
 					{
-						"buffer_size": 5983,
+						"buffer_size": 5984,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								3200,
-								3200
+								455,
+								455
 							]
 						],
 						"settings":
 						{
 							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
 							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 2534.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 11,
-					"file": "orb.js",
-					"settings":
-					{
-						"buffer_size": 1731,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								581,
-								581
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 12,
-					"file": "inventory.js",
-					"settings":
-					{
-						"buffer_size": 3904,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								3157,
-								3157
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 13,
-					"file": "cache.appcache",
-					"settings":
-					{
-						"buffer_size": 496,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Text/Plain text.tmLanguage"
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,

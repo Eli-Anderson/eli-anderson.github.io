@@ -7,6 +7,8 @@ function init(){
 	scene.add(player);
 	scene.add(floor)
 	scene.add(wall)
+
+
 	game.loop();
 }
 

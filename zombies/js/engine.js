@@ -23,13 +23,15 @@ var scene = {
 		})
 		for(var i=0; i<this.objects.length; i++){
 			obj = this.objects[i];
-			obj.rotate = obj.rotate || 0;
+			
+			//obj.rotate = obj.rotate || 0;
 			ctx.fillStyle = "rgba("+obj.rgba[0]+","+obj.rgba[1]+","+obj.rgba[2]+","+obj.rgba[3]+")";
 			ctx.save();
-			if(obj.rotate){
+			if(obj.rotation){
 				ctx.translate(obj.x,obj.y);
+				ctx.rotate(obj.rotation*Math.PI/180);
+				ctx.translate(-obj.x,-obj.y);
 			}
-			ctx.rotate(obj.rotate*Math.PI/180);
 			ctx.fillRect(obj.x,obj.y,obj.w,obj.h);
 			ctx.restore();
 		}
@@ -145,27 +147,53 @@ function Zombie(x,y){
 	
 	this.x = x;
 	this.y = y;
-	
+	this.w = 20;
+	this.h = 30
+
 	this.rgba = [0,120,0,1]
-	
+
+	this.head = {
+		rgba: [90,90,90,1],
+		rotation: 0,
+		x: this.x + (this.w/2) - 15/2,
+		y: this.y - 15,
+		w: 15,
+		h: 15,
+	}
 	this.body = {
 		rgba: [0,120,0,1],
 		rotation: 0,
 		x: this.x,
 		y: this.y,
-		w: 30,
-		h: 20,
+		w: this.w,
+		h: this.h,
 	}
-	this.arm = {
-		rgba: [0,120,0,1],
-		rotation: 180,
-		x: this.x,
-		y: this.y+30/2,
+	this.left_arm = {
+		rgba: [0,90,0,1],
+		rotation: 150,
+		x: this.x+this.w/2,
+		y: this.y+this.h/2,
 		w: 15,
-		h: 5,
+		h: 7,
+	}
+	this.right_arm = {
+		rgba: [0,75,0,1],
+		rotation: 170,
+		x: this.x+this.w/4,
+		y: this.y+this.h/2,
+		w: 15,
+		h: 7,
+	}
+	this.left_leg = {
+		rgba: [0,120,0,1],
+		rotation: 90,
+		x: this.x + this.w/2 + this.w/4,
+		y: this.y+this.h,
+		w: 15,
+		h: 10,
 	}
 	this.parts = [
-	this.body, this.arm, 
+	this.body, this.head, this.left_arm, this.right_arm, this.left_leg, 
 	]
 }
 
