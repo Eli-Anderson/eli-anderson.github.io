@@ -38,6 +38,7 @@ function resizeCanvas(){
 		width = window.innerWidth;
 		height = window.innerHeight;
 	}
+	console.log(width, height)
 	canvas.style.width = width;
     canvas.style.height = height;
 	canvas.style.left = padding_left || 0;
