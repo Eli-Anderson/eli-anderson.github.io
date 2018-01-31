@@ -125,6 +125,7 @@ class Map extends PanelBase {
 		const R_U_PATH = new Rect(32,64,32,32)
 		const U_R_PATH = new Rect(32,32,32,32)
 		var currentTile = this.getTile(0, Math.floor(this.rows/2))
+		this.pathStart = currentTile.transform.rect.center
 		currentTile.cropRect = H_PATH
 		var currentTileCoords = new Vector2(currentTile.transform.x/32, currentTile.transform.y/32)
 		var lastTile = null
@@ -192,7 +193,7 @@ class Map extends PanelBase {
 
 class Tile extends PanelImage {
 	constructor (transform, img, crop, isWalkable) {
-		super(transform, img, crop, undefined, false)
+		super(transform, img, crop, undefined, undefined, false)
 		this._isWalkable = isWalkable
 	}
 	get isWalkable () {

@@ -276,6 +276,16 @@ class Vector3 extends Vector2 {
 	set height (height) {
 		this._height = height
 	}
+
+	add (vector3) {
+		super.add(vector3)
+		return this
+	}
+	sub (vector3) {
+		super.sub(vector3)
+		return this
+	}
+
 	copy () {
 		return new Transform(this.x, this.y, this.z, this.width, this.height)
 	}
@@ -485,7 +495,7 @@ class Rect extends Vector2 {
 		var positionDifference = Vector3.SUB(vector3, this.transform)
 		this.transform.set(vector3)
 		for (const index in this.flattened) {
-			this.flattened[index].moveTo(Vector3.ADD(this.flattened[index].transform, positionDifference))
+			this.flattened[index].transform.set(Vector3.ADD(this.flattened[index].transform, positionDifference))
 		}
 	}
 }class Scene {
@@ -591,13 +601,10 @@ class Rect extends Vector2 {
 	/* should not be instantiated; used as a base for other Panel objects */
 	constructor (transform, isUI) {
 		super(transform)
-		this._isUI = (isUI == undefined) ? true : false
+		this._isUI = (isUI == undefined || isUI == true) ? true : false
 		this._class = PanelBase
 	}
-	/* 	setters used only for preventing hard-to-find errors
-		when trying to access position/dimensions where they
-		don't exist
-	*/
+	
 	get isUI () {
 		return this._isUI
 	}
@@ -605,7 +612,10 @@ class Rect extends Vector2 {
 		this._isUI = isUI
 	}
 
-
+	/* 	setters used only for preventing hard-to-find errors
+		when trying to access position/dimensions where they
+		don't exist
+	*/
 	set x (a) {
 		console.error ("Did you mean to call transform.x?")
 	}
@@ -620,9 +630,10 @@ class Rect extends Vector2 {
 	}
 }class Panel extends PanelBase {
 	/* a basic panel consisting of a background Color */
-	constructor (transform, color, isUI) {
+	constructor (transform, color, rotation, isUI) {
 		super(transform, isUI)
 		this.color = color
+		this.rotation = rotation || 0
 		this._class = Panel
 	}
 
@@ -632,17 +643,57 @@ class Rect extends Vector2 {
 	get color () {
 		return this._color
 	}
+	set rotation (rotation) {
+		this._rotation = rotation
+	}
+	get rotation () {
+		return this._rotation
+	}
+
+	/**
+	 * Rotates the panel towards a given angle over time.
+	 * Give the function a value 't' that is between [0, 1],
+	 * corresponding to the position between the current
+	 * rotation and the rotation given.
+	 * 
+	 * This can be used to lerp rotation by passing a small
+	 * value for t each frame (depending on the preferred speed)
+	 *
+	 * @param      {number}  angle   The angle desired
+	 * @param      {number}  t       A float between [0, 1]
+	 */
+	rotateTowards (angle, t) {
+		var a = angle % (Math.PI*2)
+		var PI2 = Math.PI*2
+		if (this.rotation - a > Math.PI) {
+			this.rotation = Math.abs((this.rotation + (a - (this.rotation - PI2)) * t) % PI2)
+		} else if (this.rotation - a < -Math.PI) {
+			this.rotation = (this.rotation + (a - (this.rotation + PI2)) * t) % PI2
+			if (this.rotation < 0) {
+				this.rotation += PI2
+			}
+		} else {
+			this.rotation = Math.abs((this.rotation + (a - this.rotation) * t) % PI2)
+		}
+	}
 
 	draw (context, position) {
 		if (this.enabled) {
+			context.save()
+
 			context.fillStyle = ""+this.color
+			context.translate(position.x+(this.transform.width/2), position.y+(this.transform.height/2))
+			context.rotate(this.rotation)
+			context.translate(-(position.x+(this.transform.width/2)), -(position.y+(this.transform.height/2)))
 			context.fillRect(position.x, position.y, this.transform.width, this.transform.height)
+			
+			context.restore() // resets scale
 		}
 	}
 }class PanelCircle extends Panel {
 	// Width and Height are used instead of a radius
-	constructor (transform, color, isUI) {
-		super(transform, color, isUI)
+	constructor (transform, color, rotation, isUI) {
+		super(transform, color, rotation, isUI)
 	}
 	draw (context, position) {
 		if (this.enabled) {
@@ -655,11 +706,12 @@ class Rect extends Vector2 {
 }class PanelImage extends PanelBase {
 	/* a panel with an image instead of a Color; able be be cropped from an input Image and scaled */
 	constructor (transform, image, cropRect, scale, rotation, isUI) {
-		super(transform, undefined, isUI)
+		super(transform, isUI)
 		this.image = image
 		this.cropRect = cropRect || new Rect(0, 0, transform.width, transform.height)
 		this.scale = scale || new Vector2(1, 1)
 		this.rotation = rotation || 0
+		this.drawBound = false
 		this._class = PanelImage
 	}
 
@@ -693,24 +745,54 @@ class Rect extends Vector2 {
 		return this._rotation
 	}
 
+	/**
+	 * Rotates the panel towards a given angle over time.
+	 * Give the function a value 't' that is between [0, 1],
+	 * corresponding to the position between the current
+	 * rotation and the rotation given.
+	 * 
+	 * This can be used to lerp rotation by passing a small
+	 * value for t each frame (depending on the preferred speed)
+	 *
+	 * @param      {number}  angle   The angle desired (in radians)
+	 * @param      {number}  t       A float between [0, 1]
+	 */
+	rotateTowards (angle, t) {
+		var a = angle % (Math.PI*2)
+		var PI2 = Math.PI*2
+		if (this.rotation - a > Math.PI) {
+			this.rotation = Math.abs((this.rotation + (a - (this.rotation - PI2)) * t) % PI2)
+		} else if (this.rotation - a < -Math.PI) {
+			this.rotation = (this.rotation + (a - (this.rotation + PI2)) * t) % PI2
+			if (this.rotation < 0) {
+				this.rotation += PI2
+			}
+		} else {
+			this.rotation = Math.abs((this.rotation + (a - this.rotation) * t) % PI2)
+		}
+	}
+
 	draw (context, position) {
 		if (this.enabled) {
 			context.save()
 			context.scale(this.scale.x, this.scale.y)
-			context.translate(this.transform.x+(this.transform.width/2), this.transform.y+(this.transform.height/2))
+			context.translate(position.x+(this.transform.width/2), position.y+(this.transform.height/2))
 			context.rotate(this.rotation)
-			context.translate(-(this.transform.x+(this.transform.width/2)), -(this.transform.y+(this.transform.height/2)))
+			context.translate(-(position.x+(this.transform.width/2)), -(position.y+(this.transform.height/2)))
 			
 			context.drawImage(this.image,
 				this.cropRect.x, this.cropRect.y, this.cropRect.width, this.cropRect.height,
 				position.x, position.y, this.transform.width, this.transform.height)
 			context.restore() // resets scale
+			if (this.drawBound)
+				context.strokeRect(position.x,position.y,this.transform.width,this.transform.height)
 		}
 	}
 }class Text extends PanelBase {
 	constructor (text, transform, font, isUI) {
 		super(transform, isUI)
-		this._text = text
+		this._lines = []
+		this.text = text
 		this._font = font
 		this._class = Text
 	}
@@ -725,9 +807,9 @@ class Rect extends Vector2 {
 		return this._font
 	}
 
-
 	set text (text) {
-		this._text = text		
+		this._text = text.toString()
+		this._lines = this._text.split("\n")
 	} 
 	set transform (transform) {
 		this._transform = transform
@@ -741,13 +823,16 @@ class Rect extends Vector2 {
 		if (this.enabled) {
 			this.transform.height = this.font.size
 			context.font = this.font
-			this.transform.width = context.measureText(this.text).width // TODO: Find a way to calculate the width when font is set?
 			context.fillStyle = this.font.color
+			this.transform.width = context.measureText(this.text).width // TODO: Find a way to calculate the width when font is set?
 			context.textAlign = this.font.alignment
 			var vAlign = 0
 			if (this.font.vertAlignment == 'center') vAlign = this.transform.height / 3
 			if (this.font.vertAlignment == 'bottom') vAlign = this.transform.height / 1.5
-			context.fillText(this.text, position.x, position.y + vAlign)
+			for (const index in this._lines) {
+				context.fillText(this._lines[index], position.x, position.y + vAlign + (index * this.font.size))
+			}
+			
 		}
 	}
 }class Font {
@@ -796,8 +881,8 @@ class Rect extends Vector2 {
 		return this.size + "px " + this.name
 	}
 }class Button extends Panel {
-	constructor (transform, color) {
-		super(transform, color)
+	constructor (transform, color, rotation) {
+		super(transform, color, rotation)
 		this._class = Button
 	}
 
@@ -914,8 +999,8 @@ class Rect extends Vector2 {
 		}
 	}
 }class Draggable extends Button {
-	constructor (transform, color) {
-		super(transform, color)
+	constructor (transform, color, rotation) {
+		super(transform, color, rotation)
 		this._isDragged = false
 		this._originalPosition = new Vector2(transform.x, transform.y)
 		this._distanceFromClickPoint = new Vector2(0, 0)

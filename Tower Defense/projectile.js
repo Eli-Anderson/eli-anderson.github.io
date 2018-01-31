@@ -1,6 +1,6 @@
-class BasicProjectile extends Panel {
+class BasicProjectile extends PanelImage {
 	constructor (transform, vector, damage) {
-		super(transform, new Color('yellow'), false)
+		super(transform, BasicProjectile.image, new Rect(24,24,16,16), new Vector2(1,1), 0, false)
 		this._vector = vector
 		this._damage = damage
 	}
@@ -33,6 +33,8 @@ class BasicProjectile extends Panel {
 		}
 	}
 }
+BasicProjectile.image = new Image()
+BasicProjectile.image.src = 'basicProjectile.png'
 
 class PiercingProjectile extends BasicProjectile {
 	constructor (transform, vector, damage) {

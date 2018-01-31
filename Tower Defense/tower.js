@@ -7,6 +7,7 @@ class Tower extends ButtonImage {
 		this._cost = 10
 		this._damage = 5
 		this._targeting = this.getWeakestMonster
+		this._target = null
 
 		this._timeSinceLastShot = 0;
 	}
@@ -28,6 +29,9 @@ class Tower extends ButtonImage {
 	get damage () {
 		return this._damage
 	}
+	get target () {
+		return this._target
+	}
 
 	set speed (speed) {
 		this._speed = speed
@@ -47,6 +51,9 @@ class Tower extends ButtonImage {
 	set targeting (targetingFunc) {
 		this._targeting = targetingFunc
 	}
+	set target (target) {
+		this._target = target
+	}
 
 	sell () {
 		game.map.removeTower(this.transform.x/32, this.transform.y/32)
@@ -54,26 +61,28 @@ class Tower extends ButtonImage {
 	}
 
 	attemptFire () {
-		var target = this.targeting()
-		if (target != undefined) {
-			var distanceVector = Vector2.SUB(this.transform, target.transform)
-			var angle = Math.atan2(-distanceVector.y,-distanceVector.x)
-	    	if (angle < Math.PI) {
-	    		angle += (2*Math.PI)
-	    	}
-	    	this.rotation = angle + Math.PI/2
-			if (this._timeSinceLastShot > this._reloadTime)
-				if (distanceVector.magnitude < this._range) {
-					this.fire(target)
-					this._timeSinceLastShot = 0
+		this.target = this.targeting()
+		if (this.target != null) { // has a target
+			var distanceVector = Vector2.SUB(this.transform, this.target.transform)
+			if (this._timeSinceLastShot > this._reloadTime) { // is not reloading
+				if (distanceVector.magnitude < this._range) { // target is within range
+					var angle = Math.atan2(-distanceVector.y,-distanceVector.x)
+					if (angle < 0) {
+						angle += (2*Math.PI)
+					}
+					//if (Math.abs((this.rotation - (angle))%(2*Math.PI)) < Math.PI/32) { // is looking at target
+						this.fire()
+						this._timeSinceLastShot = 0
+					//}
 				}
+			}
 		}
 	}
 
-	fire (target) {
+	fire () {
 		game.map.addProjectile(new this.projectile(
-			new Transform(this.transform.rect.center.x,this.transform.rect.center.y,4,6,6),
-			Vector3.MULT(Vector3.SUB(target.transform, this.transform).normalized, this.speed),
+			new Transform(this.transform.rect.center.x,this.transform.rect.center.y,3,6,6),
+			Vector2.MULT(Vector2.SUB(this.target.transform.rect.center, this.transform.rect.center).normalized, this.speed),
 			this.damage
 		))
 	}
@@ -88,13 +97,14 @@ class Tower extends ButtonImage {
 		return inRange
 	}
 	getClosestMonster () {
-		if (game.map.monsters.length <= 0)
+		var inRange = this.getMonstersInRange()
+		if (inRange.length <= 0)
 			return null
-		var closest = game.map.monsters[0]
-		for (const index in game.map.monsters) {
-			if (Vector2.SUB(this.transform, game.map.monsters[index].transform).magnitude < 
+		var closest = inRange[0]
+		for (const index in inRange) {
+			if (Vector2.SUB(this.transform, inRange[index].transform).magnitude < 
 				Vector2.SUB(this.transform, closest.transform).magnitude) {
-				closest = game.map.monsters[index]
+				closest = inRange[index]
 			}
 		}
 		return closest
@@ -123,6 +133,15 @@ class Tower extends ButtonImage {
 	update (dt) {
 		this._timeSinceLastShot += dt
 		this.attemptFire()
+		if (this.target != null) {
+			var distanceVector = Vector2.SUB(this.target.transform.rect.center, this.transform.rect.center).normalized
+			var angle = Math.atan2(distanceVector.y, distanceVector.x)
+	    	if (angle < 0) {
+	    		angle += (2*Math.PI)
+	    	}
+	    	this.rotateTowards(angle, dt/100)
+		}
+		
 	}
 
 	onClick (point) {
@@ -193,7 +212,7 @@ class TowerDraggable extends DraggableImage {
 
 	buildTower (position) {
 		game.map.addTower(
-			new this.towerClass(new Transform(position.x,position.y,2,32,32)),
+			new this.towerClass(new Transform(position.x,position.y,TOWER,32,32)),
 			position.x/32,
 			position.y/32
 		)
@@ -209,24 +228,30 @@ class TowerDraggable extends DraggableImage {
 		}
 		game.highlight.enabled = false
 		game.rangeHighlight.enabled = false
-		this.transform.x = this.originalPosition.x
-		this.transform.y = this.originalPosition.y
+		this.moveTo(this.originalPosition)
 	}
 }
 
 
 class BasicTower extends Tower {
 	constructor (transform) {
-		var image = new Image()
-		image.src = 'basicTower.png'
-		super(transform, image, new Rect(0,0,64,64))
-		this.speed = 4
+		super(transform, BasicTower.image, new Rect(0,0,64,64))
+		this.speed = 8
 		this.range = 128
+		this.damage = 5
 		this.reloadTime = 1000
 		this.cost = 10
 		this.projectile = BasicProjectile
 	}
+	static get tooltip () {
+		return 	"Basic Tower\n\n"+
+				"Damage: 5\n"+
+				"Fire Rate: 1000\n\n\n"+
+				"Cost: 10"
+	}
 }
+BasicTower.image = new Image()
+BasicTower.image.src = 'basicTower.png'
 
 class BasicTowerCreator extends TowerDraggable {
 	constructor (transform) {
@@ -244,14 +269,23 @@ class SniperTower extends Tower {
 		var image = new Image()
 		image.src = 'sniperTower.png'
 		super(transform, image, new Rect(0,0,64,64))
-		this.speed = 7
+		this.speed = 12
 		this.range = 256
 		this.reloadTime = 3000
 		this.cost = 25
 		this.damage = 10
 		this.projectile = PiercingProjectile
 	}
+	static get tooltip () {
+		return 	"Sniper Tower\n\n"+
+				"Pierces Enemies\n"+
+				"Damage: 10\n"+
+				"Fire Rate: 3000\n\n"+
+				"Cost: 25"
+	}
 }
+SniperTower.image = new Image()
+SniperTower.image.src = 'sniperTower.png'
 
 class SniperTowerCreator extends TowerDraggable {
 	constructor (transform) {
@@ -276,7 +310,16 @@ class RapidTower extends Tower {
 		this.range = 64
 		this.projectile = BasicProjectile
 	}
+
+	static get tooltip () {
+		return 	"Rapid Tower\n\n"+
+				"Damage: 1.5\n"+
+				"Fire Rate: 100\n\n\n"+
+				"Cost: 15"
+	}
 }
+RapidTower.image = new Image()
+RapidTower.image.src = 'rapidTower.png'
 
 class RapidTowerCreator extends TowerDraggable {
 	constructor (transform) {

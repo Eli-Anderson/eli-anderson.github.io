@@ -1,8 +1,6 @@
 class Monster extends PanelImage {
 	constructor (transform) {
-		var img = new Image()
-		img.src = 'monsters.png'
-		super(transform, img, new Rect(0,32,16,16), undefined, 0, false)
+		super(transform, Monster.image, new Rect(2,35,12,13), undefined, 0, false)
 		this.speed = 1
 		this.health = 10
 		this.bounty = 1
@@ -36,7 +34,7 @@ class Monster extends PanelImage {
     	if (angle < Math.PI) {
     		angle += (2*Math.PI)
     	}
-    	this.rotation = angle - Math.PI/2
+    	//this.rotation = angle - Math.PI/2
 
 	}
 	update (dt) {
@@ -45,6 +43,14 @@ class Monster extends PanelImage {
 			this.parent.remove(this)
 			game.map.monsters.splice(game.map.monsters.indexOf(this), 1)
 		} else {
+			
+			var angle = Math.atan2(this.direction.y,this.direction.x)
+	    	if (angle < Math.PI) {
+	    		angle += (2*Math.PI)
+	    	}
+	    	this.rotateTowards(angle - Math.PI/2, dt/100)
+
+
 			var tile = game.map.getTileAtPos(this.transform.rect.center.x, this.transform.rect.center.y)
 			if (tile != null) {
 				const V_PATH = new Rect(32,0,32,32)
@@ -53,7 +59,7 @@ class Monster extends PanelImage {
 				const D_R_PATH = new Rect(0,64,32,32)
 				const R_U_PATH = new Rect(32,64,32,32)
 				const U_R_PATH = new Rect(32,32,32,32)
-				if (Vector2.SUB(this.transform, tile.transform).magnitude < this.speed) {
+				if (Vector2.SUB(this.transform.rect.center, tile.transform.rect.center).magnitude < this.speed) {
 					if (tile.cropRect.equals(R_D_PATH)) {
 						this.direction = new Vector2(0,1)
 					} else if (tile.cropRect.equals(R_U_PATH)) {
@@ -71,6 +77,7 @@ class Monster extends PanelImage {
 				game.map.monsters.splice(game.map.monsters.indexOf(this), 1)
 			}
 		}
-		
 	}
 }
+Monster.image = new Image()
+Monster.image.src = "monsters.png"

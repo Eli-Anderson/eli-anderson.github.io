@@ -44,106 +44,27 @@ class Game {
 		)
 		this.hurtThisWave = false
 
-		this.pauseButton = new Button(new Transform(678,10,UI+4,32,32), new Color('black'))
+		this.pauseButton = new Button(new Transform(678,10,UI+4,32,32), new Color('black'), 0)
 		this.pauseButton.onClick = () => {_this.paused = !_this.paused}
 		this.scene.add(this.pauseButton)
 		
 		this.scene.add(new Panel(new Transform(0,0,0,720,480), new Color('white')))
 		this.scene.add(this.map)
 
-		this.towerTray = new Panel(new Transform(0,400,UI-1,720,80), new Color('gray'), true)
+		this.towerTray = new Panel(new Transform(0,400,UI-1,720,80), new Color('gray'), 0, true)
 		this.towerTray.add(this.waveCounter)
 		this.towerTray.add(this.goldCounter)
 		this.towerTray.add(this.lifeCounter)
-		this.highlight = new Panel(new Transform(0,0,TOWER-1,32,32), new Color(255,255,255,0.25), false)
+		this.highlight = new Panel(new Transform(0,0,TOWER-1,32,32), new Color(255,255,255,0.25), 0, false)
 		this.highlight.enabled = false
-		this.rangeHighlight = new PanelCircle(new Transform(0,0,TOWER-1,0,0), new Color(255,255,255,0.3), false)
+		this.rangeHighlight = new PanelCircle(new Transform(0,0,TOWER-1,0,0), new Color(255,255,255,0.3), 0, false)
 		this.rangeHighlight.enabled = false
 		this.scene.add(this.highlight)
 		this.scene.add(this.rangeHighlight)
 		
 		this.createTowerButtons()
-
+		this.createOtherButtons()
 		this.scene.add(this.towerTray)
-
-		this.targetWeakestButton = new Button(new Transform(438,424,UI+2,32,32), new Color('purple'), true)
-		this.targetStrongestButton = new Button(new Transform(480,424,UI+2,32,32), new Color('teal'), true)
-		this.targetClosestButton = new Button(new Transform(522,424,UI+2,32,32), new Color(0,255,120), true)
-		this.targetButtonSelected = new Text("X", new Transform(454,440,UI+3,32,32), new Font("Arial", 32, new Color('black'), 'center', 'center'))
-		this.scene.add(this.targetButtonSelected)
-		this.targetWeakestButton.onClick = ()=>{
-			if (_this.selectedTower){
-				_this.selectedTower.targeting = _this.selectedTower.getWeakestMonster
-				_this.targetButtonSelected.enabled = true
-				_this.targetButtonSelected.transform.x = _this.targetWeakestButton.transform.rect.center.x
-			}
-		}
-		this.targetStrongestButton.onClick = ()=>{
-			if (_this.selectedTower){
-				_this.selectedTower.targeting = _this.selectedTower.getStrongestMonster
-				_this.targetButtonSelected.enabled = true
-				_this.targetButtonSelected.transform.x = _this.targetStrongestButton.transform.rect.center.x
-			}
-		}
-		this.targetClosestButton.onClick = ()=>{
-			if (_this.selectedTower){
-				_this.selectedTower.targeting = _this.selectedTower.getClosestMonster
-				_this.targetButtonSelected.enabled = true
-				_this.targetButtonSelected.transform.x = _this.targetClosestButton.transform.rect.center.x
-			}
-		}
-		var targetWeakestTip = new Tooltip(
-			new Transform(438,400,UI+10,128,128),
-			new Text("Target weakest", new Transform(0,0,UI+11,0,0), new Font("Arial", 16, new Color('white'), 'center', 'center')),
-			new Color(128,128,128,0.25),
-			true
-		)
-		this.targetWeakestButton.add(targetWeakestTip)
-		var targetStrongestTip = new Tooltip(
-			new Transform(480,400,UI+10,128,128),
-			new Text("Target strongest", new Transform(0,0,UI+11,0,0), new Font("Arial", 16, new Color('white'), 'center', 'center')),
-			new Color(128,128,128,0.25),
-			true
-		)
-		this.targetStrongestButton.add(targetStrongestTip)
-		var targetClosestTip = new Tooltip(
-			new Transform(522,400,UI+10,128,128),
-			new Text("Target closest", new Transform(0,0,UI+11,0,0), new Font("Arial", 16, new Color('white'), 'center', 'center')),
-			new Color(128,128,128,0.25),
-			true
-		)
-		this.targetClosestButton.add(targetClosestTip)
-
-
-		this.sellButton = new Button(new Transform(564,424,UI+2,32,32), new Color('red'), true)
-		this.sellAmount = new Text("", new Transform(580,440,UI+3,32,32), new Font("Arial", 16, new Color('yellow'), 'center', 'center'))
-		this.sellButton.add(this.sellAmount)
-		var sellTip = new Tooltip(
-			new Transform(564,400,UI+10,128,128),
-			new Text("Sell a tower", new Transform(0,0,UI+11,0,0), new Font("Arial", 16, new Color('white'), 'center', 'center')),
-			new Color(128,128,128,0.25),
-			true
-		)
-		this.sellButton.add(sellTip)
-		this.tooltips.push(sellTip)
-		this.tooltips.push(targetWeakestTip)
-		this.tooltips.push(targetStrongestTip)
-		this.tooltips.push(targetClosestTip)
-		this.sellButton.onClick = ()=>{
-			if (_this.selectedTower) {
-				_this.selectedTower.sell()
-				_this.selectedTower = null
-				_this.sellAmount.text = ""
-				_this.highlight.enabled = false
-			}
-			
-
-		}
-		this.scene.add(this.targetWeakestButton)
-		this.scene.add(this.targetStrongestButton)
-		this.scene.add(this.targetClosestButton)
-		this.scene.add(this.sellButton)
-
 	}
 
 	get scene () {
@@ -195,16 +116,90 @@ class Game {
 		var basicTowerCreator = new BasicTowerCreator(new Transform(32,424,UI+2,32,32))
 		var sniperTowerCreator = new SniperTowerCreator(new Transform(96,424,UI+2,32,32))
 		var rapidTowerCreator = new RapidTowerCreator(new Transform(160,424,UI+2,32,32))
-		console.log(basicTowerCreator, sniperTowerCreator, rapidTowerCreator)
 		this.towerTray.add(basicTowerCreator)
 		this.towerTray.add(sniperTowerCreator)
 		this.towerTray.add(rapidTowerCreator)
+
+		for (const index in [basicTowerCreator, sniperTowerCreator, rapidTowerCreator]) {
+			var tower = [basicTowerCreator, sniperTowerCreator, rapidTowerCreator][index]
+			var t = tower.transform
+			var tip = new Tooltip(
+				new Transform(t.x,t.y-104,UI+10,128,128),
+				new Text(tower.towerClass.tooltip, new Transform(t.x,t.y-104,UI+11,0,0), new Font("Arial", 16, new Color('white'), 'left','bottom')),
+				new Color(128,128,128,0.65),
+				false
+			)
+			tower.add(tip)
+			this.tooltips.push(tip)
+		}
+	}
+	createOtherButtons () {
+		var _this = this
+
+		this.targetWeakestButton = new Button(new Transform(438,424,UI+2,32,32), new Color('purple'), 0, true)
+		this.targetWeakestButton.tooltip = "Target Weakest"
+		this.targetStrongestButton = new Button(new Transform(480,424,UI+2,32,32), new Color('teal'), 0, true)
+		this.targetStrongestButton.tooltip = "Target Strongest"
+		this.targetClosestButton = new Button(new Transform(522,424,UI+2,32,32), new Color(0,255,120), 0, true)
+		this.targetClosestButton.tooltip = "Target Closest"
+		var sellButton = new Button(new Transform(564,424,UI+2,32,32), new Color('red'), 0, true)
+		sellButton.tooltip = "Sell The Tower"
+		this.targetButtonSelected = new Text("X", new Transform(454,440,UI+3,32,32), new Font("Arial", 32, new Color('black'), 'center', 'center'))
+		
+		this.targetWeakestButton.onClick = ()=>{
+			if (_this.selectedTower){
+				_this.selectedTower.targeting = _this.selectedTower.getWeakestMonster
+				_this.targetButtonSelected.enabled = true
+				_this.targetButtonSelected.transform.x = _this.targetWeakestButton.transform.rect.center.x
+			}
+		}
+		this.targetStrongestButton.onClick = ()=>{
+			if (_this.selectedTower){
+				_this.selectedTower.targeting = _this.selectedTower.getStrongestMonster
+				_this.targetButtonSelected.enabled = true
+				_this.targetButtonSelected.transform.x = _this.targetStrongestButton.transform.rect.center.x
+			}
+		}
+		this.targetClosestButton.onClick = ()=>{
+			if (_this.selectedTower){
+				_this.selectedTower.targeting = _this.selectedTower.getClosestMonster
+				_this.targetButtonSelected.enabled = true
+				_this.targetButtonSelected.transform.x = _this.targetClosestButton.transform.rect.center.x
+			}
+		}
+
+		for (const index in [this.targetWeakestButton,this.targetStrongestButton,this.targetClosestButton,sellButton]) {
+			var button = [this.targetWeakestButton,this.targetStrongestButton,this.targetClosestButton,sellButton][index]
+			var t = button.transform
+			var tip = new Tooltip(
+				new Transform(t.x,t.y-24,UI+10,128,128),
+				new Text(button.tooltip, new Transform(t.x,t.y-24,UI+11,0,0), new Font("Arial", 16, new Color('white'), 'left','bottom')),
+				new Color(128,128,128,0.65),
+				true
+			)
+			button.add(tip)
+			this.tooltips.push(tip)
+			this.towerTray.add(button)
+		}
+
+		this.sellAmount = new Text("", new Transform(580,440,UI+3,32,32), new Font("Arial", 16, new Color('yellow'), 'center', 'center'))
+		sellButton.add(this.sellAmount)
+
+		sellButton.onClick = () => {
+			if (_this.selectedTower) {
+				_this.selectedTower.sell()
+				_this.selectedTower = null
+				_this.sellAmount.text = ""
+				_this.highlight.enabled = false
+			}
+		}
+		this.scene.add(this.targetButtonSelected)
 	}
 }
 
 class Tooltip extends Panel {
 	constructor (transform, text, color, dynamicSize) {
-		super(transform, color)
+		super(transform, color, 0, true)
 		this._dynamic = dynamicSize
 		this.tipText = text
 		this.add(text)
@@ -227,19 +222,45 @@ class Tooltip extends Panel {
 	}
 
 	update (dt, point) {
-		this.enabled = Collision.pointIsInRect(point, this.parent.transform)
+		this.enabled = Collision.pointIsInRect(point, this.parent.transform) && !input.mousedown
 	}
 }
 
 function startWave (n) {
 	game.waveCounter.text = "Wave: "+game.currentWave
-	for (var i = 0; i < n*n; i++) {
-		var m = new Monster(new Transform(Math.random()*(-132)+((i+1)*-32),192,MONSTER,32,32))
-		m.health += (2*n)
-		//m.speed += (m.speed+Math.floor(Math.sqrt(n))-1) < 32 ? Math.floor(Math.sqrt(n))-1 : (32 - m.speed)
-		game.map.addMonster(m)
+	var nextWave = createWave(n)
+
+	function sendNextSubwave (wave) {
+		var subwave = wave.next
+		if (subwave != null) {
+			for (const index in subwave) {
+				subwave[index].move(new Vector2(-nextWave.timeBetween * nextWave.index, 0))
+				subwave[index].move(new Vector2(-32 * index), 0)
+				game.map.addMonster(subwave[index])
+			}
+		}
 	}
-	
+		
+	while (nextWave.hasNext) {
+		sendNextSubwave(nextWave)
+	}
+}
+
+function createWave (n) {
+	var wave = new Wave([], 256)
+	for (var i = 0; i < n; i++) {
+		var subwave = []
+		for (var t = 0; t < n; t++) {
+			var startPos = game.map.pathStart
+			var m = new Monster(new Transform(0,0,MONSTER,26,26))
+			m.transform.x = startPos.x
+			m.transform.y = startPos.y - (m.transform.height / 2)
+			m.health += (2*n)
+			subwave.push(m)
+		}
+		wave.addSubwave(subwave)
+	}
+	return wave
 }
 
 function countdown (n) {
@@ -260,6 +281,7 @@ function countdown (n) {
 var game
 window.onload = function () {
 	game = new Game()
+	createEventListeners()
 	var dt
 	var lastTime = Date.now()
 	function loop () {
@@ -289,9 +311,10 @@ window.onload = function () {
 					game.map.projectiles[index].update(dt)
 				}
 			}
-			for (const index in game.tooltips) {
-				game.tooltips[index].update(dt, mouse)
-			}
+			
+		}
+		for (const index in game.tooltips) {
+			game.tooltips[index].update(dt, mouse)
 		}
 		game.scene.draw(ctx, game.camera)
 		lastTime = Date.now()
@@ -307,39 +330,41 @@ var input = {
 	'down': 	false,
 	'mousedown': false,
 }
-document.addEventListener('mousemove', function (e) {
-	mouse.x = e.clientX - canvas.offsetLeft
-	mouse.y = e.clientY - canvas.offsetTop
-	Button.handleInput('move', mouse, game.scene)
-})
-document.addEventListener('mousedown', function (e) {
-	Button.handleInput('down', mouse, game.scene)
-	input.mousedown = true
-})
-document.addEventListener('mouseup', function (e) {
-	Button.handleInput('up', mouse, game.scene)
-	input.mousedown = false
-})
-document.addEventListener('keydown', function (e) {
-	if (e.key == 'a')
-		input.left = true
-	else if (e.key == 'd')
-		input.right = true
-	if (e.key == 'w')
-		input.up = true
-	else if (e.key == 's')
-		input.down = true
-	if (e.key == 'Escape') {
+function createEventListeners () {
+	document.addEventListener('mousemove', function (e) {
+		mouse.x = e.clientX - canvas.offsetLeft
+		mouse.y = e.clientY - canvas.offsetTop
+		Button.handleInput('move', mouse, game.scene)
+	})
+	document.addEventListener('mousedown', function (e) {
+		Button.handleInput('down', mouse, game.scene)
+		input.mousedown = true
+	})
+	document.addEventListener('mouseup', function (e) {
+		Button.handleInput('up', mouse, game.scene)
+		input.mousedown = false
+	})
+	document.addEventListener('keydown', function (e) {
+		if (e.key == 'a')
+			input.left = true
+		else if (e.key == 'd')
+			input.right = true
+		if (e.key == 'w')
+			input.up = true
+		else if (e.key == 's')
+			input.down = true
+		if (e.key == 'Escape') {
 
-	}
-})
-document.addEventListener('keyup', function (e) {
-	if (e.key == 'a')
-		input.left = false
-	if (e.key == 'd')
-		input.right = false
-	if (e.key == 'w')
-		input.up = false
-	if (e.key == 's')
-		input.down = false
-})
+		}
+	})
+	document.addEventListener('keyup', function (e) {
+		if (e.key == 'a')
+			input.left = false
+		if (e.key == 'd')
+			input.right = false
+		if (e.key == 'w')
+			input.up = false
+		if (e.key == 's')
+			input.down = false
+	})
+}
