@@ -1,9 +1,9 @@
 class Monster extends PanelImage {
-	constructor (transform) {
-		super(transform, Monster.image, new Rect(2,35,12,13), undefined, 0, false)
-		this.speed = 1
-		this.health = 10
-		this.bounty = 1
+	constructor (transform, image, cropRect) {
+		super(transform, image, cropRect, undefined, 0, false)
+		this.speed = 0
+		this.health = 0
+		this.bounty = 0
 		this.direction = new Vector2(1,0)
 	}
 	get speed () {
@@ -77,6 +77,22 @@ class Monster extends PanelImage {
 				game.map.monsters.splice(game.map.monsters.indexOf(this), 1)
 			}
 		}
+	}
+}
+class Goblin extends Monster {
+	constructor (transform) {
+		super (transform, Monster.image, new Rect(2,35,12,13))
+		this.speed = 1
+		this.health = 8
+		this.bounty = 2
+	}
+}
+class Scout extends Monster {
+	constructor (transform) {
+		super (transform, Monster.image, new Rect(17,33,14,15))
+		this.speed = 2
+		this.health = 5
+		this.bounty = 1
 	}
 }
 Monster.image = new Image()

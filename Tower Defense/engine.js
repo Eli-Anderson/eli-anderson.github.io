@@ -663,6 +663,8 @@ class Rect extends Vector2 {
 	 * @param      {number}  t       A float between [0, 1]
 	 */
 	rotateTowards (angle, t) {
+		if (t > 1) t = 1
+		if (t < 0) t = 0
 		var a = angle % (Math.PI*2)
 		var PI2 = Math.PI*2
 		if (this.rotation - a > Math.PI) {
@@ -758,6 +760,8 @@ class Rect extends Vector2 {
 	 * @param      {number}  t       A float between [0, 1]
 	 */
 	rotateTowards (angle, t) {
+		if (t > 1) t = 1
+		if (t < 0) t = 0
 		var a = angle % (Math.PI*2)
 		var PI2 = Math.PI*2
 		if (this.rotation - a > Math.PI) {

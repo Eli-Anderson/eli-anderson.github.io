@@ -10,6 +10,20 @@ class Tower extends ButtonImage {
 		this._target = null
 
 		this._timeSinceLastShot = 0;
+		this.tooltip = new Tooltip(
+			Transform.zero(),
+			new Text("", Transform.zero(), new Font("Arial", 16, new Color('white'), 'left','bottom')),
+			new Color(128,128,128,0),
+			false
+		)
+		this.tooltip.add(new PanelCircle(
+			new Transform(this.transform.rect.center.x,this.transform.rect.center.y,TOWER-1,this.range,this.range),
+			new Color(255,255,255,0.2),
+			0,
+			false
+		))
+		this.add(this.tooltip)
+		game.tooltips.push(this.tooltip)
 	}
 	get speed () {
 		return this._speed
@@ -38,6 +52,9 @@ class Tower extends ButtonImage {
 	}
 	set range (range) {
 		this._range = range
+		
+		this.tooltip.children[1].transform.width = range
+		this.tooltip.children[1].transform.height = range
 	}
 	set reloadTime (reloadTime) {
 		this._reloadTime = reloadTime
@@ -63,14 +80,15 @@ class Tower extends ButtonImage {
 	attemptFire () {
 		this.target = this.targeting()
 		if (this.target != null) { // has a target
-			var distanceVector = Vector2.SUB(this.transform, this.target.transform)
+			var distanceVector = Vector2.SUB(this.transform.rect.center, this.target.transform.rect.center)
 			if (this._timeSinceLastShot > this._reloadTime) { // is not reloading
 				if (distanceVector.magnitude < this._range) { // target is within range
-					var angle = Math.atan2(-distanceVector.y,-distanceVector.x)
+					var angle = Math.atan2(-distanceVector.y, -distanceVector.x)
 					if (angle < 0) {
 						angle += (2*Math.PI)
 					}
-					//if (Math.abs((this.rotation - (angle))%(2*Math.PI)) < Math.PI/32) { // is looking at target
+					//console.log(Math.abs(this.rotation - angle), Math.PI/64)
+					//if (Math.abs(this.rotation - angle) < Math.PI/64) { // is looking at target
 						this.fire()
 						this._timeSinceLastShot = 0
 					//}
@@ -80,9 +98,12 @@ class Tower extends ButtonImage {
 	}
 
 	fire () {
+		var size = 6
+		var direction = new Vector2(Math.cos(this.rotation), Math.sin(this.rotation))
 		game.map.addProjectile(new this.projectile(
-			new Transform(this.transform.rect.center.x,this.transform.rect.center.y,3,6,6),
-			Vector2.MULT(Vector2.SUB(this.target.transform.rect.center, this.transform.rect.center).normalized, this.speed),
+			new Transform(this.transform.rect.center.x-(size / 2),this.transform.rect.center.y-(size / 2),PROJECTILE,size,size),
+			//Vector2.MULT(Vector2.SUB(this.target.transform.rect.center, this.transform.rect.center).normalized, this.speed),
+			Vector2.MULT(direction, this.speed),
 			this.damage
 		))
 	}
@@ -139,7 +160,7 @@ class Tower extends ButtonImage {
 	    	if (angle < 0) {
 	    		angle += (2*Math.PI)
 	    	}
-	    	this.rotateTowards(angle, dt/100)
+	    	this.rotateTowards(angle, (dt/1000)*20)
 		}
 		
 	}
@@ -236,14 +257,14 @@ class TowerDraggable extends DraggableImage {
 class BasicTower extends Tower {
 	constructor (transform) {
 		super(transform, BasicTower.image, new Rect(0,0,64,64))
-		this.speed = 8
+		this.speed = 12
 		this.range = 128
 		this.damage = 5
 		this.reloadTime = 1000
 		this.cost = 10
 		this.projectile = BasicProjectile
 	}
-	static get tooltip () {
+	static get tooltipText () {
 		return 	"Basic Tower\n\n"+
 				"Damage: 5\n"+
 				"Fire Rate: 1000\n\n\n"+
@@ -269,14 +290,14 @@ class SniperTower extends Tower {
 		var image = new Image()
 		image.src = 'sniperTower.png'
 		super(transform, image, new Rect(0,0,64,64))
-		this.speed = 12
+		this.speed = 24
 		this.range = 256
 		this.reloadTime = 3000
 		this.cost = 25
 		this.damage = 10
 		this.projectile = PiercingProjectile
 	}
-	static get tooltip () {
+	static get tooltipText () {
 		return 	"Sniper Tower\n\n"+
 				"Pierces Enemies\n"+
 				"Damage: 10\n"+
@@ -303,7 +324,7 @@ class RapidTower extends Tower {
 		var image = new Image()
 		image.src = 'rapidTower.png'
 		super(transform, image, new Rect(0,0,64,64))
-		this.speed = 6
+		this.speed = 10
 		this.reloadTime = 100
 		this.damage = 1.5
 		this.cost = 15
@@ -311,7 +332,7 @@ class RapidTower extends Tower {
 		this.projectile = BasicProjectile
 	}
 
-	static get tooltip () {
+	static get tooltipText () {
 		return 	"Rapid Tower\n\n"+
 				"Damage: 1.5\n"+
 				"Fire Rate: 100\n\n\n"+
