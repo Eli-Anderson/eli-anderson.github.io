@@ -252,7 +252,7 @@ function createWave (n) {
 		var subwave = []
 		for (var t = 0; t < n; t++) {
 			var startPos = game.map.pathStart
-			var m = new Scout(new Transform(0,0,MONSTER,26,26))
+			var m = new Goblin(new Transform(0,0,MONSTER,26,26))
 			m.transform.x = startPos.x
 			m.transform.y = startPos.y - (m.transform.height / 2)
 			m.health += (2*n)
