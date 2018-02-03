@@ -48,3 +48,17 @@ class PiercingProjectile extends BasicProjectile {
 		}
 	}
 }
+
+class SlowProjectile extends BasicProjectile {
+	constructor (transform, vector, damage, slowPercent) {
+		super (transform, vector, damage)
+	}
+	onHit (monster) {
+		monster.addEffect(new Slow(0.65, 1000))
+		monster.health -= this._damage
+		this._damage = 0 // in case it is not destroyed properly, it will not double hit
+		if (game.map.remove(this)) {
+			game.map.projectiles.splice(game.map.projectiles.indexOf(this), 1)
+		}
+	}
+}

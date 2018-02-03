@@ -498,6 +498,15 @@ class Rect extends Vector2 {
 			this.flattened[index].transform.set(Vector3.ADD(this.flattened[index].transform, positionDifference))
 		}
 	}
+
+	moveCenterTo (vector3) {
+		var adjustedPos = Vector2.SUB(vector3, new Vector2(this.transform.width/2, this.transform.height/2))
+		var positionDifference = Vector3.SUB(adjustedPos, this.transform)
+		this.transform.set(adjustedPos)
+		for (const index in this.flattened) {
+			this.flattened[index].transform.set(Vector3.ADD(this.flattened[index].transform, positionDifference))
+		}
+	}
 }class Scene {
 	constructor () {
 		this._children = []

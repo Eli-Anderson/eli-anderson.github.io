@@ -116,12 +116,14 @@ class Game {
 		var basicTowerCreator = new BasicTowerCreator(new Transform(32,424,UI+2,32,32))
 		var sniperTowerCreator = new SniperTowerCreator(new Transform(96,424,UI+2,32,32))
 		var rapidTowerCreator = new RapidTowerCreator(new Transform(160,424,UI+2,32,32))
+		var iceTowerCreator = new IceTowerCreator(new Transform(224,424,UI+2,32,32))
 		this.towerTray.add(basicTowerCreator)
 		this.towerTray.add(sniperTowerCreator)
 		this.towerTray.add(rapidTowerCreator)
+		this.towerTray.add(iceTowerCreator)
 
-		for (const index in [basicTowerCreator, sniperTowerCreator, rapidTowerCreator]) {
-			var tower = [basicTowerCreator, sniperTowerCreator, rapidTowerCreator][index]
+		for (const index in [basicTowerCreator, sniperTowerCreator, rapidTowerCreator, iceTowerCreator]) {
+			var tower = [basicTowerCreator, sniperTowerCreator, rapidTowerCreator, iceTowerCreator][index]
 			var t = tower.transform
 			var tip = new Tooltip(
 				new Transform(t.x,t.y-104,UI+10,128,128),
