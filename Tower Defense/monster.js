@@ -38,24 +38,37 @@ class Monster extends PanelImage {
     	}
 	}
 	addEffect (effect) {
+		for (const index in this.effects) {
+			if (this.effects[index].constructor == effect.constructor) {
+				// do not stack effects
+				//return
+			}
+		}
+		this.add(effect)
 		this.effects.push(effect)
-		effect.onContact(this)
+		effect._onContact(this)
 	}
 	removeEffect (effect) {
-		effect.onRelease(this)
-		this.effects.splice(this.effects.indexOf(this, 1))
+		effect._onRelease(this)
+		for (const index in this.effects) {
+			if (this.effects[index].identifier == effect.identifier) {
+				this.effects.splice(index, 1)
+				break
+			}
+		}
+
 	}
-	remove () {
+	destroy () {
 		this.parent.remove(this)
 		game.map.monsters.splice(game.map.monsters.indexOf(this), 1)
 	}
 	kill () {
 		game.gold += this.bounty
-		remove()
+		this.destroy()
 	}
 	damageBase () {
 		game.life -= this.damage
-		remove()
+		this.destroy()
 	}
 	update (dt) {
 		if (this._health <= 0) {
@@ -104,7 +117,7 @@ class Monster extends PanelImage {
 			}
 			this.move(Vector2.MULT(this.direction, this.speed))
 			if (this.transform.x >= game.map.transform.rect.right) {
-				damageBase()
+				this.damageBase()
 			}
 		}
 	}
