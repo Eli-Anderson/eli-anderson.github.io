@@ -53,6 +53,11 @@ class Color {
 					this.g = 165
 					this.b = 0
 					break
+				case 'brown':
+					this.r = 139
+					this.g = 69
+					this.b = 19
+					break
 			}
 			this.a = 1
 			return
@@ -294,7 +299,6 @@ class Vector3 extends Vector2 {
 	}
 
 }
-
 class Rect extends Vector2 {
 	constructor (x, y, width, height) {
 		super (x, y)
@@ -313,6 +317,9 @@ class Rect extends Vector2 {
 	}
 	get right () {
 		return this.x + this.width
+	}
+	get bottom () {
+		return this.y + this.height
 	}
 
 	set width (width) {
@@ -489,11 +496,20 @@ class Rect extends Vector2 {
 	 * Moves the element to a specific position, then moves each descendant
 	 * to their position relative to their parents.
 	 *
-	 * @param      {<type>}  vector3  The vector 3
+	 * @param      {<Vector3>}  vector3  The position to move to
 	 */
 	moveTo (vector3) {
 		var positionDifference = Vector3.SUB(vector3, this.transform)
 		this.transform.set(vector3)
+		for (const index in this.flattened) {
+			this.flattened[index].transform.set(Vector3.ADD(this.flattened[index].transform, positionDifference))
+		}
+	}
+
+	moveCenterTo (vector3) {
+		var adjustedPos = Vector2.SUB(vector3, new Vector2(this.transform.width/2, this.transform.height/2))
+		var positionDifference = Vector3.SUB(adjustedPos, this.transform)
+		this.transform.set(adjustedPos)
 		for (const index in this.flattened) {
 			this.flattened[index].transform.set(Vector3.ADD(this.flattened[index].transform, positionDifference))
 		}
