@@ -3,7 +3,7 @@
 <head>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0;">
 	<meta name="apple-mobile-web-app-capable" content="yes">
-	<style id=style onload=windowSize()>
+	<style id=style>
 
 		#canvas {
 				position:absolute;
@@ -17,7 +17,7 @@
 	<canvas id=canvas width=720px height=480px style='border:1px solid black'></canvas>
 
 	
-	<script type=text/javascript script='?0003'>
+	<script type=text/javascript script='?0004'>
 		var canvas = document.getElementById('canvas');
 		var ctx = canvas.getContext('2d');
 		var dt = 1;
@@ -27,7 +27,6 @@
 		var floor_x = 0;
 		
 		function windowSize(){
-			console.log('get size')
 			window_w = window.innerWidth;
 			window_h = window.innerHeight;
 			document.getElementById('canvas').style.height=window_h;
@@ -246,6 +245,7 @@
 	function log(){
 			console.log(dt)
 		}
+		windowSize()
 	</script>
 </body>
 </html>
