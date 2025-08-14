@@ -4,26 +4,37 @@ var ctx = canvas.getContext('2d');
 function init(){
 	map0_0 = gen_map(72,48);
 	map0_1 = gen_map(72,48);
+	map0_2 = gen_map(72,48);
+	
 	map1_0 = gen_map(72,48);
 	map1_1 = gen_map(72,48);
+	map1_2 = gen_map(72,48);
 	
 	map2_0 = gen_map(72,48);
 	map2_1 = gen_map(72,48);
 	map2_2 = gen_map(72,48);
-	map1_2 = gen_map(72,48);
-	map0_2 = gen_map(72,48);
 	num_of_maps = 9;
 	
 	var r = rand_int(1111,9999);
 	gen_noise(r, map0_0);
 	gen_noise(r, map0_1);
+	gen_noise(r, map0_2);
 	gen_noise(r, map1_0);
 	gen_noise(r, map1_1);
+	gen_noise(r, map1_2);
+	gen_noise(r, map2_0);
+	gen_noise(r, map2_1);
+	gen_noise(r, map2_2);
 	//gen_noise(rand_int(1111,9999), map0_0)
 	draw_map(map0_0,0,0);
 	draw_map(map0_1,0,1);
-	draw_map(map1_0,2,0);
+	draw_map(map0_2,0,2);
+	draw_map(map1_0,1,0);
 	draw_map(map1_1,1,1);
+	draw_map(map1_2,1,2);
+	draw_map(map2_0,2,0);
+	draw_map(map2_1,2,1);
+	draw_map(map2_2,2,2);
 }
 
 function gen_map(w, h){
